@@ -1,4 +1,4 @@
-package com.tricks4live.server.controller;
+package com.tricks4live.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

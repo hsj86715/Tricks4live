@@ -1,4 +1,4 @@
-package com.tricks4live.server;
+package com.tricks4live;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

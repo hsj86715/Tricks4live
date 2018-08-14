@@ -11,8 +11,39 @@
     <title>Title</title>
 
     <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+
+    <script type="text/javascript" src="jQuery/jquery-3.3.1.js"></script>
 </head>
 <body>
 Start success.
+<form method="post" action="/user/register" enctype="multipart/form-data">
+    <table>
+        <tr>
+            <td>UserName</td>
+            <td><input type="text" id="userName" placeholder="UserName"></td>
+        </tr>
+        <tr>
+            <td>NickName</td>
+            <td><input type="text" id="nickName" placeholder="NickName"></td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td><input type="password" id="password" placeholder="Password"></td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td><input type="email" id="email" placeholder="Email"></td>
+        </tr>
+        <tr>
+            <td>Phone</td>
+            <td><input type="tel" id="phone" placeholder="Phone"></td>
+        </tr>
+        <tr>
+            <td>Address</td>
+            <td><input type="text" id="address" placeholder="Address"></td>
+        </tr>
+    </table>
+    <input type="submit" id="user_register">
+</form>
 </body>
 </html>
