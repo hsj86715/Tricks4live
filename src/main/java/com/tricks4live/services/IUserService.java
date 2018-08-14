@@ -2,6 +2,8 @@ package com.tricks4live.services;
 
 import com.tricks4live.enrties.User;
 
+import java.util.List;
+
 public interface IUserService {
 
     boolean userNameUsable(String userName);
@@ -18,5 +20,7 @@ public interface IUserService {
 
     void forgetPassword(String userName, String email);
 
-    void findbackPassword(String token, String newpwd);
+    void findBackPassword(String token, String newpwd);
+
+    List<User> findAll();
 }

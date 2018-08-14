@@ -4,12 +4,13 @@ import com.tricks4live.annotation.Authority;
 import com.tricks4live.enrties.converters.DateConverter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
 @Entity
 @Table(name = "user")
-public class User {
+public class User implements Serializable{
     @Id
     private String id;
 
