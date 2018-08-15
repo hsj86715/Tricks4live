@@ -7,6 +7,7 @@ import com.tricks4live.enrties.result.BaseResult;
 import com.tricks4live.enrties.result.DataResult;
 import com.tricks4live.enrties.result.UserCheckResult;
 import com.tricks4live.services.IUserService;
+import com.tricks4live.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -25,20 +26,17 @@ public class UserController {
     public BaseResult isUserNameUsable(@RequestParam("userName") String userName) {
         UserCheckResult result = new UserCheckResult();
         if (StringUtils.isEmpty(userName)) {
-            result.setCode(ErrCode.REQUEST_PARAMETER_LOST);
             result.setStatus(Status.FAIL);
-            result.setMsg("The request userName must not be empty");
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "userName");
             return result;
         }
 
         Boolean usable = userService.userNameUsable(userName);
         result.setUsable(usable);
         if (usable) {
-            result.setCode(ErrCode.USER_NOT_EXISTS);
-            result.setMsg("The userName: " + userName + " is usable.");
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.USER_NOT_EXISTS), userName);
         } else {
-            result.setCode(ErrCode.USERNAME_OCCUPIED);
-            result.setMsg("The userName: " + userName + " has been occupied.");
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.USERNAME_OCCUPIED), userName);
         }
         return result;
     }
@@ -48,9 +46,8 @@ public class UserController {
     public BaseResult isEmailUsable(@RequestParam("email") String email) {
         UserCheckResult result = new UserCheckResult();
         if (StringUtils.isEmpty(email)) {
-            result.setCode(ErrCode.REQUEST_PARAMETER_LOST);
             result.setStatus(Status.FAIL);
-            result.setMsg("The request email must not be empty");
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "email");
             return result;
         }
 
@@ -59,8 +56,7 @@ public class UserController {
         if (usable) {
             result.setMsg("The email: " + email + " is usable.");
         } else {
-            result.setCode(ErrCode.EMAIL_OCCUPIED);
-            result.setMsg("The email: " + email + " has been occupied.");
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMAIL_OCCUPIED), email);
         }
         return result;
     }
@@ -70,9 +66,8 @@ public class UserController {
     public BaseResult isPhoneUsable(@RequestParam("phone") String phone) {
         UserCheckResult result = new UserCheckResult();
         if (StringUtils.isEmpty(phone)) {
-            result.setCode(ErrCode.REQUEST_PARAMETER_LOST);
             result.setStatus(Status.FAIL);
-            result.setMsg("The request phone must not be empty");
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "phone");
             return result;
         }
 
@@ -81,8 +76,7 @@ public class UserController {
         if (usable) {
             result.setMsg("The phone: " + phone + " is usable.");
         } else {
-            result.setCode(ErrCode.PHONE_OCCUPIED);
-            result.setMsg("The phone: " + phone + " has been occupied.");
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.PHONE_OCCUPIED), phone);
         }
         return result;
     }
@@ -93,23 +87,19 @@ public class UserController {
         BaseResult result = new BaseResult();
 
         if (StringUtils.isEmpty(user.getUserName())) {
-            result.setCode(ErrCode.EMPTY_USERNAME);
-            result.setMsg("The request userName must not be empty");
             result.setStatus(Status.FAIL);
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMPTY_USERNAME));
         } else if (StringUtils.isEmpty(user.getPassword())) {
-            result.setCode(ErrCode.EMPTY_PWD);
-            result.setMsg("The request password must not be empty");
             result.setStatus(Status.FAIL);
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMPTY_PWD));
         } else if (StringUtils.isEmpty(user.getEmail())) {
-            result.setCode(ErrCode.EMPTY_EMAIL);
-            result.setMsg("The request email must not be empty");
             result.setStatus(Status.FAIL);
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMPTY_EMAIL));
         } else {
             String password = user.getPassword();
             if (password.length() < 6) {
-                result.setCode(ErrCode.PWD_SHORT);
-                result.setMsg("The request password is too short, the suggested minimal length is 6");
                 result.setStatus(Status.FAIL);
+                result.setCodeMsg(Constants.getErrorMsg(ErrCode.PWD_SHORT));
             } else {
                 result = new DataResult<User>();
                 String userAgent = request.getHeader("User-Agent");
@@ -121,27 +111,23 @@ public class UserController {
         return result;
     }
 
-//    @RequestMapping(name = "/login", method = RequestMethod.POST)
     @PostMapping("/login")
     @ResponseBody
     public BaseResult login(String userName, String password, HttpServletRequest request) {
         BaseResult result = new BaseResult();
 
         if (StringUtils.isEmpty(userName)) {
-            result.setCode(ErrCode.EMPTY_USERNAME);
-            result.setMsg("The request userName must not be empty");
             result.setStatus(Status.FAIL);
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMPTY_USERNAME));
         } else if (StringUtils.isEmpty(password)) {
-            result.setCode(ErrCode.EMPTY_PWD);
-            result.setMsg("The request password must not be empty");
             result.setStatus(Status.FAIL);
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMPTY_PWD));
         } else {
             String userAgent = request.getHeader("User-Agent");
             User user = userService.login(userName, password, userAgent);
             if (user == null) {
-                result.setCode(ErrCode.USERNAME_OR_PWD_ERR);
-                result.setMsg("The userName or password is not right for login");
                 result.setStatus(Status.FAIL);
+                result.setCodeMsg(Constants.getErrorMsg(ErrCode.USERNAME_OR_PWD_ERR));
             } else {
                 result = new DataResult<User>();
                 result.setMsg("User login successful");

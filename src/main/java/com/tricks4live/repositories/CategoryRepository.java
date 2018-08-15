@@ -14,6 +14,6 @@ public interface CategoryRepository extends JpaRepository<Category, String> {
     @Query(value = "select c from Category c where c.level=:level")
     List<Category> findByLevel(@Param("level") Integer level);
 
-    @Query(value = "select c from Category c where c.cSuperId=:superId")
+    @Query(value = "select c from Category c where c.superId=:superId")
     List<Category> findBySuperId(@Param("superId") String superId);
 }

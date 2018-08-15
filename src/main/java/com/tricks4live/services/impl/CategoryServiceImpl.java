@@ -44,7 +44,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public void deleteCategory(Category category) throws DataIntegrityException {
-        List<Category> subCat = repository.findBySuperId(category.getcId());
+        List<Category> subCat = repository.findBySuperId(category.getId());
         if (subCat != null && !subCat.isEmpty()) {
             throw new DataIntegrityException();
         }

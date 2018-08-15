@@ -11,67 +11,68 @@ import java.util.Objects;
 @Table(name = "category")
 public class Category implements Serializable {
     @Id
-    @Column(name = "cid")
-    private String cId;
+    private String id;//自身ID
 
-    @Column(name = "cname_cn", length = 32)
-    private String cNameCN;
+    @Column(name = "name_cn", length = 32)
+    private String nameCN;//中文分类名称
 
-    @Column(name = "cname_en", length = 64)
-    private String cNameEN;
+    @Column(name = "name_en", length = 64)
+    private String nameEN;//英文分类名称
 
     @Column(name = "super_id")
-    private String cSuperId;
+    private String superId;//上级分类ID
 
-    private Integer level = 1;
+    private Integer level = 1;//分类等级
+
+    private Boolean available = true;//是否可用
 
     public Category() {
     }
 
-    public Category(String cId, String cNameCN, String cNameEN) {
-        this.cId = cId;
-        this.cNameCN = cNameCN;
-        this.cNameEN = cNameEN;
+    public Category(String id, String nameCN, String nameEN) {
+        this.id = id;
+        this.nameCN = nameCN;
+        this.nameEN = nameEN;
     }
 
-    public Category(String cId, String cNameCN, String cNameEN, String cSuperId, Integer level) {
-        this.cId = cId;
-        this.cNameCN = cNameCN;
-        this.cNameEN = cNameEN;
-        this.cSuperId = cSuperId;
+    public Category(String id, String nameCN, String nameEN, String superId, Integer level) {
+        this.id = id;
+        this.nameCN = nameCN;
+        this.nameEN = nameEN;
+        this.superId = superId;
         this.level = level;
     }
 
-    public String getcId() {
-        return cId;
+    public String getId() {
+        return id;
     }
 
-    public void setcId(String cId) {
-        this.cId = cId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getcNameCN() {
-        return cNameCN;
+    public String getNameCN() {
+        return nameCN;
     }
 
-    public void setcNameCN(String cNameCN) {
-        this.cNameCN = cNameCN;
+    public void setNameCN(String nameCN) {
+        this.nameCN = nameCN;
     }
 
-    public String getcNameEN() {
-        return cNameEN;
+    public String getNameEN() {
+        return nameEN;
     }
 
-    public void setcNameEN(String cNameEN) {
-        this.cNameEN = cNameEN;
+    public void setNameEN(String nameEN) {
+        this.nameEN = nameEN;
     }
 
-    public String getcSuperId() {
-        return cSuperId;
+    public String getSuperId() {
+        return superId;
     }
 
-    public void setcSuperId(String cSuperId) {
-        this.cSuperId = cSuperId;
+    public void setSuperId(String superId) {
+        this.superId = superId;
     }
 
     public Integer getLevel() {
@@ -82,31 +83,40 @@ public class Category implements Serializable {
         this.level = level;
     }
 
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return Objects.equals(cId, category.cId) &&
-                Objects.equals(cNameCN, category.cNameCN) &&
-                Objects.equals(cNameEN, category.cNameEN) &&
-                Objects.equals(cSuperId, category.cSuperId) &&
+        return Objects.equals(id, category.id) &&
+                Objects.equals(nameCN, category.nameCN) &&
+                Objects.equals(nameEN, category.nameEN) &&
+                Objects.equals(superId, category.superId) &&
                 Objects.equals(level, category.level);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cId, cNameCN, cNameEN, cSuperId, level);
+        return Objects.hash(id, nameCN, nameEN, superId, level);
     }
 
     @Override
     public String toString() {
         return "Category{" +
-                "cId='" + cId + '\'' +
-                ", cNameCN='" + cNameCN + '\'' +
-                ", cNameEN='" + cNameEN + '\'' +
-                ", cSuperId='" + cSuperId + '\'' +
+                "id='" + id + '\'' +
+                ", nameCN='" + nameCN + '\'' +
+                ", nameEN='" + nameEN + '\'' +
+                ", superId='" + superId + '\'' +
                 ", level=" + level +
+                ", available=" + available +
                 '}';
     }
 }

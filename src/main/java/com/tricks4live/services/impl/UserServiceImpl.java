@@ -39,6 +39,7 @@ public class UserServiceImpl implements IUserService {
     public User register(User user, String userAgent) {
         user.setPassword(EncryptUtil.encryptPassword(user.getPassword()));
         user.setToken(TokenUtil.createJWT(user, userAgent));
+        user.setRegisterDate(new Date());
         return repository.save(user);
     }
 

@@ -1,16 +1,20 @@
 package com.tricks4live.enrties;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.tricks4live.annotation.Authority;
 import com.tricks4live.enrties.converters.DateConverter;
+import com.tricks4live.utils.Constants;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+@JsonSerialize
 @Entity
 @Table(name = "user")
-public class User implements Serializable{
+public class User implements Serializable {
     @Id
     private String id;
 
@@ -33,16 +37,22 @@ public class User implements Serializable{
     @Column(length = 512)
     private String token;
 
+    private String avatar;
+
     @Authority
     private Integer permission = Authority.NONE;
 
     @Column(name = "register_date")
     @Convert(converter = DateConverter.class)
+    @JsonFormat(pattern = Constants.DATE_FORMAT, timezone = "GMT+8")
     private Date registerDate;
 
     @Column(name = "last_login_date")
     @Convert(converter = DateConverter.class)
+    @JsonFormat(pattern = Constants.DATE_FORMAT, timezone = "GMT+8")
     private Date lastLoginDate;
+
+    private Boolean active = true;//
 
     public String getId() {
         return id;
@@ -144,6 +154,22 @@ public class User implements Serializable{
         return (this.permission & permission) != 0;
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -170,9 +196,11 @@ public class User implements Serializable{
                 ", phone='" + phone + '\'' +
                 ", address='" + address + '\'' +
                 ", token='" + token + '\'' +
+                ", avatar='" + avatar + "\'" +
                 ", permission=" + permission +
                 ", registerDate=" + registerDate +
                 ", lastLoginDate=" + lastLoginDate +
+                ", active=" + active +
                 '}';
     }
 }

@@ -46,7 +46,6 @@ public class UserTests extends BaseTest {
         user.setId(uuid);
         user.setEmail("email" + uuid.substring(12, 14) + "@test.com");
         user.setPhone("13123456789");
-        user.setRegisterDate(new Date());
 
         println("testRegister, user", user.toString());
         user = userService.register(user, "Test");

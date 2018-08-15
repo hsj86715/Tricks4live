@@ -2,6 +2,7 @@ package com.tricks4live.enrties.result;
 
 import com.tricks4live.annotation.ErrCode;
 import com.tricks4live.annotation.Status;
+import com.tricks4live.utils.Constants.CodeMsg;
 
 import java.io.Serializable;
 
@@ -44,6 +45,16 @@ public class BaseResult implements Serializable {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public void setCodeMsg(CodeMsg codeMsg) {
+        setCode(codeMsg.getCode());
+        setMsg(codeMsg.getMsg());
+    }
+
+    public void setCodeMsg(CodeMsg codeMsg, Object... args) {
+        setCode(codeMsg.getCode());
+        setMsg(String.format(codeMsg.getMsg(), args));
     }
 
     @Override
