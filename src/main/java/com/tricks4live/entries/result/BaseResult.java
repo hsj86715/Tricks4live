@@ -1,4 +1,4 @@
-package com.tricks4live.enrties.result;
+package com.tricks4live.entries.result;
 
 import com.tricks4live.annotation.ErrCode;
 import com.tricks4live.annotation.Status;

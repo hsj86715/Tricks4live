@@ -1,59 +1,65 @@
-package com.tricks4live.enrties;
+package com.tricks4live.entries;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.tricks4live.utils.Constants;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 
 /**
- * 评论用MongoDB存储
+ * 评论，MongoDB存储
  */
 @JsonSerialize
-@Document(collection = "subject_comment")
-public class Comment implements Serializable{
-    @Id
-    private String id;//自身ID
+public class Comment implements Serializable {
+    private Long id;//自身ID
 
-    private String sid;//评论的主题ID
-    private String uid;//评论人ID
+    private Long sid;//评论的主题ID
+    private Long uid;//评论人ID
     private String content;//评论内容
-    private String superId;//回复的评论ID
 
-    @Field("comment_time")
+    private Long superId;//回复的评论ID
+
     @JsonFormat(pattern = Constants.DATE_FORMAT, timezone = "GMT+8")
     private Date commentTime;//评论时间
 
-    @Field("agree_users")
-    private Pair<String, String>[] agreeUsers;//赞同的人的ID和头像
+//    private List<Pair<String, String>> agreeUsers;//赞同的人的ID和头像
 
-    public String getId() {
+    private Integer floor = 1;//楼层
+
+    private Comment follow;
+
+    public Comment() {
+    }
+
+    public Comment(Long sid, Long uid, String content) {
+        this.sid = sid;
+        this.uid = uid;
+        this.content = content;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getSid() {
+    public Long getSid() {
         return sid;
     }
 
-    public void setSid(String sid) {
+    public void setSid(Long sid) {
         this.sid = sid;
     }
 
-    public String getUid() {
+    public Long getUid() {
         return uid;
     }
 
-    public void setUid(String uid) {
+    public void setUid(Long uid) {
         this.uid = uid;
     }
 
@@ -65,11 +71,11 @@ public class Comment implements Serializable{
         this.content = content;
     }
 
-    public String getSuperId() {
+    public Long getSuperId() {
         return superId;
     }
 
-    public void setSuperId(String superId) {
+    public void setSuperId(Long superId) {
         this.superId = superId;
     }
 
@@ -81,12 +87,28 @@ public class Comment implements Serializable{
         this.commentTime = commentTime;
     }
 
-    public Pair<String, String>[] getAgreeUsers() {
-        return agreeUsers;
+//    public List<Pair<String, String>> getAgreeUsers() {
+//        return agreeUsers;
+//    }
+//
+//    public void setAgreeUsers(List<Pair<String, String>> agreeUsers) {
+//        this.agreeUsers = agreeUsers;
+//    }
+
+    public Integer getFloor() {
+        return floor;
     }
 
-    public void setAgreeUsers(Pair<String, String>[] agreeUsers) {
-        this.agreeUsers = agreeUsers;
+    public void setFloor(Integer floor) {
+        this.floor = floor;
+    }
+
+    public Comment getFollow() {
+        return follow;
+    }
+
+    public void setFollow(Comment fellow) {
+        this.follow = fellow;
     }
 
     @Override
@@ -104,20 +126,20 @@ public class Comment implements Serializable{
 
     @Override
     public int hashCode() {
-
         return Objects.hash(id, sid, uid, content, superId, commentTime);
     }
 
     @Override
     public String toString() {
         return "Comment{" +
-                "id='" + id + '\'' +
-                ", sid='" + sid + '\'' +
-                ", uid='" + uid + '\'' +
+                "id=" + id +
+                ", sid=" + sid +
+                ", uid=" + uid +
                 ", content='" + content + '\'' +
-                ", superId='" + superId + '\'' +
+                ", superId=" + superId +
                 ", commentTime=" + commentTime +
-                ", agreeUsers=" + Arrays.toString(agreeUsers) +
+                ", floor=" + floor +
+                ", follow=" + follow +
                 '}';
     }
 }

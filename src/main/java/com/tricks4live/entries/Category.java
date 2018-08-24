@@ -1,26 +1,19 @@
-package com.tricks4live.enrties;
+package com.tricks4live.entries;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Entity
-@Table(name = "category")
+/**
+ * 分类信息，MySQL存储
+ */
 public class Category implements Serializable {
-    @Id
-    private String id;//自身ID
+    private Long id;//自身ID
 
-    @Column(name = "name_cn", length = 32)
     private String nameCN;//中文分类名称
 
-    @Column(name = "name_en", length = 64)
     private String nameEN;//英文分类名称
 
-    @Column(name = "super_id")
-    private String superId;//上级分类ID
+    private Long superId;//上级分类ID
 
     private Integer level = 1;//分类等级
 
@@ -29,25 +22,23 @@ public class Category implements Serializable {
     public Category() {
     }
 
-    public Category(String id, String nameCN, String nameEN) {
-        this.id = id;
+    public Category(String nameCN, String nameEN) {
         this.nameCN = nameCN;
         this.nameEN = nameEN;
     }
 
-    public Category(String id, String nameCN, String nameEN, String superId, Integer level) {
-        this.id = id;
+    public Category(String nameCN, String nameEN, Long superId, Integer level) {
         this.nameCN = nameCN;
         this.nameEN = nameEN;
         this.superId = superId;
         this.level = level;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -67,11 +58,11 @@ public class Category implements Serializable {
         this.nameEN = nameEN;
     }
 
-    public String getSuperId() {
+    public Long getSuperId() {
         return superId;
     }
 
-    public void setSuperId(String superId) {
+    public void setSuperId(Long superId) {
         this.superId = superId;
     }
 

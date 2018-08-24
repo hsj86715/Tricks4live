@@ -1,4 +1,4 @@
-package com.tricks4live.enrties.result;
+package com.tricks4live.entries.result;
 
 public class UserCheckResult extends BaseResult {
     private Boolean usable = false;

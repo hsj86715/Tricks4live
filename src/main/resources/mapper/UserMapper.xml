@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tricks4live.mappers.UserMapper">
+    <resultMap id="userResultMap" type="com.tricks4live.entries.User">
+        <id property="id" column="_id" jdbcType="INTEGER"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+        <result property="password" column="_password" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="address" column="address" jdbcType="VARCHAR"/>
+        <result property="token" column="token" jdbcType="VARCHAR"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="permission" column="permission" jdbcType="INTEGER"/>
+        <result property="registerDate" column="register_date" jdbcType="VARCHAR"/>
+        <result property="active" column="active" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="userResultMap">
+        SELECT *
+        FROM t_user
+    </select>
+
+    <select id="findByUserName" parameterType="string" resultMap="userResultMap">
+        SELECT *
+        FROM t_user
+        WHERE user_name = #{userName, jdbcType=VARCHAR}
+        LIMIT 1
+    </select>
+
+    <select id="findByEmail" parameterType="string" resultMap="userResultMap">
+        SELECT *
+        FROM t_user
+        WHERE email = #{email, jdbcType=VARCHAR}
+        LIMIT 1
+    </select>
+
+    <select id="findByPhone" parameterType="string" resultMap="userResultMap">
+        SELECT *
+        FROM t_user
+        WHERE phone = #{phone, jdbcType=VARCHAR}
+        LIMIT 1
+    </select>
+
+    <select id="findByNickName" parameterType="string" resultMap="userResultMap">
+        SELECT *
+        FROM t_user
+        WHERE nick_name LIKE '%${value}%'
+    </select>
+
+    <insert id="addUser" parameterType="com.tricks4live.entries.User">
+        INSERT INTO t_user (user_name, nick_name, _password, email, phone, address, token, avatar, permission,
+                            register_date, active)
+        VALUES (#{userName, jdbcType=VARCHAR}, #{nickName, jdbcType=VARCHAR}, #{password, jdbcType=VARCHAR},
+                                               #{email, jdbcType=VARCHAR}, #{phone, jdbcType=VARCHAR},
+                                               #{address, jdbcType=VARCHAR}, #{token, jdbcType=VARCHAR},
+                                               #{avatar, jdbcType=VARCHAR},
+                                               #{permission, jdbcType=INTEGER}, #{registerDate, jdbcType=VARCHAR},
+                                               #{active,jdbcType=TINYINT})
+    </insert>
+
+    <select id="login" parameterType="com.tricks4live.entries.User" resultMap="userResultMap">
+        SELECT *
+        FROM t_user
+        WHERE user_name = #{userName, jdbcType=VARCHAR} AND _password = #{password, jdbcType=VARCHAR} AND active = 1
+        LIMIT 1
+    </select>
+
+    <delete id="deleteById" parameterType="string">
+        DELETE FROM t_user
+        WHERE _id = #{id, jdbcType=VARCHAR}
+    </delete>
+
+    <update id="updateToken" parameterType="com.tricks4live.entries.User">
+        UPDATE t_user
+        SET token = #{token, jdbcType=VARCHAR}
+        WHERE _id = #{id, jdbcType=INTEGER}
+    </update>
+</mapper>

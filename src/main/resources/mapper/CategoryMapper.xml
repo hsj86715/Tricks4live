@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tricks4live.mappers.CategoryMapper">
+
+    <resultMap id="categoryResultMap" type="com.tricks4live.entries.Category">
+        <id property="id" column="_id" jdbcType="INTEGER"/>
+        <result property="nameCN" column="name_cn" jdbcType="VARCHAR"/>
+        <result property="nameEN" column="name_en" jdbcType="VARCHAR"/>
+        <result property="superId" column="super_id" jdbcType="INTEGER"/>
+        <result property="level" column="_level" jdbcType="INTEGER"/>
+        <result property="available" column="available" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <select id="findByLevel" parameterType="int" resultMap="categoryResultMap">
+        SELECT *
+        FROM t_category
+        WHERE _level = #{level, jdbcType=INTEGER} AND available = 1
+    </select>
+
+    <select id="findBySupperId" parameterType="long" resultMap="categoryResultMap">
+        SELECT *
+        FROM t_category
+        WHERE super_id = #{superId, jdbcType=INTEGER} AND available = 1
+    </select>
+
+    <insert id="addCategory" parameterType="com.tricks4live.entries.Category" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_category (name_cn, name_en, super_id, _level, available)
+        VALUES (#{nameCN, jdbcType=VARCHAR}, #{nameEN, jdbcType=VARCHAR},
+                #{superId,jdbcType=INTEGER}, #{level,jdbcType=INTEGER}, #{available,jdbcType=TINYINT})
+    </insert>
+
+    <update id="updateCategory" parameterType="com.tricks4live.entries.Category">
+        UPDATE t_category
+        SET name_cn   = #{nameCN, jdbcType=VARCHAR}, name_en = #{nameEN, jdbcType=VARCHAR},
+            super_id  = #{superId,jdbcType=INTEGER}, _level = #{level,jdbcType=INTEGER},
+            available = #{available,jdbcType=TINYINT}
+        WHERE _id = #{id, jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM t_category
+        WHERE _id = #{id, jdbcType=INTEGER}
+    </delete>
+</mapper>

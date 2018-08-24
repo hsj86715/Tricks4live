@@ -1,20 +1,20 @@
 package com.tricks4live.services;
 
-import com.tricks4live.enrties.Category;
+import com.tricks4live.entries.Category;
 import com.tricks4live.exception.DataIntegrityException;
 
 import java.util.List;
 
 public interface ICategoryService {
-    List<Category> findCategoryByLevel(Integer level);
+    List<Category> findByLevel(Integer level);
 
-    List<Category> findSubCategory(String superId);
+    List<Category> findSubCategory(Long superId);
 
-    void addCategory(Category category);
+    Long addCategory(Category category);
 
     void updateCategory(Category category);
 
     void deleteCategory(Category category) throws DataIntegrityException;
 
-    void deleteCategoryById(String cId) throws DataIntegrityException;
+    void deleteById(Long cId) throws DataIntegrityException;
 }

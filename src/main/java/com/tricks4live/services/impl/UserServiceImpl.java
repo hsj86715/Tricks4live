@@ -1,7 +1,8 @@
 package com.tricks4live.services.impl;
 
-import com.tricks4live.enrties.User;
-import com.tricks4live.repositories.UserRepository;
+import com.tricks4live.LogAbleClass;
+import com.tricks4live.entries.User;
+import com.tricks4live.mappers.UserMapper;
 import com.tricks4live.services.IUserService;
 import com.tricks4live.utils.EncryptUtil;
 import com.tricks4live.utils.TokenUtil;
@@ -12,26 +13,29 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements IUserService {
+public class UserServiceImpl extends LogAbleClass implements IUserService {
 
     @Autowired
-    UserRepository repository;
+    UserMapper mapper;
 
     @Override
     public boolean userNameUsable(String userName) {
-        User user = repository.findByUserName(userName);
+        User user = mapper.findByUserName(userName);
+        println("userNameUsable", user);
         return user == null;
     }
 
     @Override
     public boolean emailUsable(String email) {
-        User user = repository.findByEmail(email);
+        User user = mapper.findByEmail(email);
+        println("emailUsable", user);
         return user == null;
     }
 
     @Override
     public boolean phoneUsable(String phone) {
-        User user = repository.findByPhone(phone);
+        User user = mapper.findByPhone(phone);
+        println("phoneUsable", user);
         return user == null;
     }
 
@@ -40,18 +44,20 @@ public class UserServiceImpl implements IUserService {
         user.setPassword(EncryptUtil.encryptPassword(user.getPassword()));
         user.setToken(TokenUtil.createJWT(user, userAgent));
         user.setRegisterDate(new Date());
-        return repository.save(user);
+        mapper.addUser(user);
+        println("register", user);
+        return user;
     }
 
     @Override
     public User login(String userName, String password, String userAgent) {
         password = EncryptUtil.encryptPassword(password);
-        User user = repository.findByUsernameAndPassword(userName, password);
+        User user = mapper.login(new User(userName, password));
         if (user != null) {
             user.setToken(TokenUtil.createJWT(user, userAgent));
-            user.setLastLoginDate(new Date());
-            repository.save(user);
+            mapper.updateToken(user);
         }
+        println("login", user);
         return user;
     }
 
@@ -72,6 +78,8 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public List<User> findAll() {
-        return repository.findAll();
+        List<User> users = mapper.findAll();
+        println("findAll", users);
+        return users;
     }
 }

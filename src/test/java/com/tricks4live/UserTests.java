@@ -1,20 +1,25 @@
 package com.tricks4live;
 
-import com.tricks4live.enrties.User;
+import com.tricks4live.entries.User;
 import com.tricks4live.services.IUserService;
 import com.tricks4live.utils.UUIDUtil;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Date;
+import java.util.List;
 
-public class UserTests extends BaseTest {
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class UserTests extends LogAbleClass {
     @Autowired
     IUserService userService;
 
     @Test
     public void testUserNameUsable() {
-        String userName = "user_64FB";
+        String userName = "user_3b23";
         Boolean usable = userService.userNameUsable(userName);
         assert usable == false;
         println("testUserNameUsable:", usable);
@@ -43,7 +48,6 @@ public class UserTests extends BaseTest {
         user.setUserName("user_" + uuid.substring(0, 4));
         user.setPassword("pass_" + uuid.substring(4, 8));
         user.setNickName("nick_" + uuid.substring(8, 12));
-        user.setId(uuid);
         user.setEmail("email" + uuid.substring(12, 14) + "@test.com");
         user.setPhone("13123456789");
 
@@ -54,10 +58,17 @@ public class UserTests extends BaseTest {
 
     @Test
     public void testLogin() {
-        String userName = "user_64FB";
-        String password = "pass_6C9B";
+        String userName = "user_5c49";
+        String password = "pass_e8c6";
         User user = userService.login(userName, password, "Test");
         assert user != null;
         println("testLogin", user.toString());
+    }
+
+    @Test
+    public void testFindAll() {
+        List<User> users = userService.findAll();
+        assert users != null;
+        println("testFindAll", users);
     }
 }

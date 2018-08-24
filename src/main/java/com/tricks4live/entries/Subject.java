@@ -1,54 +1,41 @@
-package com.tricks4live.enrties;
+package com.tricks4live.entries;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.tricks4live.utils.Constants;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
- * 主题用MongoDB存储
+ * 主题，MySQL存储
  */
 @JsonSerialize
-@Document(collection = "subject")
 public class Subject implements Serializable {
-    @Id
-    private String id;
+    private Long id;
     private String title;
-    private String cid;//所属分类
-    private String uid;//发布者ID
+    private Long cid;//所属分类
+    private Long uid;//发布者ID
 
     private String content;
 
-    @Field("pic_urls")
-    private String[] picUrls;
+    private List<String> picUrls;
 
-    @Field("video_url")
     private String videoUrl;
 
-    @Field("create_time")
     @JsonFormat(pattern = Constants.DATE_FORMAT, timezone = "GMT+8")
     private Date createTime;
 
-    @Field("last_modify")
     @JsonFormat(pattern = Constants.DATE_FORMAT, timezone = "GMT+8")
     private Date lastModify;
 
-    @Field("valid_users")
-    private Pair<String, String>[] validUsers;//觉得有用的人
-
-    @Field("invalid_users")
-    private Pair<String, String>[] invalidUsers;//觉得没有用的人
-
-    private Pair<String, String>[] verifiers;//参与验证的人
-
-    private Label[] labels;
+//    private Integer validCount;//觉得有用的人
+//
+//    private Integer invalidCount;//觉得没有用的人
+//
+    private List<Label> labels;
 
     private Boolean visible = true;
     private Boolean deleted = false;
@@ -56,18 +43,18 @@ public class Subject implements Serializable {
     public Subject() {
     }
 
-    public Subject(String title, String cid, String uid, String content) {
+    public Subject(String title, Long cid, Long uid, String content) {
         this.title = title;
         this.cid = cid;
         this.uid = uid;
         this.content = content;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -79,19 +66,19 @@ public class Subject implements Serializable {
         this.title = title;
     }
 
-    public String getCid() {
+    public Long getCid() {
         return cid;
     }
 
-    public void setCid(String cid) {
+    public void setCid(Long cid) {
         this.cid = cid;
     }
 
-    public String getUid() {
+    public Long getUid() {
         return uid;
     }
 
-    public void setUid(String uid) {
+    public void setUid(Long uid) {
         this.uid = uid;
     }
 
@@ -103,11 +90,11 @@ public class Subject implements Serializable {
         this.content = content;
     }
 
-    public String[] getPicUrls() {
+    public List<String> getPicUrls() {
         return picUrls;
     }
 
-    public void setPicUrls(String[] picUrls) {
+    public void setPicUrls(List<String> picUrls) {
         this.picUrls = picUrls;
     }
 
@@ -135,6 +122,22 @@ public class Subject implements Serializable {
         this.lastModify = lastModify;
     }
 
+//    public Integer getValidCount() {
+//        return validCount;
+//    }
+//
+//    public void setValidCount(Integer validCount) {
+//        this.validCount = validCount;
+//    }
+//
+//    public Integer getInvalidCount() {
+//        return invalidCount;
+//    }
+//
+//    public void setInvalidCount(Integer invalidCount) {
+//        this.invalidCount = invalidCount;
+//    }
+
     public Boolean getVisible() {
         return visible;
     }
@@ -151,35 +154,11 @@ public class Subject implements Serializable {
         this.deleted = deleted;
     }
 
-    public Pair<String, String>[] getValidUsers() {
-        return validUsers;
-    }
-
-    public void setValidUsers(Pair<String, String>[] validUsers) {
-        this.validUsers = validUsers;
-    }
-
-    public Pair<String, String>[] getInvalidUsers() {
-        return invalidUsers;
-    }
-
-    public void setInvalidUsers(Pair<String, String>[] invalidUsers) {
-        this.invalidUsers = invalidUsers;
-    }
-
-    public Pair<String, String>[] getVerifiers() {
-        return verifiers;
-    }
-
-    public void setVerifiers(Pair<String, String>[] verifiers) {
-        this.verifiers = verifiers;
-    }
-
-    public Label[] getLabels() {
+    public List<Label> getLabels() {
         return labels;
     }
 
-    public void setLabels(Label[] labels) {
+    public void setLabels(List<Label> labels) {
         this.labels = labels;
     }
 
@@ -203,19 +182,16 @@ public class Subject implements Serializable {
     @Override
     public String toString() {
         return "Subject{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", title='" + title + '\'' +
-                ", cid='" + cid + '\'' +
-                ", uid='" + uid + '\'' +
+                ", cid=" + cid +
+                ", uid=" + uid +
                 ", content='" + content + '\'' +
-                ", picUrls=" + Arrays.toString(picUrls) +
+                ", picUrls=" + picUrls +
                 ", videoUrl='" + videoUrl + '\'' +
                 ", createTime=" + createTime +
                 ", lastModify=" + lastModify +
-                ", validUsers=" + Arrays.toString(validUsers) +
-                ", invalidUsers=" + Arrays.toString(invalidUsers) +
-                ", verifiers=" + Arrays.toString(verifiers) +
-                ", labels=" + Arrays.toString(labels) +
+                ", labels=" + labels +
                 ", visible=" + visible +
                 ", deleted=" + deleted +
                 '}';

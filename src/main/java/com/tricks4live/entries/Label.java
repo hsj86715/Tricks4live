@@ -1,23 +1,16 @@
-package com.tricks4live.enrties;
+package com.tricks4live.entries;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Objects;
 
 /**
- * 标签用MongoDB存储
+ * 标签，MySQL存储
  */
 @JsonSerialize
-@Document(collection = "label")
 public class Label {
-    @Id
-    private String id;
-    @Field("name_cn")
+    private Long id;
     private String nameCN;
-    @Field("name_en")
     private String nameEN;
 
     public Label() {
@@ -28,11 +21,11 @@ public class Label {
         this.nameEN = nameEN;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -70,7 +63,7 @@ public class Label {
     @Override
     public String toString() {
         return "Label{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", nameCN='" + nameCN + '\'' +
                 ", nameEN='" + nameEN + '\'' +
                 '}';

@@ -1,40 +1,33 @@
-package com.tricks4live.enrties;
+package com.tricks4live.entries;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.tricks4live.annotation.Authority;
-import com.tricks4live.enrties.converters.DateConverter;
 import com.tricks4live.utils.Constants;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * 用户信息，MySQL存储
+ */
 @JsonSerialize
-@Entity
-@Table(name = "user")
 public class User implements Serializable {
-    @Id
-    private String id;
+    private Long id;
 
-    @Column(name = "user_name", length = 32)
     private String userName;
 
-    @Column(name = "nick_name", length = 32)
     private String nickName;
 
     private String password;
 
-    @Column(length = 48)
     private String email;
 
-    @Column(length = 32)
     private String phone;
 
     private String address;
 
-    @Column(length = 512)
     private String token;
 
     private String avatar;
@@ -42,23 +35,24 @@ public class User implements Serializable {
     @Authority
     private Integer permission = Authority.NONE;
 
-    @Column(name = "register_date")
-    @Convert(converter = DateConverter.class)
     @JsonFormat(pattern = Constants.DATE_FORMAT, timezone = "GMT+8")
     private Date registerDate;
 
-    @Column(name = "last_login_date")
-    @Convert(converter = DateConverter.class)
-    @JsonFormat(pattern = Constants.DATE_FORMAT, timezone = "GMT+8")
-    private Date lastLoginDate;
+    private Boolean active = true;
 
-    private Boolean active = true;//
+    public User() {
+    }
 
-    public String getId() {
+    public User(String userName, String password) {
+        this.userName = userName;
+        this.password = password;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -134,14 +128,6 @@ public class User implements Serializable {
         this.registerDate = registerDate;
     }
 
-    public Date getLastLoginDate() {
-        return lastLoginDate;
-    }
-
-    public void setLastLoginDate(Date lastLoginDate) {
-        this.lastLoginDate = lastLoginDate;
-    }
-
     public void addPermission(@Authority Integer permission) {
         this.permission = this.permission | permission;
     }
@@ -199,7 +185,6 @@ public class User implements Serializable {
                 ", avatar='" + avatar + "\'" +
                 ", permission=" + permission +
                 ", registerDate=" + registerDate +
-                ", lastLoginDate=" + lastLoginDate +
                 ", active=" + active +
                 '}';
     }

@@ -1,36 +1,41 @@
 package com.tricks4live.services.impl;
 
-import com.tricks4live.enrties.Label;
-import com.tricks4live.repositories.LabelRepository;
+import com.tricks4live.LogAbleClass;
+import com.tricks4live.entries.Label;
+import com.tricks4live.mappers.LabelMapper;
 import com.tricks4live.services.ILabelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
-public class LabelServiceImpl implements ILabelService {
+public class LabelServiceImpl extends LogAbleClass implements ILabelService {
     @Autowired
-    LabelRepository repository;
+    LabelMapper mapper;
 
     @Override
     public List<Label> findAll() {
-        return repository.findAll();
+        return mapper.findAll();
     }
 
     @Override
-    public void addLabel(Label label) {
-        repository.insert(label);
+    public Long addLabel(Label label) {
+        mapper.addLabel(label);
+        return label.getId();
     }
 
     @Override
     public void updateLabel(Label label) {
-        repository.save(label);
+        mapper.updateLabel(label);
     }
 
     @Override
-    public Label findById(String id) throws NoSuchElementException {
-        return repository.findById(id).get();
+    public Label findById(Long id) {
+        if (StringUtils.isEmpty(id)) {
+            return null;
+        }
+        return mapper.findById(id);
     }
 }

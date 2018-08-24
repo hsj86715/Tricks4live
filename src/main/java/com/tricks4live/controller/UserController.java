@@ -2,10 +2,10 @@ package com.tricks4live.controller;
 
 import com.tricks4live.annotation.ErrCode;
 import com.tricks4live.annotation.Status;
-import com.tricks4live.enrties.User;
-import com.tricks4live.enrties.result.BaseResult;
-import com.tricks4live.enrties.result.DataResult;
-import com.tricks4live.enrties.result.UserCheckResult;
+import com.tricks4live.entries.User;
+import com.tricks4live.entries.result.BaseResult;
+import com.tricks4live.entries.result.DataResult;
+import com.tricks4live.entries.result.UserCheckResult;
 import com.tricks4live.services.IUserService;
 import com.tricks4live.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,9 +103,9 @@ public class UserController {
             } else {
                 result = new DataResult<User>();
                 String userAgent = request.getHeader("User-Agent");
-                User u = userService.register(user, userAgent);
+                userService.register(user, userAgent);
                 result.setMsg("User registered successful");
-                ((DataResult) result).setData(u);
+//                ((DataResult) result).setData(u);
             }
         }
         return result;

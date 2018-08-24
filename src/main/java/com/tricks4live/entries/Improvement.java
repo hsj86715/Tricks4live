@@ -1,64 +1,52 @@
-package com.tricks4live.enrties;
+package com.tricks4live.entries;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 
 /**
- * 改进用MongoDB存储
+ * 主题改进，MySQL存储
  */
 @JsonSerialize
-@Document(collection = "subject_improvement")
 public class Improvement implements Serializable {
-    @Id
-    private String id;
-    private String uid;
-    private String sid;
+    private Long id;
+    private Long uid;
+    private Long sid;
     private String content;//改进内容
 
-    @Field("improve_date")
     private Date improveDate;//发起改进的时间
 
     private Boolean approve = false;//是否被采纳
 
-    @Field("approve_date")
     private Date approveDate;//采纳的时间
 
-    @Field("valid_users")
-    private Pair<String, String>[] validUsers;//觉得有用的人
+    private Integer validCount;//觉得有用的人
 
-    @Field("invalid_users")
-    private Pair<String, String>[] invalidUsers;//觉得没有用的人
+    private Integer invalidCount;//觉得没有用的人
 
-    private Pair<String, String>[] verifiers;//参与验证的人
-
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getUid() {
+    public Long getUid() {
         return uid;
     }
 
-    public void setUid(String uid) {
+    public void setUid(Long uid) {
         this.uid = uid;
     }
 
-    public String getSid() {
+    public Long getSid() {
         return sid;
     }
 
-    public void setSid(String sid) {
+    public void setSid(Long sid) {
         this.sid = sid;
     }
 
@@ -94,28 +82,20 @@ public class Improvement implements Serializable {
         this.approveDate = approveDate;
     }
 
-    public Pair<String, String>[] getValidUsers() {
-        return validUsers;
+    public Integer getValidCount() {
+        return validCount;
     }
 
-    public void setValidUsers(Pair<String, String>[] validUsers) {
-        this.validUsers = validUsers;
+    public void setValidCount(Integer validCount) {
+        this.validCount = validCount;
     }
 
-    public Pair<String, String>[] getInvalidUsers() {
-        return invalidUsers;
+    public Integer getInvalidCount() {
+        return invalidCount;
     }
 
-    public void setInvalidUsers(Pair<String, String>[] invalidUsers) {
-        this.invalidUsers = invalidUsers;
-    }
-
-    public Pair<String, String>[] getVerifiers() {
-        return verifiers;
-    }
-
-    public void setVerifiers(Pair<String, String>[] verifiers) {
-        this.verifiers = verifiers;
+    public void setInvalidCount(Integer invalidCount) {
+        this.invalidCount = invalidCount;
     }
 
     @Override
@@ -139,16 +119,15 @@ public class Improvement implements Serializable {
     @Override
     public String toString() {
         return "Improvement{" +
-                "id='" + id + '\'' +
-                ", uid='" + uid + '\'' +
-                ", sid='" + sid + '\'' +
+                "id=" + id +
+                ", uid=" + uid +
+                ", sid=" + sid +
                 ", content='" + content + '\'' +
                 ", improveDate=" + improveDate +
                 ", approve=" + approve +
                 ", approveDate=" + approveDate +
-                ", validUsers=" + Arrays.toString(validUsers) +
-                ", invalidUsers=" + Arrays.toString(invalidUsers) +
-                ", verifiers=" + Arrays.toString(verifiers) +
+                ", validCount=" + validCount +
+                ", invalidCount=" + invalidCount +
                 '}';
     }
 }

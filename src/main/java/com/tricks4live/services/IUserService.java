@@ -1,6 +1,6 @@
 package com.tricks4live.services;
 
-import com.tricks4live.enrties.User;
+import com.tricks4live.entries.User;
 
 import java.util.List;
 

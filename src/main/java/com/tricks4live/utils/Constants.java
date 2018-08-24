@@ -34,6 +34,8 @@ public class Constants {
     }
 
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String DATE_FORMAT_MILLI = "yyyy-MM-dd HH:mm:ss.SSS";
+    public static final String DATE_FORMAT_DAY = "yyyy-MM-dd";
 
     public static class CodeMsg {
         private Integer code;

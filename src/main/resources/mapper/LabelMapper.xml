@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tricks4live.mappers.LabelMapper">
+    <resultMap id="labelResultMap" type="com.tricks4live.entries.Label">
+        <id property="id" column="_id" jdbcType="INTEGER"/>
+        <result property="nameCN" column="name_cn" jdbcType="VARCHAR"/>
+        <result property="nameEN" column="name_en" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="labelResultMap">
+        SELECT *
+        FROM t_label
+    </select>
+
+    <select id="findById" parameterType="long" resultMap="labelResultMap">
+        SELECT *
+        FROM t_label
+        WHERE _id = #{id, jdbcType=INTEGER}
+    </select>
+
+    <insert id="addLabel" parameterType="com.tricks4live.entries.Label" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_label (name_cn, name_en)
+        VALUES (#{nameCN, jdbcType=VARCHAR}, #{nameEN, jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateLabel" parameterType="com.tricks4live.entries.Label">
+        UPDATE t_label
+        SET name_cn = #{nameCN, jdbcType=VARCHAR}, name_en = #{nameEN, jdbcType=VARCHAR}
+        WHERE _id = #{id, jdbcType=INTEGER}
+    </update>
+</mapper>

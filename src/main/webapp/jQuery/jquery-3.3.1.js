@@ -8711,7 +8711,7 @@ function ajaxConvert( s, response, jqXHR, isSuccess ) {
 		// Work with a copy of dataTypes in case we need to modify it for conversion
 		dataTypes = s.dataTypes.slice();
 
-	// Create converters map with lowercased keys
+	// Create typeHandler map with lowercased keys
 	if ( dataTypes[ 1 ] ) {
 		for ( conv in s.converters ) {
 			converters[ conv.toLowerCase() ] = s.converters[ conv ];
@@ -8761,7 +8761,7 @@ function ajaxConvert( s, response, jqXHR, isSuccess ) {
 								converters[ "* " + tmp[ 0 ] ];
 							if ( conv ) {
 
-								// Condense equivalence converters
+								// Condense equivalence typeHandler
 								if ( conv === true ) {
 									conv = converters[ conv2 ];
 
@@ -8850,7 +8850,7 @@ jQuery.extend( {
 			json: "responseJSON"
 		},
 
-		// Data converters
+		// Data typeHandler
 		// Keys separate source (or catchall "*") and destination types with a single space
 		converters: {
 
@@ -9747,7 +9747,7 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 			responseContainer = arguments;
 		};
 
-		// Clean-up function (fires after converters)
+		// Clean-up function (fires after typeHandler)
 		jqXHR.always( function() {
 
 			// If previous value didn't exist - remove it
