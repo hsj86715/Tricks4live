@@ -20,4 +20,6 @@ public interface SubjectMapper {
     void addSubject(Subject subject);
 
     List<Subject> findByPageInCategory(SubjectVO subjectVO);
+
+    Long getCountInCategory(Long cid);
 }

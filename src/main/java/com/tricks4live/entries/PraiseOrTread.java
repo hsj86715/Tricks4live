@@ -49,7 +49,7 @@ public class PraiseOrTread extends BaseDBEntry implements Serializable {
     @Override
     public String toString() {
         return "PraiseOrTread{" + super.toString() +
-                "sid=" + sid +
+                ", sid=" + sid +
                 ", uid=" + uid +
                 ", praise=" + praise +
                 ", tread=" + tread +

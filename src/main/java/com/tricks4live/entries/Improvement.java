@@ -84,7 +84,7 @@ public class Improvement extends BaseDBEntry implements Serializable {
     @Override
     public String toString() {
         return "Improvement{" + super.toString() +
-                "uid=" + uid +
+                ", uid=" + uid +
                 ", sid=" + sid +
                 ", content='" + content + '\'' +
                 ", approve=" + approve +

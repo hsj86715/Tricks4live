@@ -24,6 +24,9 @@ public class SubjectServiceImpl extends LogAbleClass implements ISubjectService 
 
     @Override
     public Page<Subject> findByPageInCategory(Long cid, Long pageNum, Integer pageSize) {
+        if (cid == null || cid == 0) {
+            return null;
+        }
         SubjectVO vo = new SubjectVO();
         vo.setCategoryId(cid);
         Long pageIdx = pageNum - 1;
@@ -33,12 +36,14 @@ public class SubjectServiceImpl extends LogAbleClass implements ISubjectService 
         vo.setLimitOff(pageIdx * pageSize);
         vo.setLimitRows(pageSize);
 
+        Long totalCount = mapper.getCountInCategory(cid);
         List<Subject> result = mapper.findByPageInCategory(vo);
 
         Page<Subject> subjectPage = new Page<>();
         subjectPage.setPageNum(pageNum);
         subjectPage.setPageSize(pageSize);
         subjectPage.setContentResults(result);
+        subjectPage.setTotalCount(totalCount);
         return subjectPage;
     }
 
@@ -66,13 +71,13 @@ public class SubjectServiceImpl extends LogAbleClass implements ISubjectService 
         SubjectVO subjectVO = null;
         if (subject.getLabels() != null) {
             subjectVO = new SubjectVO();
-            subjectVO.setSubjectId(sid);
+            subjectVO.setId(sid);
             subjectVO.setLabelList(subject.getLabels());
             addLabel(subjectVO);
         }
         if (subject.getPicUrls() != null) {
             subjectVO = new SubjectVO();
-            subjectVO.setSubjectId(sid);
+            subjectVO.setId(sid);
             subjectVO.setPicturePaths(subject.getPicUrls());
             addPicture(subjectVO);
         }

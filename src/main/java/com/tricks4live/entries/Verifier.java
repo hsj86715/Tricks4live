@@ -40,7 +40,7 @@ public class Verifier extends BaseDBEntry implements Serializable {
     @Override
     public String toString() {
         return "Verifier{" + super.toString() +
-                "sid=" + sid +
+                ", sid=" + sid +
                 ", uid=" + uid +
                 ", valid=" + valid +
                 '}';

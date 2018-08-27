@@ -114,7 +114,7 @@ public class Subject extends BaseDBEntry implements Serializable {
     @Override
     public String toString() {
         return "Subject{" + super.toString() +
-                "title='" + title + '\'' +
+                ", title='" + title + '\'' +
                 ", cid=" + cid +
                 ", uid=" + uid +
                 ", content='" + content + '\'' +

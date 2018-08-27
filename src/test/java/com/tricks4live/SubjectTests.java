@@ -27,18 +27,18 @@ public class SubjectTests extends LogAbleClass {
     public void testAddSubject() {
         Random random = new Random();
 //        for (int i = 0; i < 100; i++) {
-            Subject subject = new Subject("TestSub", 289L, 1L,
-                    "开机按贷款纠纷那可就放那看见你发空间阿卡" + random.nextInt(100) + random.nextInt(9999));
-            List<Label> labels = labelService.findAll();
-            int size = random.nextInt(9) + 1;
-            int start = random.nextInt(100 - size);
-            println("testAddSubject", labels);
-            subject.setLabels(labels.subList(start, start + size));
-            List<String> pics = new ArrayList<>();
-            pics.add("pic1akdjfkdjfkladjfl" + size + start);
-            pics.add("pic2akjdfaldjflakfalfanldfklk" + size + start);
-            subject.setPicUrls(pics);
-            service.addSubject(subject);
+        Subject subject = new Subject("TestSub", 289L, 1L,
+                "开机按贷款纠纷那可就放那看见你发空间阿卡" + random.nextInt(100) + random.nextInt(9999));
+        List<Label> labels = labelService.findAll();
+        int size = random.nextInt(9) + 1;
+        int start = random.nextInt(100 - size);
+        println("testAddSubject", labels);
+        subject.setLabels(labels.subList(start, start + size));
+        List<String> pics = new ArrayList<>();
+        pics.add("pic1akdjfkdjfkladjfl" + size + start);
+        pics.add("pic2akjdfaldjflakfalfanldfklk" + size + start);
+        subject.setPicUrls(pics);
+        service.addSubject(subject);
 //        }
     }
 
@@ -52,6 +52,7 @@ public class SubjectTests extends LogAbleClass {
     public void testFindByPage() {
         Page<Subject> subjectPage = service.findByPageInCategory(289L, 2L, 5);
         assert subjectPage != null;
+        println(subjectPage.toString());
         List<Subject> subjects = subjectPage.getContentResults();
         for (Subject subject : subjects) {
             println(subject.toString());

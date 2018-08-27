@@ -6,12 +6,11 @@ import java.io.Serializable;
 import java.util.List;
 
 @JsonSerialize
-public class Page<T> implements Serializable{
+public class Page<T> implements Serializable {
     private Long pageNum;
     private Integer pageSize;
     private List<T> contentResults;
     private Long totalCount;
-    private Long totalPages;
 
     public Long getPageNum() {
         return pageNum;
@@ -46,11 +45,16 @@ public class Page<T> implements Serializable{
     }
 
     public Long getTotalPages() {
-        return totalPages;
-    }
-
-    public void setTotalPages(Long totalPages) {
-        this.totalPages = totalPages;
+        if (totalCount == null || totalCount == 0) {
+            return 0L;
+        } else {
+            Integer more = Math.toIntExact(totalCount % pageSize);
+            Long totalPage = totalCount / pageSize;
+            if (more > 0) {
+                totalPage++;
+            }
+            return totalPage;
+        }
     }
 
     @Override
@@ -58,9 +62,9 @@ public class Page<T> implements Serializable{
         return "Page{" +
                 "pageNum=" + pageNum +
                 ", pageSize=" + pageSize +
-                ", contentResults=" + contentResults +
+//                ", contentResults=" + contentResults +
                 ", totalCount=" + totalCount +
-                ", totalPages=" + totalPages +
+                ", totalPages=" + getTotalPages() +
                 '}';
     }
 }

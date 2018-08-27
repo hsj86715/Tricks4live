@@ -6,7 +6,6 @@ import java.util.List;
 
 public class SubjectVO {
     private Long id;
-    private Long subjectId;
     private List<String> picturePaths;
     private List<Label> labelList;
     private Long categoryId;
@@ -19,14 +18,6 @@ public class SubjectVO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getSubjectId() {
-        return subjectId;
-    }
-
-    public void setSubjectId(Long subjectId) {
-        this.subjectId = subjectId;
     }
 
     public List<String> getPicturePaths() {

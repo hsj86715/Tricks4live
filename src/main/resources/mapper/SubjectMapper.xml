@@ -53,7 +53,7 @@
         INSERT INTO subject_picture (subject_id, picture_path)
         VALUES
         <foreach collection="picturePaths" item="path" index="index" separator=",">
-            (#{subjectId, jdbcType=BIGINT}, #{path, jdbcType=VARCHAR})
+            (#{id, jdbcType=BIGINT}, #{path, jdbcType=VARCHAR})
         </foreach>
     </insert>
 
@@ -61,7 +61,7 @@
         INSERT INTO label_subject (label_id, subject_id)
         VALUES
         <foreach collection="labelList" item="label" index="index" separator=",">
-            (#{label.id, jdbcType=BIGINT}, #{subjectId, jdbcType=BIGINT})
+            (#{label.id, jdbcType=BIGINT}, #{id, jdbcType=BIGINT})
         </foreach>
     </insert>
 
@@ -76,6 +76,12 @@
                                             #{createBy, jdbcType=VARCHAR}, #{updateBy, jdbcType=VARCHAR},
                 #{remark, jdbcType=VARCHAR})
     </insert>
+
+    <select id="getCountInCategory" parameterType="long" resultType="long">
+        SELECT COUNT(*)
+        FROM t_subject
+        WHERE cid = #{categoryId, jdbcType=BIGINT} AND enabled = 1 AND deleted = 0
+    </select>
 
     <resultMap id="subjectResultMapSimple" extends="subjectResultMapBase" type="com.tricks4live.entries.Subject">
         <collection property="picUrls" ofType="string">
@@ -94,6 +100,6 @@
                  ORDER BY update_date DESC
                  LIMIT #{limitOff, jdbcType=BIGINT}, #{limitRows, jdbcType=INTEGER}) ts LEFT JOIN subject_picture sp
                 ON ts._id = sp.subject_id
-        ORDER BY ts._id DESC, update_date DESC
+        ORDER BY update_date DESC, ts._id DESC
     </select>
 </mapper>

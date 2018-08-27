@@ -134,7 +134,7 @@ public class User extends BaseDBEntry implements Serializable {
     @Override
     public String toString() {
         return "User{" + super.toString() +
-                "userName='" + userName + '\'' +
+                ", userName='" + userName + '\'' +
                 ", nickName='" + nickName + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +

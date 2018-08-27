@@ -30,7 +30,7 @@ public class UserLogin extends BaseDBEntry{
     @Override
     public String toString() {
         return "UserLogin{" + super.toString() +
-                "uid=" + uid +
+                ", uid=" + uid +
                 ", loginIp='" + loginIp + '\'' +
                 '}';
     }

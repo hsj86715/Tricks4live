@@ -20,6 +20,7 @@ public class Comment extends BaseDBEntry implements Serializable {
     private Integer floor = 1;//楼层
 
     private Comment follow;
+    private Boolean deleted = false;
 
     public Comment() {
     }
@@ -28,6 +29,13 @@ public class Comment extends BaseDBEntry implements Serializable {
         this.sid = sid;
         this.uid = uid;
         this.content = content;
+    }
+
+    public Comment(Long sid, Long uid, String content, Long superId) {
+        this.sid = sid;
+        this.uid = uid;
+        this.content = content;
+        this.superId = superId;
     }
 
     public Long getSid() {
@@ -78,6 +86,14 @@ public class Comment extends BaseDBEntry implements Serializable {
         this.floor = floor;
     }
 
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public Comment getFollow() {
         return follow;
     }
@@ -89,11 +105,12 @@ public class Comment extends BaseDBEntry implements Serializable {
     @Override
     public String toString() {
         return "Comment{" + super.toString() +
-                "sid=" + sid +
+                ", sid=" + sid +
                 ", uid=" + uid +
                 ", content='" + content + '\'' +
                 ", superId=" + superId +
                 ", floor=" + floor +
+                ", deleted=" + deleted +
                 ", follow=" + follow +
                 '}';
     }

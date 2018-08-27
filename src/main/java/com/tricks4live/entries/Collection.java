@@ -27,7 +27,7 @@ public class Collection extends BaseDBEntry {
     @Override
     public String toString() {
         return "Collection{" + super.toString() +
-                "uid=" + uid +
+                ", uid=" + uid +
                 ", sid=" + sid +
                 '}';
     }
