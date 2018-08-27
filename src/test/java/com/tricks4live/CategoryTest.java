@@ -43,7 +43,7 @@ public class CategoryTest extends LogAbleClass {
 
     @Test
     public void testFindSubCategory() {
-        List<Category> subCat = service.findSubCategory(0L);
+        List<Category> subCat = service.findSubCategory(147L);
         assert subCat != null;
         for (Category category : subCat) {
             println(category.toString());
@@ -52,6 +52,6 @@ public class CategoryTest extends LogAbleClass {
 
     @Test
     public void testDeleteCategory() {
-        service.deleteById(0L);
+        service.deleteById(3L);
     }
 }

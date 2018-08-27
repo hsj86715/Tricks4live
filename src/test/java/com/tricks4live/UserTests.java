@@ -19,7 +19,7 @@ public class UserTests extends LogAbleClass {
 
     @Test
     public void testUserNameUsable() {
-        String userName = "user_3b23";
+        String userName = "user_4f1f";
         Boolean usable = userService.userNameUsable(userName);
         assert usable == false;
         println("testUserNameUsable:", usable);
@@ -27,7 +27,7 @@ public class UserTests extends LogAbleClass {
 
     @Test
     public void testEmailUsable() {
-        String email = "email41@test.com";
+        String email = "email40@test.com";
         Boolean usable = userService.emailUsable(email);
         assert usable == false;
         println("testEmailUsable", usable);
@@ -51,15 +51,15 @@ public class UserTests extends LogAbleClass {
         user.setEmail("email" + uuid.substring(12, 14) + "@test.com");
         user.setPhone("13123456789");
 
-        println("testRegister, user", user.toString());
+        println("testRegister BEFORE, user", user.toString());
         user = userService.register(user, "Test");
-        println("testRegister, user", user.toString());
+        println("testRegister AFTER, user", user.toString());
     }
 
     @Test
     public void testLogin() {
-        String userName = "user_5c49";
-        String password = "pass_e8c6";
+        String userName = "user_4f1f";
+        String password = "pass_de9a";
         User user = userService.login(userName, password, "Test");
         assert user != null;
         println("testLogin", user.toString());

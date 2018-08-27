@@ -42,8 +42,8 @@ public class UserServiceImpl extends LogAbleClass implements IUserService {
     @Override
     public User register(User user, String userAgent) {
         user.setPassword(EncryptUtil.encryptPassword(user.getPassword()));
-        user.setToken(TokenUtil.createJWT(user, userAgent));
-        user.setRegisterDate(new Date());
+//        user.setToken(TokenUtil.createJWT(user, userAgent));
+        user.setCreateDate(new Date());
         mapper.addUser(user);
         println("register", user);
         return user;

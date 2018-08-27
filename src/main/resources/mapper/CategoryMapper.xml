@@ -3,44 +3,61 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tricks4live.mappers.CategoryMapper">
+    <resultMap id="baseResultMap" type="com.tricks4live.entries.BaseDBEntry">
+        <id property="id" column="_id" jdbcType="BIGINT"/>
+        <result property="enabled" column="enabled" jdbcType="BIT"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"/>
+        <result property="version" column="_version" jdbcType="INTEGER"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="remark" column="_remark" jdbcType="VARCHAR"/>
+    </resultMap>
 
-    <resultMap id="categoryResultMap" type="com.tricks4live.entries.Category">
-        <id property="id" column="_id" jdbcType="INTEGER"/>
+    <resultMap id="categoryResultMap" extends="baseResultMap" type="com.tricks4live.entries.Category">
         <result property="nameCN" column="name_cn" jdbcType="VARCHAR"/>
         <result property="nameEN" column="name_en" jdbcType="VARCHAR"/>
-        <result property="superId" column="super_id" jdbcType="INTEGER"/>
+        <result property="superId" column="super_id" jdbcType="BIGINT"/>
         <result property="level" column="_level" jdbcType="INTEGER"/>
-        <result property="available" column="available" jdbcType="TINYINT"/>
     </resultMap>
+
 
     <select id="findByLevel" parameterType="int" resultMap="categoryResultMap">
         SELECT *
         FROM t_category
-        WHERE _level = #{level, jdbcType=INTEGER} AND available = 1
+        WHERE _level = #{level, jdbcType=INTEGER} AND enabled = 1
     </select>
 
     <select id="findBySupperId" parameterType="long" resultMap="categoryResultMap">
         SELECT *
         FROM t_category
-        WHERE super_id = #{superId, jdbcType=INTEGER} AND available = 1
+        WHERE super_id = #{superId, jdbcType=BIGINT} AND enabled = 1
     </select>
 
     <insert id="addCategory" parameterType="com.tricks4live.entries.Category" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO t_category (name_cn, name_en, super_id, _level, available)
-        VALUES (#{nameCN, jdbcType=VARCHAR}, #{nameEN, jdbcType=VARCHAR},
-                #{superId,jdbcType=INTEGER}, #{level,jdbcType=INTEGER}, #{available,jdbcType=TINYINT})
+        INSERT INTO t_category (name_cn, name_en, super_id, _level, enabled, create_date, update_date, _version,
+                                create_by, update_by, _remark)
+        VALUES (#{nameCN, jdbcType=VARCHAR}, #{nameEN, jdbcType=VARCHAR}, #{superId, jdbcType=BIGINT},
+                                             #{level, jdbcType=INTEGER}, #{enabled, jdbcType=BIT},
+                                             #{createDate, jdbcType=TIMESTAMP},
+                                             #{updateDate, jdbcType=TIMESTAMP}, #{version, jdbcType=INTEGER},
+                                             #{createBy, jdbcType=VARCHAR},
+                                             #{updateBy, jdbcType=VARCHAR}, #{remark, jdbcType=VARCHAR})
     </insert>
 
     <update id="updateCategory" parameterType="com.tricks4live.entries.Category">
         UPDATE t_category
-        SET name_cn   = #{nameCN, jdbcType=VARCHAR}, name_en = #{nameEN, jdbcType=VARCHAR},
-            super_id  = #{superId,jdbcType=INTEGER}, _level = #{level,jdbcType=INTEGER},
-            available = #{available,jdbcType=TINYINT}
-        WHERE _id = #{id, jdbcType=INTEGER}
+        SET name_cn     = #{nameCN, jdbcType=VARCHAR}, name_en = #{nameEN, jdbcType=VARCHAR},
+            super_id    = #{superId,jdbcType=BIGINT}, _level = #{level,jdbcType=INTEGER},
+            enabled     = #{enabled,jdbcType=BIT}, create_date = #{createDate, jdbcType=TIMESTAMP},
+            update_date = #{updateDate, jdbcType=TIMESTAMP}, _version = #{version, jdbcType=INTEGER},
+            create_by   = #{createBy, jdbcType=VARCHAR}, update_by = #{updateBy, jdbcType=VARCHAR},
+            _remark     = #{remark, jdbcType=VARCHAR}
+        WHERE _id = #{id, jdbcType=BIGINT}
     </update>
 
     <delete id="deleteById" parameterType="long">
         DELETE FROM t_category
-        WHERE _id = #{id, jdbcType=INTEGER}
+        WHERE _id = #{id, jdbcType=BIGINT}
     </delete>
 </mapper>

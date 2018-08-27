@@ -20,14 +20,16 @@ public class LabelTests extends LogAbleClass {
     @Test
     public void testAddLabel() {
         Random random = new Random();
-        int idx = random.nextInt(99);
-        Label label = new Label("标签" + idx, "Label" + idx);
-        service.addLabel(label);
+        for (int i = 0; i < 10; i++) {
+            int idx = random.nextInt(999);
+            Label label = new Label("标签" + idx, "Label" + idx);
+            service.addLabel(label);
+        }
     }
 
     @Test
     public void testUpdateLabel() {
-        Label label = service.findById(0L);
+        Label label = service.findById(1L);
         assert label != null;
         Random random = new Random();
         int idx = random.nextInt(99);

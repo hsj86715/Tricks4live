@@ -1,6 +1,7 @@
 package com.tricks4live;
 
 import com.tricks4live.entries.Label;
+import com.tricks4live.entries.Page;
 import com.tricks4live.entries.Subject;
 import com.tricks4live.services.ILabelService;
 import com.tricks4live.services.ISubjectService;
@@ -12,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -23,71 +25,36 @@ public class SubjectTests extends LogAbleClass {
 
     @Test
     public void testAddSubject() {
-        Subject subject = new Subject("TestSub", 0L, 0L,
-                "开机按贷款纠纷那可就放那看见你发空间阿卡纳地方看见爱的开发可不多见");
-        List<Label> labels = labelService.findAll();
-        println("testAddSubject", labels);
-        subject.setLabels(labels);
-        List<String> pics = new ArrayList<>();
-        pics.add("pic1");
-        pics.add("pic2");
-        subject.setPicUrls(pics);
-        service.addSubject(subject);
+        Random random = new Random();
+//        for (int i = 0; i < 100; i++) {
+            Subject subject = new Subject("TestSub", 289L, 1L,
+                    "开机按贷款纠纷那可就放那看见你发空间阿卡" + random.nextInt(100) + random.nextInt(9999));
+            List<Label> labels = labelService.findAll();
+            int size = random.nextInt(9) + 1;
+            int start = random.nextInt(100 - size);
+            println("testAddSubject", labels);
+            subject.setLabels(labels.subList(start, start + size));
+            List<String> pics = new ArrayList<>();
+            pics.add("pic1akdjfkdjfkladjfl" + size + start);
+            pics.add("pic2akjdfaldjflakfalfanldfklk" + size + start);
+            subject.setPicUrls(pics);
+            service.addSubject(subject);
+//        }
     }
 
-//    @Test
-//    public void testAddValid() {
-//        String sid = "5b7535b0bece46922927b2b1";
-//        Subject subject = service.findById(sid);
-//        assert subject != null;
-//        Pair<String, String> pair = new Pair<>("uid4", "uavatar4");
-//        service.addValidUser(sid, pair);
-//    }
-//
-//    @Test
-//    public void testRemoveValid() {
-//        String sid = "5b7535b0bece46922927b2b1";
-//        Subject subject = service.findById(sid);
-//        assert subject != null;
-//        Pair<String, String> pair = new Pair<>("uid4", "uavatar4");
-//        service.removeValidUser(sid, pair);
-//    }
-//
-//    @Test
-//    public void testAddInvalid() {
-//        String sid = "5b7535b0bece46922927b2b1";
-//        Subject subject = service.findById(sid);
-//        assert subject != null;
-//        Pair<String, String> pair = new Pair<>("uid4", "uavatar4");
-//        service.addInvalidUser(sid, pair);
-//    }
-//
-//    @Test
-//    public void testRemoveInvalid() {
-//        String sid = "5b7535b0bece46922927b2b1";
-//        Subject subject = service.findById(sid);
-//        assert subject != null;
-//        Pair<String, String> pair = new Pair<>("uid4", "uavatar4");
-//        service.removeInvalidUser(sid, pair);
-//    }
-//
-//    @Test
-//    public void testAddVerifier() {
-//        String sid = "5b7535b0bece46922927b2b1";
-//        Subject subject = service.findById(sid);
-//        assert subject != null;
-//        Pair<String, String> pair = new Pair<>("uid1", "uavatar1");
-//        service.addVerifier(sid, pair);
-//    }
-//
-//    @Test
-//    public void testFind() {
-//        Page<Subject> subjectPage = service.findByPageWithCid("cid_0", 0, 10);
-//        assert subjectPage != null;
-//        println(subjectPage.getTotalElements() + "");
-//        List<Subject> subjects = subjectPage.getContent();
-//        for (Subject subject : subjects) {
-//            println(subject.toString());
-//        }
-//    }
+    @Test
+    public void testFindById() {
+        Subject subject = service.findById(2L);
+        println("testFindById", subject);
+    }
+
+    @Test
+    public void testFindByPage() {
+        Page<Subject> subjectPage = service.findByPageInCategory(289L, 2L, 5);
+        assert subjectPage != null;
+        List<Subject> subjects = subjectPage.getContentResults();
+        for (Subject subject : subjects) {
+            println(subject.toString());
+        }
+    }
 }

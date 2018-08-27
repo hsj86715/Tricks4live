@@ -4,14 +4,12 @@ import com.tricks4live.entries.Page;
 import com.tricks4live.entries.Subject;
 import com.tricks4live.vo.SubjectVO;
 
-import java.util.NoSuchElementException;
-
 public interface ISubjectService {
 
     Subject findById(Long id);
 
-//    Page<Subject> findByPageWithCid(String cid, Integer page, Integer pageSize);
-//
+    Page<Subject> findByPageInCategory(Long cid, Long pageNum, Integer pageSize);
+
     Long addPicture(SubjectVO subjectVO);
 
     Long addLabel(SubjectVO subjectVO);

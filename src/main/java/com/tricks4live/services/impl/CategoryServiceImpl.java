@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -37,7 +38,9 @@ public class CategoryServiceImpl extends LogAbleClass implements ICategoryServic
 
     @Override
     public Long addCategory(Category category) {
+        category.setCreateDate(new Date());
         mapper.addCategory(category);
+        println(category.toString());
         return category.getId();
     }
 

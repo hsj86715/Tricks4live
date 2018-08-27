@@ -1,6 +1,7 @@
 package com.tricks4live.services.impl;
 
 import com.tricks4live.LogAbleClass;
+import com.tricks4live.entries.Page;
 import com.tricks4live.entries.Subject;
 import com.tricks4live.mappers.SubjectMapper;
 import com.tricks4live.services.ISubjectService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class SubjectServiceImpl extends LogAbleClass implements ISubjectService {
@@ -20,18 +22,25 @@ public class SubjectServiceImpl extends LogAbleClass implements ISubjectService 
         return mapper.findById(id);
     }
 
-//    @Override
-//    public Page<Subject> findByPageWithCid(String cid, Integer page, Integer pageSize) {
-//        Subject subject = new Subject();
-//        subject.setCid(cid);
-//        ExampleMatcher matcher = ExampleMatcher.matching()
-//                .withMatcher("cid", ExampleMatcher.GenericPropertyMatchers.exact())
-//                .withMatcher("visible", ExampleMatcher.GenericPropertyMatchers.exact())
-//                .withMatcher("deleted", ExampleMatcher.GenericPropertyMatchers.exact());
-//        Example<Subject> example = Example.of(subject, matcher);
-//        Pageable pageable = PageRequest.of(page, pageSize, Sort.Direction.DESC, "last_modify");
-//        return repository.findAll(example, pageable);
-//    }
+    @Override
+    public Page<Subject> findByPageInCategory(Long cid, Long pageNum, Integer pageSize) {
+        SubjectVO vo = new SubjectVO();
+        vo.setCategoryId(cid);
+        Long pageIdx = pageNum - 1;
+        if (pageIdx < 0) {
+            pageIdx = 0L;
+        }
+        vo.setLimitOff(pageIdx * pageSize);
+        vo.setLimitRows(pageSize);
+
+        List<Subject> result = mapper.findByPageInCategory(vo);
+
+        Page<Subject> subjectPage = new Page<>();
+        subjectPage.setPageNum(pageNum);
+        subjectPage.setPageSize(pageSize);
+        subjectPage.setContentResults(result);
+        return subjectPage;
+    }
 
 
     @Override
@@ -42,6 +51,7 @@ public class SubjectServiceImpl extends LogAbleClass implements ISubjectService 
 
     @Override
     public Long addLabel(SubjectVO subjectVO) {
+        println("addLabel", subjectVO.getLabelList());
         mapper.addLabel(subjectVO);
         return subjectVO.getId();
     }
@@ -49,8 +59,8 @@ public class SubjectServiceImpl extends LogAbleClass implements ISubjectService 
     @Override
     public Long addSubject(Subject subject) {
         Date date = new Date();
-        subject.setCreateTime(date);
-        subject.setLastModify(date);
+        subject.setCreateDate(date);
+        subject.setUpdateDate(date);
         mapper.addSubject(subject);
         Long sid = subject.getId();
         SubjectVO subjectVO = null;
@@ -66,6 +76,7 @@ public class SubjectServiceImpl extends LogAbleClass implements ISubjectService 
             subjectVO.setPicturePaths(subject.getPicUrls());
             addPicture(subjectVO);
         }
+        println(subject.toString());
         return sid;
     }
 

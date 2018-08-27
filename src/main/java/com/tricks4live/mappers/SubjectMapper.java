@@ -5,6 +5,8 @@ import com.tricks4live.vo.SubjectVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @Mapper
 public interface SubjectMapper {
@@ -16,4 +18,6 @@ public interface SubjectMapper {
     void addLabel(SubjectVO subjectVO);
 
     void addSubject(Subject subject);
+
+    List<Subject> findByPageInCategory(SubjectVO subjectVO);
 }

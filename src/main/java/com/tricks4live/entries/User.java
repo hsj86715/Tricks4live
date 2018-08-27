@@ -1,21 +1,15 @@
 package com.tricks4live.entries;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.tricks4live.annotation.Authority;
-import com.tricks4live.utils.Constants;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Objects;
 
 /**
  * 用户信息，MySQL存储
  */
 @JsonSerialize
-public class User implements Serializable {
-    private Long id;
-
+public class User extends BaseDBEntry implements Serializable {
     private String userName;
 
     private String nickName;
@@ -35,10 +29,7 @@ public class User implements Serializable {
     @Authority
     private Integer permission = Authority.NONE;
 
-    @JsonFormat(pattern = Constants.DATE_FORMAT, timezone = "GMT+8")
-    private Date registerDate;
-
-    private Boolean active = true;
+    private Boolean canceled = false;
 
     public User() {
     }
@@ -46,14 +37,6 @@ public class User implements Serializable {
     public User(String userName, String password) {
         this.userName = userName;
         this.password = password;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getUserName() {
@@ -120,14 +103,6 @@ public class User implements Serializable {
         this.permission = permission;
     }
 
-    public Date getRegisterDate() {
-        return registerDate;
-    }
-
-    public void setRegisterDate(Date registerDate) {
-        this.registerDate = registerDate;
-    }
-
     public void addPermission(@Authority Integer permission) {
         this.permission = this.permission | permission;
     }
@@ -140,14 +115,6 @@ public class User implements Serializable {
         return (this.permission & permission) != 0;
     }
 
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
     public String getAvatar() {
         return avatar;
     }
@@ -156,36 +123,27 @@ public class User implements Serializable {
         this.avatar = avatar;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) &&
-                Objects.equals(userName, user.userName) &&
-                Objects.equals(registerDate, user.registerDate);
+    public Boolean getCanceled() {
+        return canceled;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, userName, registerDate);
+    public void setCanceled(Boolean canceled) {
+        this.canceled = canceled;
     }
 
     @Override
     public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", userName='" + userName + '\'' +
+        return "User{" + super.toString() +
+                "userName='" + userName + '\'' +
                 ", nickName='" + nickName + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", address='" + address + '\'' +
                 ", token='" + token + '\'' +
-                ", avatar='" + avatar + "\'" +
+                ", avatar='" + avatar + '\'' +
                 ", permission=" + permission +
-                ", registerDate=" + registerDate +
-                ", active=" + active +
+                ", canceled=" + canceled +
                 '}';
     }
 }

@@ -1,25 +1,40 @@
 package com.tricks4live.entries;
 
-public class Page<T extends Object> {
-    private Integer pageIndex = 0;
-    private Integer pageTotal = 0;
-    private Long totalCount = 0L;
-    private T pageData;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-    public Integer getPageIndex() {
-        return pageIndex;
+import java.io.Serializable;
+import java.util.List;
+
+@JsonSerialize
+public class Page<T> implements Serializable{
+    private Long pageNum;
+    private Integer pageSize;
+    private List<T> contentResults;
+    private Long totalCount;
+    private Long totalPages;
+
+    public Long getPageNum() {
+        return pageNum;
     }
 
-    public void setPageIndex(Integer pageIndex) {
-        this.pageIndex = pageIndex;
+    public void setPageNum(Long pageNum) {
+        this.pageNum = pageNum;
     }
 
-    public Integer getPageTotal() {
-        return pageTotal;
+    public Integer getPageSize() {
+        return pageSize;
     }
 
-    public void setPageTotal(Integer pageTotal) {
-        this.pageTotal = pageTotal;
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public List<T> getContentResults() {
+        return contentResults;
+    }
+
+    public void setContentResults(List<T> contentResults) {
+        this.contentResults = contentResults;
     }
 
     public Long getTotalCount() {
@@ -30,21 +45,22 @@ public class Page<T extends Object> {
         this.totalCount = totalCount;
     }
 
-    public T getPageData() {
-        return pageData;
+    public Long getTotalPages() {
+        return totalPages;
     }
 
-    public void setPageData(T pageData) {
-        this.pageData = pageData;
+    public void setTotalPages(Long totalPages) {
+        this.totalPages = totalPages;
     }
 
     @Override
     public String toString() {
         return "Page{" +
-                "pageIndex=" + pageIndex +
-                ", pageTotal=" + pageTotal +
+                "pageNum=" + pageNum +
+                ", pageSize=" + pageSize +
+                ", contentResults=" + contentResults +
                 ", totalCount=" + totalCount +
-                ", pageData=" + pageData +
+                ", totalPages=" + totalPages +
                 '}';
     }
 }
