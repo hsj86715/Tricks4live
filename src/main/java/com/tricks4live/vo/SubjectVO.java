@@ -4,13 +4,11 @@ import com.tricks4live.entries.Label;
 
 import java.util.List;
 
-public class SubjectVO {
+public class SubjectVO extends PageVO {
     private Long id;
     private List<String> picturePaths;
     private List<Label> labelList;
     private Long categoryId;
-    private Long limitOff;
-    private Integer limitRows;
 
     public Long getId() {
         return id;
@@ -42,21 +40,5 @@ public class SubjectVO {
 
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
-    }
-
-    public Long getLimitOff() {
-        return limitOff;
-    }
-
-    public void setLimitOff(Long limitOff) {
-        this.limitOff = limitOff;
-    }
-
-    public Integer getLimitRows() {
-        return limitRows;
-    }
-
-    public void setLimitRows(Integer limitRows) {
-        this.limitRows = limitRows;
     }
 }

@@ -11,5 +11,5 @@ public interface ILabelService {
 
     void updateLabel(Label label);
 
-    Label findById(Long id);
+    Label findById(Long labelId);
 }

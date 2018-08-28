@@ -37,6 +37,9 @@ public class Constants {
     public static final String DATE_FORMAT_MILLI = "yyyy-MM-dd HH:mm:ss.SSS";
     public static final String DATE_FORMAT_DAY = "yyyy-MM-dd";
 
+    public static final String HEADER = "Accept=application/json";
+    public static final String APPLICATION_JSON = "application/json";
+
     public static class CodeMsg {
         private Integer code;
         private String msg;

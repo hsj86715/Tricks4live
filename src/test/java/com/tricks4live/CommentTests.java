@@ -41,7 +41,7 @@ public class CommentTests extends LogAbleClass {
     @Test
     public void testFellowComment() {
         Comment comment = new Comment(6L, 1L, "说得好,aaa", 4L);
-        service.fellowComment(comment);
+        service.addComment(comment);
         println(comment.toString());
     }
 

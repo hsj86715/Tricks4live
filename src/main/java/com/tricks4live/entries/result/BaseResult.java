@@ -2,6 +2,7 @@ package com.tricks4live.entries.result;
 
 import com.tricks4live.annotation.ErrCode;
 import com.tricks4live.annotation.Status;
+import com.tricks4live.utils.Constants;
 import com.tricks4live.utils.Constants.CodeMsg;
 
 import java.io.Serializable;
@@ -14,12 +15,12 @@ public class BaseResult implements Serializable {
     protected String msg;
 
     public BaseResult() {
-        this.code = ErrCode.OK;
+        setCodeMsg(Constants.getErrorMsg(ErrCode.OK));
         this.status = Status.SUCCESS;
     }
 
-    public BaseResult(Integer code, @Status String status) {
-        this.code = code;
+    public BaseResult(@ErrCode Integer code, @Status String status) {
+        setCodeMsg(Constants.getErrorMsg(code));
         this.status = status;
     }
 

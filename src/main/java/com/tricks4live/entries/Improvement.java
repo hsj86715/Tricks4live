@@ -12,8 +12,8 @@ import java.util.Date;
  */
 @JsonSerialize
 public class Improvement extends BaseDBEntry implements Serializable {
-    private Long uid;
-    private Long sid;
+    private Long userId;
+    private Long subjectId;
     private String content;//改进内容
 
     private Boolean approve = false;//是否被采纳
@@ -21,24 +21,33 @@ public class Improvement extends BaseDBEntry implements Serializable {
     @JsonFormat(pattern = Constants.DATE_FORMAT, timezone = "GMT+8")
     private Date approveDate;//采纳的时间
 
-    private Integer validCount;//觉得有用的人
+//    private Integer validCount;//觉得有用的人
+//
+//    private Integer invalidCount;//觉得没有用的人
 
-    private Integer invalidCount;//觉得没有用的人
-
-    public Long getUid() {
-        return uid;
+    public Improvement() {
     }
 
-    public void setUid(Long uid) {
-        this.uid = uid;
+    public Improvement(Long userId, Long subjectId, String content) {
+        this.userId = userId;
+        this.subjectId = subjectId;
+        this.content = content;
     }
 
-    public Long getSid() {
-        return sid;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setSid(Long sid) {
-        this.sid = sid;
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(Long subjectId) {
+        this.subjectId = subjectId;
     }
 
     public String getContent() {
@@ -65,32 +74,32 @@ public class Improvement extends BaseDBEntry implements Serializable {
         this.approveDate = approveDate;
     }
 
-    public Integer getValidCount() {
-        return validCount;
-    }
+//    public Integer getValidCount() {
+//        return validCount;
+//    }
 
-    public void setValidCount(Integer validCount) {
-        this.validCount = validCount;
-    }
+//    public void setValidCount(Integer validCount) {
+//        this.validCount = validCount;
+//    }
 
-    public Integer getInvalidCount() {
-        return invalidCount;
-    }
+//    public Integer getInvalidCount() {
+//        return invalidCount;
+//    }
 
-    public void setInvalidCount(Integer invalidCount) {
-        this.invalidCount = invalidCount;
-    }
+//    public void setInvalidCount(Integer invalidCount) {
+//        this.invalidCount = invalidCount;
+//    }
 
     @Override
     public String toString() {
         return "Improvement{" + super.toString() +
-                ", uid=" + uid +
-                ", sid=" + sid +
+                ", userId=" + userId +
+                ", subjectId=" + subjectId +
                 ", content='" + content + '\'' +
                 ", approve=" + approve +
                 ", approveDate=" + approveDate +
-                ", validCount=" + validCount +
-                ", invalidCount=" + invalidCount +
+//                ", validCount=" + validCount +
+//                ", invalidCount=" + invalidCount +
                 '}';
     }
 }

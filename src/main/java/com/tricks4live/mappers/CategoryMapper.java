@@ -12,11 +12,11 @@ public interface CategoryMapper {
 
     List<Category> findByLevel(Integer level);
 
-    List<Category> findBySupperId(Long superId);
+    List<Category> findSubCategory(Long catId);
 
     void addCategory(Category category);
 
     void updateCategory(Category category);
 
-    void deleteById(Long cId);
+    void deleteById(Long catId);
 }

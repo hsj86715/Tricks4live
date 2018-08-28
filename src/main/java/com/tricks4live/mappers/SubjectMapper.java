@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface SubjectMapper {
 
-    Subject findById(Long id);
+    Subject findById(Long subjectId);
 
     void addPicture(SubjectVO subjectVO);
 
@@ -21,5 +21,5 @@ public interface SubjectMapper {
 
     List<Subject> findByPageInCategory(SubjectVO subjectVO);
 
-    Long getCountInCategory(Long cid);
+    Long getCountInCategory(Long catId);
 }

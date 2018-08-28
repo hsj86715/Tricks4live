@@ -1,30 +1,30 @@
 package com.tricks4live.services;
 
+import com.tricks4live.entries.ContentPraise;
 import com.tricks4live.entries.Page;
 import com.tricks4live.entries.Subject;
-import com.tricks4live.vo.SubjectVO;
 
 public interface ISubjectService {
 
-    Subject findById(Long id);
+    Subject findById(Long subjectId);
 
-    Page<Subject> findByPageInCategory(Long cid, Long pageNum, Integer pageSize);
-
-    Long addPicture(SubjectVO subjectVO);
-
-    Long addLabel(SubjectVO subjectVO);
+    Page<Subject> findByPageInCategory(Long catId, Long pageNum, Integer pageSize);
 
     Long addSubject(Subject subject);
-//
-//    long addValidUser(String sid, Pair<String, String> pair) throws NoSuchElementException, IllegalArgumentException;
-//
-//    long removeValidUser(String sid, Pair<String, String> pair) throws NoSuchElementException, IllegalArgumentException;
-//
-//    long addInvalidUser(String sid, Pair<String, String> pair) throws NoSuchElementException, IllegalArgumentException;
-//
-//    long removeInvalidUser(String sid, Pair<String, String> pair) throws NoSuchElementException, IllegalArgumentException;
-//
-//    long addVerifier(String sid, Pair<String, String> pair) throws NoSuchElementException, IllegalArgumentException;
-//
-//    long deleteSubject(String sid);
+
+    Long deleteSubject(Long subjectId);
+
+    Long validUser(Long subjectId, Long userId, Boolean valid);
+
+    Page<ContentPraise> findValidUsersByPage(Long subjectId, Long pageNum, Integer pageSize);
+
+    Long invalidUser(Long subjectId, Long userId, Boolean invalid);
+
+    Page<ContentPraise> findInvalidUsersByPage(Long subjectId, Long pageNum, Integer pageSize);
+
+    Long addVerifier(Long subjectId, Long userId);
+
+    Long updateVerifier(Long subjectId, Long userId, Boolean valid);
+
+    Page<ContentPraise> findVerifierByPage(Long subjectId, Long pageNum, Integer pageSize);
 }

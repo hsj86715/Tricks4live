@@ -7,16 +7,16 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  */
 @JsonSerialize
 public class UserLogin extends BaseDBEntry{
-    private Long uid;
+    private Long userId;
 
     private String loginIp;
 
-    public Long getUid() {
-        return uid;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUid(Long uid) {
-        this.uid = uid;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getLoginIp() {
@@ -30,7 +30,7 @@ public class UserLogin extends BaseDBEntry{
     @Override
     public String toString() {
         return "UserLogin{" + super.toString() +
-                ", uid=" + uid +
+                ", userId=" + userId +
                 ", loginIp='" + loginIp + '\'' +
                 '}';
     }

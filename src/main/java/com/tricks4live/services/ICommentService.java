@@ -13,5 +13,5 @@ public interface ICommentService {
 //
 //    long removeAgree(String cid, Pair<String, String> pair) throws NoSuchElementException, IllegalArgumentException;
 
-    Long fellowComment(Comment comment);
+//    Long fellowComment(Comment comment);
 }

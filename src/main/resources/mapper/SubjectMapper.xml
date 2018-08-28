@@ -3,27 +3,16 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tricks4live.mappers.SubjectMapper">
-    <resultMap id="baseResultMap" type="com.tricks4live.entries.BaseDBEntry">
-        <id property="id" column="_id" jdbcType="BIGINT"/>
-        <result property="enabled" column="enabled" jdbcType="BIT"/>
-        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
-        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"/>
-        <result property="version" column="_version" jdbcType="INTEGER"/>
-        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
-        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
-        <result property="remark" column="_remark" jdbcType="VARCHAR"/>
-    </resultMap>
-
-    <resultMap id="subjectResultMapBase" extends="baseResultMap" type="com.tricks4live.entries.Subject">
+    <resultMap id="subjectResultMapBase" extends="Base.baseResultMap" type="com.tricks4live.entries.Subject">
         <result property="title" column="title" jdbcType="VARCHAR"/>
-        <result property="cid" column="cid" jdbcType="BIGINT"/>
-        <result property="uid" column="uid" jdbcType="BIGINT"/>
+        <result property="categoryId" column="category_id" jdbcType="BIGINT"/>
         <result property="content" column="content" jdbcType="VARCHAR"/>
         <result property="videoUrl" column="video_url" jdbcType="VARCHAR"/>
         <result property="deleted" column="deleted" jdbcType="BIT"/>
     </resultMap>
 
     <resultMap id="subjectResultMapFull" extends="subjectResultMapBase" type="com.tricks4live.entries.Subject">
+        <association property="user" resultMap="Base.simpleUserResultMap"/>
         <collection property="picUrls" ofType="string">
             <result column="picture_path" jdbcType="VARCHAR"/>
         </collection>
@@ -41,10 +30,13 @@
             sp.picture_path,
             tl._id tl_id,
             tl.name_cn,
-            tl.name_en
-        FROM t_subject ts, subject_picture sp, label_subject ls, t_label tl
+            tl.name_en,
+            tu.nick_name,
+            tu.avatar
+        FROM t_subject ts, subject_picture sp, label_subject ls, t_label tl, t_user tu
         WHERE ts._id = sp.subject_id AND
               ts._id = ls.subject_id AND
+              ts.user_id = tu._id AND
               ls.label_id = tl._id AND
               ts._id = #{id, jdbcType=BIGINT} AND ts.enabled = 1 AND ts.deleted = 0
     </select>
@@ -66,9 +58,9 @@
     </insert>
 
     <insert id="addSubject" parameterType="com.tricks4live.entries.Subject" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO t_subject (title, cid, uid, content, video_url, deleted, enabled, create_date, update_date,
+        INSERT INTO t_subject (title, category_id, user_id, content, video_url, deleted, enabled, create_date, update_date,
                                _version, create_by, update_by, _remark)
-        VALUES (#{title, jdbcType=VARCHAR}, #{cid, jdbcType=BIGINT}, #{uid, jdbcType=BIGINT},
+        VALUES (#{title, jdbcType=VARCHAR}, #{categoryId, jdbcType=BIGINT}, #{user.id, jdbcType=BIGINT},
                                             #{content, jdbcType=VARCHAR}, #{videoUrl, jdbcType=VARCHAR},
                                             #{deleted, jdbcType=BIT}, #{enabled, jdbcType=BIT},
                                             #{createDate, jdbcType=TIMESTAMP}, #{updateDate, jdbcType=TIMESTAMP},
@@ -80,7 +72,7 @@
     <select id="getCountInCategory" parameterType="long" resultType="long">
         SELECT COUNT(*)
         FROM t_subject
-        WHERE cid = #{categoryId, jdbcType=BIGINT} AND enabled = 1 AND deleted = 0
+        WHERE category_id = #{categoryId, jdbcType=BIGINT} AND enabled = 1 AND deleted = 0
     </select>
 
     <resultMap id="subjectResultMapSimple" extends="subjectResultMapBase" type="com.tricks4live.entries.Subject">
@@ -96,7 +88,7 @@
         FROM (
                  SELECT *
                  FROM t_subject
-                 WHERE cid = #{categoryId, jdbcType=BIGINT} AND enabled = 1 AND deleted = 0
+                 WHERE category_id = #{categoryId, jdbcType=BIGINT} AND enabled = 1 AND deleted = 0
                  ORDER BY update_date DESC
                  LIMIT #{limitOff, jdbcType=BIGINT}, #{limitRows, jdbcType=INTEGER}) ts LEFT JOIN subject_picture sp
                 ON ts._id = sp.subject_id

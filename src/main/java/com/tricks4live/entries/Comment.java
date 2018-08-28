@@ -9,8 +9,8 @@ import java.io.Serializable;
  */
 @JsonSerialize
 public class Comment extends BaseDBEntry implements Serializable {
-    private Long sid;//评论的主题ID
-    private Long uid;//评论人ID
+    private Long subjectId;//评论的主题ID
+    private UserSimple user;//评论人
     private String content;//评论内容
 
     private Long superId;//回复的评论ID
@@ -25,33 +25,31 @@ public class Comment extends BaseDBEntry implements Serializable {
     public Comment() {
     }
 
-    public Comment(Long sid, Long uid, String content) {
-        this.sid = sid;
-        this.uid = uid;
-        this.content = content;
+    public Comment(Long subjectId, Long userId, String content) {
+        this(subjectId, userId, content, null);
     }
 
-    public Comment(Long sid, Long uid, String content, Long superId) {
-        this.sid = sid;
-        this.uid = uid;
+    public Comment(Long subjectId, Long userId, String content, Long superId) {
+        this.subjectId = subjectId;
+        this.user = new UserSimple(userId);
         this.content = content;
         this.superId = superId;
     }
 
-    public Long getSid() {
-        return sid;
+    public Long getSubjectId() {
+        return subjectId;
     }
 
-    public void setSid(Long sid) {
-        this.sid = sid;
+    public void setSubjectId(Long subjectId) {
+        this.subjectId = subjectId;
     }
 
-    public Long getUid() {
-        return uid;
+    public UserSimple getUser() {
+        return user;
     }
 
-    public void setUid(Long uid) {
-        this.uid = uid;
+    public void setUser(UserSimple user) {
+        this.user = user;
     }
 
     public String getContent() {
@@ -105,8 +103,8 @@ public class Comment extends BaseDBEntry implements Serializable {
     @Override
     public String toString() {
         return "Comment{" + super.toString() +
-                ", sid=" + sid +
-                ", uid=" + uid +
+                ", subjectId=" + subjectId +
+                ", user=" + user +
                 ", content='" + content + '\'' +
                 ", superId=" + superId +
                 ", floor=" + floor +

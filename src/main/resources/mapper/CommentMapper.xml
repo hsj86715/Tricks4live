@@ -3,30 +3,19 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tricks4live.mappers.CommentMapper">
-    <resultMap id="baseResultMap" type="com.tricks4live.entries.BaseDBEntry">
-        <id property="id" column="_id" jdbcType="BIGINT"/>
-        <result property="enabled" column="enabled" jdbcType="BIT"/>
-        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
-        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"/>
-        <result property="version" column="_version" jdbcType="INTEGER"/>
-        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
-        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
-        <result property="remark" column="_remark" jdbcType="VARCHAR"/>
-    </resultMap>
-
-    <resultMap id="commentResultMap" extends="baseResultMap" type="com.tricks4live.entries.Comment">
-        <result property="sid" column="sid" jdbcType="BIGINT"/>
-        <result property="uid" column="uid" jdbcType="BIGINT"/>
+    <resultMap id="commentResultMap" extends="Base.baseResultMap" type="com.tricks4live.entries.Comment">
+        <result property="subjectId" column="subjectId" jdbcType="BIGINT"/>
         <result property="content" column="content" jdbcType="VARCHAR"/>
         <result property="superId" column="super_id" jdbcType="BIGINT"/>
         <result property="floor" column="floor" jdbcType="INTEGER"/>
         <result property="deleted" column="deleted" jdbcType="BIT"/>
+        <association property="user" resultMap="Base.simpleUserResultMap"/>
     </resultMap>
 
     <insert id="addComment" parameterType="com.tricks4live.entries.Comment" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO t_comment (sid, uid, content, super_id, floor, deleted, enabled, create_date, update_date,
+        INSERT INTO t_comment (subject_id, user_id, content, super_id, floor, deleted, enabled, create_date, update_date,
                                _version, create_by, update_by, _remark)
-        VALUES (#{sid, jdbcType=BIGINT}, #{uid, jdbcType=BIGINT}, #{content, jdbcType=VARCHAR},
+        VALUES (#{subjectId, jdbcType=BIGINT}, #{user.id, jdbcType=BIGINT}, #{content, jdbcType=VARCHAR},
                                          #{superId, jdbcType=BIGINT}, #{floor, jdbcType=INTEGER},
                                          #{deleted, jdbcType=BIT}, #{enabled, jdbcType=BIT},
                                          #{createDate, jdbcType=TIMESTAMP}, #{updateDate, jdbcType=TIMESTAMP},
@@ -38,13 +27,13 @@
     <select id="getCountInSubject" parameterType="long" resultType="long">
         SELECT COUNT(*)
         FROM t_comment
-        WHERE sid = #{subjectId, jdbcType=BIGINT} AND super_id IS NULL AND enabled = 1 AND deleted = 0
+        WHERE subject_id = #{subjectId, jdbcType=BIGINT} AND super_id IS NULL AND enabled = 1 AND deleted = 0
     </select>
 
     <select id="findByPageInSubject" parameterType="com.tricks4live.vo.CommentVO" resultMap="commentResultMap">
         SELECT *
         FROM t_comment
-        WHERE sid = #{subjectId, jdbcType=BIGINT} AND super_id IS NULL AND enabled = 1 AND deleted = 0
+        WHERE subject_id = #{subjectId, jdbcType=BIGINT} AND super_id IS NULL AND enabled = 1 AND deleted = 0
         ORDER BY create_date DESC, _id DESC
         LIMIT #{limitOff, jdbcType=BIGINT}, #{limitRows, jdbcType=INTEGER}
     </select>

@@ -11,23 +11,23 @@ import java.util.List;
 @JsonSerialize
 public class Subject extends BaseDBEntry implements Serializable {
     private String title;
-    private Long cid;//所属分类
-    private Long uid;//发布者ID
+    private Long categoryId;//所属分类
+    private UserSimple user;//发布者
     private String content;
     private List<String> picUrls;
     private String videoUrl;
-    //    private Integer validCount;//觉得有用的人
-//    private Integer invalidCount;//觉得没有用的人
+    private Integer validCount;//觉得有用的人
+    private Integer invalidCount;//觉得没有用的人
     private List<Label> labels;
     private Boolean deleted = false;
 
     public Subject() {
     }
 
-    public Subject(String title, Long cid, Long uid, String content) {
+    public Subject(String title, Long categoryId, Long userId, String content) {
         this.title = title;
-        this.cid = cid;
-        this.uid = uid;
+        this.categoryId = categoryId;
+        this.user = new UserSimple(userId);
         this.content = content;
     }
 
@@ -39,20 +39,20 @@ public class Subject extends BaseDBEntry implements Serializable {
         this.title = title;
     }
 
-    public Long getCid() {
-        return cid;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCid(Long cid) {
-        this.cid = cid;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public Long getUid() {
-        return uid;
+    public UserSimple getUser() {
+        return user;
     }
 
-    public void setUid(Long uid) {
-        this.uid = uid;
+    public void setUser(UserSimple user) {
+        this.user = user;
     }
 
     public String getContent() {
@@ -79,21 +79,21 @@ public class Subject extends BaseDBEntry implements Serializable {
         this.videoUrl = videoUrl;
     }
 
-//    public Integer getValidCount() {
-//        return validCount;
-//    }
-//
-//    public void setValidCount(Integer validCount) {
-//        this.validCount = validCount;
-//    }
-//
-//    public Integer getInvalidCount() {
-//        return invalidCount;
-//    }
-//
-//    public void setInvalidCount(Integer invalidCount) {
-//        this.invalidCount = invalidCount;
-//    }
+    public Integer getValidCount() {
+        return validCount;
+    }
+
+    public void setValidCount(Integer validCount) {
+        this.validCount = validCount;
+    }
+
+    public Integer getInvalidCount() {
+        return invalidCount;
+    }
+
+    public void setInvalidCount(Integer invalidCount) {
+        this.invalidCount = invalidCount;
+    }
 
     public Boolean getDeleted() {
         return deleted;
@@ -115,11 +115,13 @@ public class Subject extends BaseDBEntry implements Serializable {
     public String toString() {
         return "Subject{" + super.toString() +
                 ", title='" + title + '\'' +
-                ", cid=" + cid +
-                ", uid=" + uid +
+                ", categoryId=" + categoryId +
+                ", user=" + user +
                 ", content='" + content + '\'' +
                 ", picUrls=" + picUrls +
                 ", videoUrl='" + videoUrl + '\'' +
+                ", validCount=" + validCount +
+                ", invalidCount" + invalidCount +
                 ", labels=" + labels +
                 ", deleted=" + deleted +
                 '}';

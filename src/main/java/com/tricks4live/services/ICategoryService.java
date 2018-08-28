@@ -8,7 +8,7 @@ import java.util.List;
 public interface ICategoryService {
     List<Category> findByLevel(Integer level);
 
-    List<Category> findSubCategory(Long superId);
+    List<Category> findSubCategory(Long catId);
 
     Long addCategory(Category category);
 
@@ -16,5 +16,5 @@ public interface ICategoryService {
 
     void deleteCategory(Category category) throws DataIntegrityException;
 
-    void deleteById(Long cId) throws DataIntegrityException;
+    void deleteById(Long catId) throws DataIntegrityException;
 }

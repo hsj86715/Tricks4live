@@ -34,10 +34,10 @@ public class LabelServiceImpl extends LogAbleClass implements ILabelService {
     }
 
     @Override
-    public Label findById(Long id) {
-        if (StringUtils.isEmpty(id)) {
+    public Label findById(Long labelId) {
+        if (StringUtils.isEmpty(labelId)) {
             return null;
         }
-        return mapper.findById(id);
+        return mapper.findById(labelId);
     }
 }

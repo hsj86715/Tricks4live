@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tricks4live.mappers.PraiseMapper">
+    <resultMap id="praiseResultMap" extends="Base.baseResultMap" type="com.tricks4live.entries.ContentPraise">
+        <result property="contentId" column="content_id" jdbcType="BIGINT"/>
+        <result property="praiseType" column="praise_type" jdbcType="VARCHAR"/>
+        <result property="praised" column="praised" jdbcType="BIT"/>
+        <association property="user" resultMap="Base.simpleUserResultMap"/>
+    </resultMap>
+
+    <insert id="addPraise" parameterType="com.tricks4live.entries.ContentPraise" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO t_praise (user_id, content_id, praise_type, praised, enabled, create_date, update_date,
+                              _version, create_by, update_by, _remark)
+        VALUES (#{user.id, jdbcType=BIGINT}, #{contentId, jdbcType=BIGINT}, #{praiseType,jdbcType=VARCHAR},
+                                             #{praised, jdbcType=BIT},
+                                             #{enabled, jdbcType=BIT},
+                                             #{createDate, jdbcType=TIMESTAMP}, #{updateDate, jdbcType=TIMESTAMP},
+                                             #{version, jdbcType=INTEGER},
+                                             #{createBy, jdbcType=VARCHAR}, #{updateBy, jdbcType=VARCHAR},
+                                             #{remark, jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updatePraise" parameterType="com.tricks4live.entries.ContentPraise">
+        UPDATE t_praise
+        SET praised     = #{praised, jdbcType=BIT},
+            enabled     = #{enabled, jdbcType=BIT},
+            update_date = #{updateDate, jdbcType=TIMESTAMP},
+            _version    = #{version, jdbcType=INTEGER},
+            update_by   = #{updateBy, jdbcType=VARCHAR},
+            _remark     = #{remark, jdbcType=VARCHAR}
+        WHERE user_id = #{user.id, jdbcType=BIGINT} AND content_id = #{contentId, jdbcType=BIGINT} AND
+              praise_type = #{praiseType,jdbcType=VARCHAR}
+    </update>
+
+    <select id="findPraise" parameterType="com.tricks4live.entries.ContentPraise" resultMap="praiseResultMap">
+        SELECT
+            tp.*,
+            tu.nick_name,
+            tu.avatar
+        FROM t_praise tp LEFT JOIN t_user tu ON tp.user_id = tu._id
+        WHERE tp.user_id = #{user.id, jdbcType=BIGINT} AND tp.content_id = #{contentId, jdbcType=BIGINT} AND
+              tp.praise_type = #{praiseType,jdbcType=VARCHAR}
+        LIMIT 1
+    </select>
+
+    <select id="findPraiseUserByPage" parameterType="com.tricks4live.vo.PraiseVO" resultMap="praiseResultMap">
+        SELECT
+        tp.*,
+        tu.nick_name,
+        tu.avatar
+        FROM t_praise tp LEFT JOIN t_user tu ON tp.user_id = tu._id
+        <where>
+            p.content_id = #{contentId, jdbcType=BIGINT} AND
+            tp.praise_type = #{praiseType, jdbcType=VARCHAR}
+            <if test="praised == null">
+                AND tp.praised IS NULL
+            </if>
+            <if test="praised != null">
+                AND tp.praised = #{praised, jdbcType=BIGINT}
+            </if>
+        </where>
+        LIMIT #{limitOff, jdbcType=BIGINT}, #{limitRows, jdbcType=INTEGER}
+    </select>
+
+    <select id="getPraiseUserCount" parameterType="com.tricks4live.vo.PraiseVO" resultType="long">
+        SELECT COUNT(*) FROM t_praise
+        <where>
+            content_id = #{contentId, jdbcType=BIGINT} AND
+            praise_type = #{praiseType, jdbcType=VARCHAR}
+            <if test="praised == null">
+                AND praised IS NULL
+            </if>
+            <if test="praised != null">
+                AND praised = #{praised, jdbcType=BIGINT}
+            </if>
+        </where>
+    </select>
+</mapper>

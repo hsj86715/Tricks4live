@@ -131,6 +131,10 @@ public class User extends BaseDBEntry implements Serializable {
         this.canceled = canceled;
     }
 
+    public UserSimple toSimple() {
+        return new UserSimple(this.id, this.nickName, this.avatar);
+    }
+
     @Override
     public String toString() {
         return "User{" + super.toString() +

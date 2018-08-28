@@ -12,7 +12,7 @@ import java.util.List;
 
 public class TokenUtil {
 
-    private static final String SECRET = "feedSystemback666";
+    private static final String SECRET = "Tricks4live666";
 
     public static String createJWT(User user, String userAgent) {
         Algorithm algorithm = Algorithm.HMAC256(SECRET);

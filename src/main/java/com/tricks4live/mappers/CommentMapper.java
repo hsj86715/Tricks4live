@@ -18,5 +18,5 @@ public interface CommentMapper {
 
     Comment findSuperComment(Long superId);
 
-    Comment findSubComment(Long id);
+    Comment findSubComment(Long commId);
 }

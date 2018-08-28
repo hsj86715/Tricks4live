@@ -28,11 +28,11 @@ public class CategoryServiceImpl extends LogAbleClass implements ICategoryServic
     }
 
     @Override
-    public List<Category> findSubCategory(Long superId) {
-        if (StringUtils.isEmpty(superId)) {
+    public List<Category> findSubCategory(Long catId) {
+        if (catId == null || catId == 0) {
             return findByLevel(1);
         } else {
-            return mapper.findBySupperId(superId);
+            return mapper.findSubCategory(catId);
         }
     }
 
@@ -46,12 +46,13 @@ public class CategoryServiceImpl extends LogAbleClass implements ICategoryServic
 
     @Override
     public void updateCategory(Category category) {
+        category.setUpdateDate(new Date());
         mapper.updateCategory(category);
     }
 
     @Override
     public void deleteCategory(Category category) throws DataIntegrityException {
-        List<Category> subCat = mapper.findBySupperId(category.getSuperId());
+        List<Category> subCat = mapper.findSubCategory(category.getId());
         if (subCat != null && !subCat.isEmpty()) {
             throw new DataIntegrityException();
         }
@@ -59,13 +60,13 @@ public class CategoryServiceImpl extends LogAbleClass implements ICategoryServic
     }
 
     @Override
-    public void deleteById(Long cId) throws DataIntegrityException {
-        if (!StringUtils.isEmpty(cId)) {
-            List<Category> subCat = mapper.findBySupperId(cId);
+    public void deleteById(Long catId) throws DataIntegrityException {
+        if (!StringUtils.isEmpty(catId)) {
+            List<Category> subCat = mapper.findSubCategory(catId);
             if (subCat != null && !subCat.isEmpty()) {
                 throw new DataIntegrityException();
             }
-            mapper.deleteById(cId);
+            mapper.deleteById(catId);
         }
     }
 }

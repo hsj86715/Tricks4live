@@ -51,22 +51,31 @@ public class CommentServiceImpl extends LogAbleClass implements ICommentService 
 
     @Override
     public Long addComment(Comment comment) {
+        Long superId = comment.getSuperId();
+        if (superId != null && superId > 0) {
+            Comment superCom = mapper.findSuperComment(superId);
+            if (superCom == null) {
+                comment.setSuperId(null);
+            } else {
+                comment.setFloor(superCom.getFloor() + 1);
+            }
+        }
         comment.setCreateDate(new Date());
         mapper.addComment(comment);
         return comment.getId();
     }
 
-    @Override
-    public Long fellowComment(Comment comment) {
-        Comment superCom = mapper.findSuperComment(comment.getSuperId());
-        if (superCom == null) {
-            comment.setSuperId(null);
-            return addComment(comment);
-        } else {
-            comment.setFloor(superCom.getFloor() + 1);
-            return addComment(comment);
-        }
-    }
+//    @Override
+//    public Long fellowComment(Comment comment) {
+//        Comment superCom = mapper.findSuperComment(comment.getSuperId());
+//        if (superCom == null) {
+//            comment.setSuperId(null);
+//            return addComment(comment);
+//        } else {
+//            comment.setFloor(superCom.getFloor() + 1);
+//            return addComment(comment);
+//        }
+//    }
 
 //    @Override
 //    public long addAgree(String cid, Pair<String, String> pair) throws NoSuchElementException, IllegalArgumentException {
