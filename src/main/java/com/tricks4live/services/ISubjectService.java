@@ -12,7 +12,7 @@ public interface ISubjectService {
 
     Long addSubject(Subject subject);
 
-    Long deleteSubject(Long subjectId);
+    void deleteSubject(Long subjectId);
 
     Long validUser(Long subjectId, Long userId, Boolean valid);
 
@@ -27,4 +27,8 @@ public interface ISubjectService {
     Long updateVerifier(Long subjectId, Long userId, Boolean valid);
 
     Page<ContentPraise> findVerifierByPage(Long subjectId, Long pageNum, Integer pageSize);
+
+    Long collectSubject(Long subjectId, Long userId, Boolean collected);
+
+    Page<Subject> findCollectedByPage(Long userId, Long pageNum, Integer pageSize);
 }

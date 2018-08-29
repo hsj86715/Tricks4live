@@ -94,4 +94,18 @@
                 ON ts._id = sp.subject_id
         ORDER BY update_date DESC, ts._id DESC
     </select>
+
+    <select id="findCollectedByPage" parameterType="com.tricks4live.vo.PraiseVO" resultMap="subjectResultMapSimple">
+        SELECT ts.*
+        FROM t_praise tp LEFT JOIN t_subject ts ON tp.content_id = ts._id
+        WHERE tp.user_id = #{userId, jdbcType=BIGINT} AND tp.praise_type = #{praiseType, jdbcType=VARCHAR} AND
+              tp.praised = #{praised, jdbcType=BIT}
+        LIMIT #{limitOff, jdbcType=BIGINT}, #{limitRows, jdbcType=INTEGER}
+    </select>
+
+    <update id="deleteSubject" parameterType="long">
+        UPDATE t_subject
+        SET deleted = 1
+        WHERE _id = #{subjectId, jdbcType=BIGINT}
+    </update>
 </mapper>

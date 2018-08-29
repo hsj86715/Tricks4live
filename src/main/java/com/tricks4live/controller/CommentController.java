@@ -69,4 +69,26 @@ public class CommentController {
         result.setData(commentPage);
         return result;
     }
+
+    @RequestMapping("/agree")
+    @ResponseBody
+    public BaseResult agreeComment(@RequestParam("comment_id") Long commentId,
+                                   @RequestParam("user_id") Long userId,
+                                   @RequestParam("agreement") Boolean agreement) {
+        BaseResult result = new BaseResult();
+        if (commentId == null || commentId == 0 || userId == null || userId == 0) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "comment id or user id");
+            result.setStatus(Status.FAIL);
+            return result;
+        }
+        if (agreement == null) {
+            agreement = false;
+        }
+        Long id = service.agreeComment(commentId, userId, agreement);
+        if (id <= 0) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
+            result.setStatus(Status.FAIL);
+        }
+        return result;
+    }
 }

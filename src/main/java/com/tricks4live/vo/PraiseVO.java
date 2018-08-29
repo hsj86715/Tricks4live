@@ -9,12 +9,13 @@ public class PraiseVO extends PageVO {
 
     private Boolean praised = null;
 
+    private Long userId;
+
     public PraiseVO() {
     }
 
-    public PraiseVO(Long contentId, String praiseType) {
-        this.contentId = contentId;
-        this.praiseType = praiseType;
+    public PraiseVO(@PraiseType String praiseType, Boolean praised) {
+        this(null, praiseType, praised);
     }
 
     public PraiseVO(Long contentId, @PraiseType String praiseType, Boolean praised) {
@@ -45,5 +46,13 @@ public class PraiseVO extends PageVO {
 
     public void setPraised(Boolean praised) {
         this.praised = praised;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

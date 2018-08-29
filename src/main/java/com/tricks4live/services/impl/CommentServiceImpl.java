@@ -1,7 +1,8 @@
 package com.tricks4live.services.impl;
 
-import com.tricks4live.LogAbleClass;
+import com.tricks4live.annotation.PraiseType;
 import com.tricks4live.entries.Comment;
+import com.tricks4live.entries.ContentPraise;
 import com.tricks4live.entries.Page;
 import com.tricks4live.mappers.CommentMapper;
 import com.tricks4live.services.ICommentService;
@@ -13,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class CommentServiceImpl extends LogAbleClass implements ICommentService {
+public class CommentServiceImpl extends PraiseAbleService implements ICommentService {
     @Autowired
     CommentMapper mapper;
 
@@ -65,48 +66,9 @@ public class CommentServiceImpl extends LogAbleClass implements ICommentService 
         return comment.getId();
     }
 
-//    @Override
-//    public Long fellowComment(Comment comment) {
-//        Comment superCom = mapper.findSuperComment(comment.getSuperId());
-//        if (superCom == null) {
-//            comment.setSuperId(null);
-//            return addComment(comment);
-//        } else {
-//            comment.setFloor(superCom.getFloor() + 1);
-//            return addComment(comment);
-//        }
-//    }
-
-//    @Override
-//    public long addAgree(String cid, Pair<String, String> pair) throws NoSuchElementException, IllegalArgumentException {
-//        Comment comment = repository.findById(cid).get();
-//        List<Pair<String, String>> agreeUsers = comment.getAgreeUsers();
-//        if (agreeUsers == null) {
-//            agreeUsers = new ArrayList<>();
-//        } else {
-//            if (agreeUsers.contains(pair)) {
-//                throw new IllegalArgumentException("The user is already in the agree users.");
-//            }
-//        }
-//        agreeUsers.add(pair);
-//        return modify(cid, agreeUsers, "agree_users");
-//    }
-//
-//    @Override
-//    public long removeAgree(String cid, Pair<String, String> pair) throws NoSuchElementException, IllegalArgumentException {
-//        Comment comment = repository.findById(cid).get();
-//        List<Pair<String, String>> agreeUsers = comment.getAgreeUsers();
-//        if (agreeUsers == null) {
-//            return 0;
-//        }
-//        int index = agreeUsers.indexOf(pair);
-//        if (index < 0) {
-//            throw new IllegalArgumentException("The user is not in the agree users.");
-//        }
-//        if (agreeUsers.size() == 1) {
-//            return modify(cid, null, "agree_users");
-//        }
-//        agreeUsers.remove(pair);
-//        return modify(cid, agreeUsers, "agree_users");
-//    }
+    @Override
+    public Long agreeComment(Long commentId, Long userId, Boolean agreement) {
+        ContentPraise praise = new ContentPraise(userId, commentId, PraiseType.AGREE_COMMENT);
+        return setPraised(praise, agreement);
+    }
 }

@@ -17,7 +17,7 @@ public interface PraiseMapper {
 
     ContentPraise findPraise(ContentPraise praise);
 
-    Long getPraiseUserCount(PraiseVO vo);
+    Long getPraiseCount(PraiseVO vo);
 
     List<ContentPraise> findPraiseUserByPage(PraiseVO vo);
 }

@@ -51,15 +51,6 @@ public class CategoryServiceImpl extends LogAbleClass implements ICategoryServic
     }
 
     @Override
-    public void deleteCategory(Category category) throws DataIntegrityException {
-        List<Category> subCat = mapper.findSubCategory(category.getId());
-        if (subCat != null && !subCat.isEmpty()) {
-            throw new DataIntegrityException();
-        }
-        mapper.deleteById(category.getId());
-    }
-
-    @Override
     public void deleteById(Long catId) throws DataIntegrityException {
         if (!StringUtils.isEmpty(catId)) {
             List<Category> subCat = mapper.findSubCategory(catId);

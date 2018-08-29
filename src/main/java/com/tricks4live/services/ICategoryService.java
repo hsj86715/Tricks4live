@@ -14,7 +14,5 @@ public interface ICategoryService {
 
     void updateCategory(Category category);
 
-    void deleteCategory(Category category) throws DataIntegrityException;
-
     void deleteById(Long catId) throws DataIntegrityException;
 }

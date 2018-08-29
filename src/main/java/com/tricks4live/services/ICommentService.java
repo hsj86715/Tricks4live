@@ -9,9 +9,5 @@ public interface ICommentService {
 
     Long addComment(Comment comment);
 
-//    long addAgree(String cid, Pair<String, String> pair) throws NoSuchElementException, IllegalArgumentException;
-//
-//    long removeAgree(String cid, Pair<String, String> pair) throws NoSuchElementException, IllegalArgumentException;
-
-//    Long fellowComment(Comment comment);
+    Long agreeComment(Long commentId, Long userId, Boolean agreement);
 }

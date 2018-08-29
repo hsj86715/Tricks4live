@@ -1,11 +1,9 @@
 package com.tricks4live.services.impl;
 
-import com.tricks4live.LogAbleClass;
 import com.tricks4live.annotation.PraiseType;
 import com.tricks4live.entries.ContentPraise;
 import com.tricks4live.entries.Page;
 import com.tricks4live.entries.Subject;
-import com.tricks4live.mappers.PraiseMapper;
 import com.tricks4live.mappers.SubjectMapper;
 import com.tricks4live.services.ISubjectService;
 import com.tricks4live.vo.PraiseVO;
@@ -17,19 +15,17 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class SubjectServiceImpl extends LogAbleClass implements ISubjectService {
+public class SubjectServiceImpl extends PraiseAbleService implements ISubjectService {
     @Autowired
     SubjectMapper mapper;
-    @Autowired
-    PraiseMapper praiseMapper;
 
     @Override
     public Subject findById(Long subjectId) {
         Subject subject = mapper.findById(subjectId);
         PraiseVO praiseVO = new PraiseVO(subjectId, PraiseType.PRAISE_TREAD, true);
-        subject.setValidCount(Math.toIntExact(praiseMapper.getPraiseUserCount(praiseVO)));
+        subject.setValidCount(Math.toIntExact(praiseMapper.getPraiseCount(praiseVO)));
         praiseVO.setPraised(false);
-        subject.setInvalidCount(Math.toIntExact(praiseMapper.getPraiseUserCount(praiseVO)));
+        subject.setInvalidCount(Math.toIntExact(praiseMapper.getPraiseCount(praiseVO)));
         return subject;
     }
 
@@ -58,6 +54,30 @@ public class SubjectServiceImpl extends LogAbleClass implements ISubjectService 
         return subjectPage;
     }
 
+    @Override
+    public Page<Subject> findCollectedByPage(Long userId, Long pageNum, Integer pageSize) {
+        if (userId == null || userId == 0) {
+            return null;
+        }
+        PraiseVO praiseVO = new PraiseVO(PraiseType.COLLECT_SUBJECT, true);
+        praiseVO.setUserId(userId);
+        Long pageIdx = pageNum - 1;
+        if (pageIdx < 0) {
+            pageIdx = 0L;
+        }
+        praiseVO.setLimitOff(pageIdx * pageSize);
+        praiseVO.setLimitRows(pageSize);
+
+        Long totalCount = praiseMapper.getPraiseCount(praiseVO);
+        List<Subject> result = mapper.findCollectedByPage(praiseVO);
+
+        Page<Subject> subjectPage = new Page<>();
+        subjectPage.setPageNum(pageNum);
+        subjectPage.setPageSize(pageSize);
+        subjectPage.setContentResults(result);
+        subjectPage.setTotalCount(totalCount);
+        return subjectPage;
+    }
 
     private Long addPicture(SubjectVO subjectVO) {
         mapper.addPicture(subjectVO);
@@ -94,13 +114,13 @@ public class SubjectServiceImpl extends LogAbleClass implements ISubjectService 
     }
 
     @Override
-    public Long validUser(Long subjectId, Long userId, Boolean valid) {
+    public Long invalidUser(Long subjectId, Long userId, Boolean invalid) {
         ContentPraise praise = new ContentPraise(userId, subjectId, PraiseType.PRAISE_TREAD);
 
-        ContentPraise praiseTem = praiseMapper.findPraise(praise);
-        if (praiseTem == null) {
-            if (valid) {
-                praise.setPraised(valid);
+        ContentPraise praiseTemp = praiseMapper.findPraise(praise);
+        if (praiseTemp == null) {
+            if (invalid) {
+                praise.setPraised(false);
             } else {
                 praise.setPraised(null);
             }
@@ -108,15 +128,15 @@ public class SubjectServiceImpl extends LogAbleClass implements ISubjectService 
             praiseMapper.addPraise(praise);
             return praise.getId();
         } else {
-            if (valid != praiseTem.getPraised()) {
-                if (valid) {
-                    praiseTem.setPraised(valid);
+            if (invalid != praiseTemp.getPraised()) {
+                if (invalid) {
+                    praiseTemp.setPraised(false);
                 } else {
-                    praiseTem.setPraised(null);
+                    praiseTemp.setPraised(null);
                 }
-                praiseTem.setUpdateDate(new Date());
-                praiseMapper.updatePraise(praiseTem);
-                return praiseTem.getId();
+                praiseTemp.setUpdateDate(new Date());
+                praiseMapper.updatePraise(praiseTemp);
+                return praiseTemp.getId();
             }
         }
         return -1L;
@@ -128,43 +148,7 @@ public class SubjectServiceImpl extends LogAbleClass implements ISubjectService 
             return null;
         }
         PraiseVO vo = new PraiseVO(subjectId, PraiseType.PRAISE_TREAD, true);
-        Long pageIdx = pageNum - 1;
-        if (pageIdx < 0) {
-            pageIdx = 0L;
-        }
-        vo.setLimitOff(pageIdx * pageSize);
-        vo.setLimitRows(pageSize);
-
         return findUsersByPage(vo, pageNum, pageSize);
-    }
-
-    @Override
-    public Long invalidUser(Long subjectId, Long userId, Boolean invalid) {
-        ContentPraise praise = new ContentPraise(userId, subjectId, PraiseType.PRAISE_TREAD);
-
-        ContentPraise praiseTem = praiseMapper.findPraise(praise);
-        if (praiseTem == null) {
-            if (invalid) {
-                praise.setPraised(false);
-            } else {
-                praise.setPraised(null);
-            }
-            praise.setCreateDate(new Date());
-            praiseMapper.addPraise(praise);
-            return praise.getId();
-        } else {
-            if (invalid != praiseTem.getPraised()) {
-                if (invalid) {
-                    praiseTem.setPraised(false);
-                } else {
-                    praiseTem.setPraised(null);
-                }
-                praiseTem.setUpdateDate(new Date());
-                praiseMapper.updatePraise(praiseTem);
-                return praiseTem.getId();
-            }
-        }
-        return -1L;
     }
 
     @Override
@@ -173,26 +157,16 @@ public class SubjectServiceImpl extends LogAbleClass implements ISubjectService 
             return null;
         }
         PraiseVO vo = new PraiseVO(subjectId, PraiseType.PRAISE_TREAD, false);
-        Long pageIdx = pageNum - 1;
-        if (pageIdx < 0) {
-            pageIdx = 0L;
-        }
-        vo.setLimitOff(pageIdx * pageSize);
-        vo.setLimitRows(pageSize);
-
         return findUsersByPage(vo, pageNum, pageSize);
     }
 
-    private Page<ContentPraise> findUsersByPage(PraiseVO vo, Long pageNum, Integer pageSize) {
-        Long totalCount = praiseMapper.getPraiseUserCount(vo);
-        List<ContentPraise> result = praiseMapper.findPraiseUserByPage(vo);
-
-        Page<ContentPraise> praiseOrTreadPage = new Page<>();
-        praiseOrTreadPage.setPageNum(pageNum);
-        praiseOrTreadPage.setPageSize(pageSize);
-        praiseOrTreadPage.setContentResults(result);
-        praiseOrTreadPage.setTotalCount(totalCount);
-        return praiseOrTreadPage;
+    @Override
+    public Page<ContentPraise> findVerifierByPage(Long subjectId, Long pageNum, Integer pageSize) {
+        if (subjectId == null || subjectId == 0) {
+            return null;
+        }
+        PraiseVO vo = new PraiseVO(subjectId, PraiseType.VERIFY_SUBJECT, false);
+        return findUsersByPage(vo, pageNum, pageSize);
     }
 
     @Override
@@ -204,18 +178,26 @@ public class SubjectServiceImpl extends LogAbleClass implements ISubjectService 
     }
 
     @Override
+    public Long validUser(Long subjectId, Long userId, Boolean valid) {
+        ContentPraise praise = new ContentPraise(userId, subjectId, PraiseType.PRAISE_TREAD);
+        return setPraised(praise, valid);
+    }
+
+    @Override
     public Long updateVerifier(Long subjectId, Long userId, Boolean valid) {
-        return null;
+        ContentPraise praise = new ContentPraise(userId, subjectId, PraiseType.VERIFY_SUBJECT);
+        return setPraised(praise, valid);
     }
 
     @Override
-    public Page<ContentPraise> findVerifierByPage(Long subjectId, Long pageNum, Integer pageSize) {
-        return null;
+    public Long collectSubject(Long subjectId, Long userId, Boolean collected) {
+        ContentPraise praise = new ContentPraise(userId, subjectId, PraiseType.COLLECT_SUBJECT);
+        return setPraised(praise, collected);
     }
 
     @Override
-    public Long deleteSubject(Long subjectId) {
-        return 0L;
+    public void deleteSubject(Long subjectId) {
+        mapper.deleteSubject(subjectId);
     }
 
 }

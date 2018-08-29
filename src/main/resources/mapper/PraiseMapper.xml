@@ -59,17 +59,22 @@
                 AND tp.praised IS NULL
             </if>
             <if test="praised != null">
-                AND tp.praised = #{praised, jdbcType=BIGINT}
+                AND tp.praised = #{praised, jdbcType=BIT}
             </if>
         </where>
         LIMIT #{limitOff, jdbcType=BIGINT}, #{limitRows, jdbcType=INTEGER}
     </select>
 
-    <select id="getPraiseUserCount" parameterType="com.tricks4live.vo.PraiseVO" resultType="long">
+    <select id="getPraiseCount" parameterType="com.tricks4live.vo.PraiseVO" resultType="long">
         SELECT COUNT(*) FROM t_praise
         <where>
-            content_id = #{contentId, jdbcType=BIGINT} AND
             praise_type = #{praiseType, jdbcType=VARCHAR}
+            <if test="contentId != null">
+                AND content_id = #{contentId, jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId, jdbcType=BIGINT}
+            </if>
             <if test="praised == null">
                 AND praised IS NULL
             </if>
