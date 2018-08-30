@@ -1,7 +1,6 @@
 package com.tricks4live.controller;
 
 import com.tricks4live.annotation.ErrCode;
-import com.tricks4live.annotation.Status;
 import com.tricks4live.entries.User;
 import com.tricks4live.entries.result.BaseResult;
 import com.tricks4live.entries.result.DataResult;
@@ -23,11 +22,10 @@ public class UserController {
 
     @RequestMapping("/check_username")
     @ResponseBody
-    public BaseResult isUserNameUsable(@RequestParam("userName") String userName) {
+    public BaseResult isUserNameUsable(@RequestParam("user_name") String userName) {
         UserCheckResult result = new UserCheckResult();
         if (StringUtils.isEmpty(userName)) {
-            result.setStatus(Status.FAIL);
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "userName");
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "user_name");
             return result;
         }
 
@@ -46,7 +44,6 @@ public class UserController {
     public BaseResult isEmailUsable(@RequestParam("email") String email) {
         UserCheckResult result = new UserCheckResult();
         if (StringUtils.isEmpty(email)) {
-            result.setStatus(Status.FAIL);
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "email");
             return result;
         }
@@ -66,7 +63,6 @@ public class UserController {
     public BaseResult isPhoneUsable(@RequestParam("phone") String phone) {
         UserCheckResult result = new UserCheckResult();
         if (StringUtils.isEmpty(phone)) {
-            result.setStatus(Status.FAIL);
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "phone");
             return result;
         }
@@ -83,29 +79,23 @@ public class UserController {
 
     @PostMapping("/register")
     @ResponseBody
-    public BaseResult register(@RequestBody User user, HttpServletRequest request) {
-        BaseResult result = new BaseResult();
+    public DataResult<User> register(@RequestBody User user, HttpServletRequest request) {
+        DataResult<User> result = new DataResult<>();
 
         if (StringUtils.isEmpty(user.getUserName())) {
-            result.setStatus(Status.FAIL);
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMPTY_USERNAME));
         } else if (StringUtils.isEmpty(user.getPassword())) {
-            result.setStatus(Status.FAIL);
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMPTY_PWD));
         } else if (StringUtils.isEmpty(user.getEmail())) {
-            result.setStatus(Status.FAIL);
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMPTY_EMAIL));
         } else {
             String password = user.getPassword();
             if (password.length() < 6) {
-                result.setStatus(Status.FAIL);
                 result.setCodeMsg(Constants.getErrorMsg(ErrCode.PWD_SHORT));
             } else {
-                result = new DataResult<User>();
                 String userAgent = request.getHeader("User-Agent");
-                userService.register(user, userAgent);
-                result.setMsg("User registered successful");
-//                ((DataResult) result).setData(u);
+                user = userService.register(user, userAgent);
+                result.setData(user);
             }
         }
         return result;
@@ -113,25 +103,21 @@ public class UserController {
 
     @PostMapping("/login")
     @ResponseBody
-    public BaseResult login(String userName, String password, HttpServletRequest request) {
-        BaseResult result = new BaseResult();
+    public DataResult<User> login(String userName, String password, HttpServletRequest request) {
+        DataResult<User> result = new DataResult<>();
 
         if (StringUtils.isEmpty(userName)) {
-            result.setStatus(Status.FAIL);
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMPTY_USERNAME));
         } else if (StringUtils.isEmpty(password)) {
-            result.setStatus(Status.FAIL);
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMPTY_PWD));
         } else {
             String userAgent = request.getHeader("User-Agent");
             User user = userService.login(userName, password, userAgent);
             if (user == null) {
-                result.setStatus(Status.FAIL);
                 result.setCodeMsg(Constants.getErrorMsg(ErrCode.USERNAME_OR_PWD_ERR));
             } else {
-                result = new DataResult<User>();
                 result.setMsg("User login successful");
-                ((DataResult) result).setData(user);
+                result.setData(user);
             }
         }
         return result;

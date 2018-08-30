@@ -22,6 +22,9 @@ public @interface ErrCode {
      * 缺少请求的必要参数
      */
     int REQUEST_PARAMETER_LOST = 201;
+
+    // 参数不合法
+    int ILLEGAL_ARGUMENT = 202;
     //==========================正常=============================//
     /**
      * 正常执行完成

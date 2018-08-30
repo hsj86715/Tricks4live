@@ -1,5 +1,6 @@
-package com.tricks4live;
+package com.tricks4live.service;
 
+import com.tricks4live.LogAbleClass;
 import com.tricks4live.entries.User;
 import com.tricks4live.services.IUserService;
 import com.tricks4live.utils.UUIDUtil;

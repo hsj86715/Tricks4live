@@ -6,11 +6,11 @@ import org.slf4j.LoggerFactory;
 public class LogAbleClass {
     final Logger logger = LoggerFactory.getLogger(LogAbleClass.this.getClass().getTypeName());
 
-    void println(String method, Object arg) {
+    protected void println(String method, Object arg) {
         println(method + ": " + arg);
     }
 
-    void println(String string) {
+    protected void println(String string) {
 //        System.out.println("================================================================================================================================");
         System.out.println();
         logger.info(string);

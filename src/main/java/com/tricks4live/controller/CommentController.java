@@ -29,10 +29,12 @@ public class CommentController {
                                  @RequestParam("content") String content,
                                  @RequestParam(name = "super_id", required = false) Long superId) {
         BaseResult result = new BaseResult();
-        if (subjectId == null || subjectId <= 0 || userId == null || userId <= 0 || StringUtils.isEmpty(content)) {
+        if (StringUtils.isEmpty(content)) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "content");
-            result.setStatus(Status.FAIL);
             return result;
+        }
+        if (subjectId <= 0 || userId <= 0) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id or/and user_id");
         }
         Comment comment;
         if (superId == null || subjectId <= 0) {
@@ -43,7 +45,6 @@ public class CommentController {
         Long id = service.addComment(comment);
         if (id <= 0) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
-            result.setStatus(Status.FAIL);
         }
         return result;
     }
@@ -54,16 +55,9 @@ public class CommentController {
                                                 @RequestParam("page_num") Long pageNum,
                                                 @RequestParam(name = "page_size", required = false, defaultValue = "20") Integer pageSize) {
         DataResult<Page<Comment>> result = new DataResult<>();
-        if (subjectId == null || subjectId <= 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "subject id");
-            result.setStatus(Status.FAIL);
+        if (subjectId <= 0 || pageNum < 1) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id or/and page_num");
             return result;
-        }
-        if (pageNum == null || pageNum < 1) {
-            pageNum = 1L;
-        }
-        if (pageSize == null || pageSize < 1) {
-            pageSize = 20;
         }
         Page<Comment> commentPage = service.findByPageInSubject(subjectId, pageNum, pageSize);
         result.setData(commentPage);
@@ -76,18 +70,13 @@ public class CommentController {
                                    @RequestParam("user_id") Long userId,
                                    @RequestParam("agreement") Boolean agreement) {
         BaseResult result = new BaseResult();
-        if (commentId == null || commentId == 0 || userId == null || userId == 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "comment id or user id");
-            result.setStatus(Status.FAIL);
+        if (commentId <= 0 || userId <= 0) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "comment_id or/and user_id");
             return result;
-        }
-        if (agreement == null) {
-            agreement = false;
         }
         Long id = service.agreeComment(commentId, userId, agreement);
         if (id <= 0) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
-            result.setStatus(Status.FAIL);
         }
         return result;
     }

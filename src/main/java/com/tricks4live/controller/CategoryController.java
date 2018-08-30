@@ -1,7 +1,6 @@
 package com.tricks4live.controller;
 
 import com.tricks4live.annotation.ErrCode;
-import com.tricks4live.annotation.Status;
 import com.tricks4live.entries.Category;
 import com.tricks4live.entries.result.BaseResult;
 import com.tricks4live.entries.result.DataResult;
@@ -28,18 +27,20 @@ public class CategoryController {
     public BaseResult addCategory(@RequestParam("name_cn") String nameCN,
                                   @RequestParam("name_en") String nameEN,
                                   @RequestParam(name = "super_id", required = false) Long superId,
-                                  @RequestParam(name = "level", defaultValue = "1") Integer level) {
+                                  @RequestParam("level") Integer level) {
         BaseResult result = new BaseResult();
         if (StringUtils.isEmpty(nameCN) || StringUtils.isEmpty(nameEN)) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "Category Name(both CN and EN)");
-            result.setStatus(Status.FAIL);
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "name_cn or/and name_en");
+            return result;
+        }
+        if (superId != null && superId <= 0) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "super_id");
             return result;
         }
         Category category = new Category(nameCN, nameEN, superId, level);
         Long id = service.addCategory(category);
         if (id <= 0) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
-            result.setStatus(Status.FAIL);
         }
         return result;
     }
@@ -47,8 +48,12 @@ public class CategoryController {
     @RequestMapping("/findSubCategory")
     @ResponseBody
     public DataResult<List<Category>> findSubCategory(@RequestParam("cat_id") Long categoryId) {
-        List<Category> categories = service.findSubCategory(categoryId);
         DataResult<List<Category>> result = new DataResult<>();
+        if (categoryId <= 0) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "cat_id");
+            return result;
+        }
+        List<Category> categories = service.findSubCategory(categoryId);
         result.setData(categories);
         return result;
     }
@@ -56,20 +61,30 @@ public class CategoryController {
     @RequestMapping("findByLevel")
     @ResponseBody
     public DataResult<List<Category>> findByLevel(@RequestParam("level") Integer level) {
+        DataResult<List<Category>> result = new DataResult<>();
+        if (level <= 0 || level > 3) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "level");
+            return result;
+        }
         List<Category> categories = service.findByLevel(level);
-        DataResult<List<Category>> result = new DataResult<>(categories);
+        result.setData(categories);
         return result;
     }
 
     @PostMapping("/update")
     @ResponseBody
-    public BaseResult updateCategory(@RequestParam("name_cn") String nameCN, @RequestParam("name_en") String nameEN,
-                                     @RequestParam("super_id") Long superId, @RequestParam("cat_id") Long categoryId,
+    public BaseResult updateCategory(@RequestParam("name_cn") String nameCN,
+                                     @RequestParam("name_en") String nameEN,
+                                     @RequestParam(name = "super_id", required = false) Long superId,
+                                     @RequestParam("cat_id") Long categoryId,
                                      @RequestParam("level") Integer level) {
         BaseResult result = new BaseResult();
-        if (StringUtils.isEmpty(nameCN) || StringUtils.isEmpty(nameEN) || categoryId == null || categoryId == 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "Category Name(both CN and EN) and category id");
-            result.setStatus(Status.FAIL);
+        if (StringUtils.isEmpty(nameCN) || StringUtils.isEmpty(nameEN)) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "name_cn or/and name_en");
+            return result;
+        }
+        if ((superId != null && superId <= 0) || categoryId <= 0 || level <= 0 || level > 3) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "super_id or/and cat_id or/and level");
             return result;
         }
         Category category = new Category(nameCN, nameEN, superId, level);
@@ -82,9 +97,8 @@ public class CategoryController {
     @ResponseBody
     public BaseResult deleteById(@RequestParam("cat_id") Long categoryId) {
         BaseResult result = new BaseResult();
-        if (categoryId == null || categoryId == 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "category id");
-            result.setStatus(Status.FAIL);
+        if (categoryId <= 0) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "cat_id");
             return result;
         }
         service.deleteById(categoryId);

@@ -1,5 +1,6 @@
-package com.tricks4live;
+package com.tricks4live.service;
 
+import com.tricks4live.LogAbleClass;
 import com.tricks4live.entries.Label;
 import com.tricks4live.entries.Page;
 import com.tricks4live.entries.Subject;

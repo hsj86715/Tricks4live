@@ -19,24 +19,24 @@ public class BaseResult implements Serializable {
         this.status = Status.SUCCESS;
     }
 
-    public BaseResult(@ErrCode Integer code, @Status String status) {
-        setCodeMsg(Constants.getErrorMsg(code));
-        this.status = status;
-    }
-
     public Integer getCode() {
         return code;
     }
 
-    public void setCode(Integer code) {
+    public void setCode(@ErrCode Integer code) {
         this.code = code;
+        if (code == ErrCode.OK) {
+            setStatus(Status.SUCCESS);
+        } else {
+            setStatus(Status.FAIL);
+        }
     }
 
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    private void setStatus(String status) {
         this.status = status;
     }
 

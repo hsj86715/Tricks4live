@@ -1,7 +1,6 @@
 package com.tricks4live.controller;
 
 import com.tricks4live.annotation.ErrCode;
-import com.tricks4live.annotation.Status;
 import com.tricks4live.entries.ContentPraise;
 import com.tricks4live.entries.Page;
 import com.tricks4live.entries.Subject;
@@ -25,23 +24,22 @@ public class SubjectController {
                                                 @RequestParam("page_num") Long pageNum,
                                                 @RequestParam(name = "page_size", defaultValue = "20",
                                                         required = false) Integer pageSize) {
-        if (categoryId == null || categoryId < 1) {
-            categoryId = 3L;
-        }
-        if (pageNum == null || pageNum < 1) {
-            pageNum = 1L;
+        DataResult<Page<Subject>> result = new DataResult<>();
+        if (categoryId <= 0 || pageNum < 1) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "category_id or/and page_num");
+            return result;
         }
         Page<Subject> subjectPage = service.findByPageInCategory(categoryId, pageNum, pageSize);
-        return new DataResult<>(subjectPage);
+        result.setData(subjectPage);
+        return result;
     }
 
     @RequestMapping("/findById")
     @ResponseBody
     public DataResult<Subject> findById(@RequestParam("subject_id") Long subjectId) {
         DataResult<Subject> result = new DataResult<>();
-        if (subjectId == null || subjectId == 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "subject id");
-            result.setStatus(Status.FAIL);
+        if (subjectId <= 0) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id");
             return result;
         }
         result.setData(service.findById(subjectId));
@@ -55,7 +53,6 @@ public class SubjectController {
         Long id = service.addSubject(subject);
         if (id <= 0) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
-            result.setStatus(Status.FAIL);
         }
         return result;
     }
@@ -64,9 +61,8 @@ public class SubjectController {
     @ResponseBody
     public BaseResult deleteSubject(@RequestParam("subject_id") Long subjectId) {
         BaseResult result = new BaseResult();
-        if (subjectId == null || subjectId == 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "subject id");
-            result.setStatus(Status.FAIL);
+        if (subjectId <= 0) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id");
             return result;
         }
         service.deleteSubject(subjectId);
@@ -79,18 +75,13 @@ public class SubjectController {
                                 @RequestParam("user_id") Long userId,
                                 @RequestParam("valid") Boolean valid) {
         BaseResult result = new BaseResult();
-        if (subjectId == null || subjectId == 0 || userId == null || userId == 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "subject id or user id");
-            result.setStatus(Status.FAIL);
+        if (subjectId <= 0 || userId <= 0) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id or/and user_id");
             return result;
-        }
-        if (valid == null) {
-            valid = true;
         }
         Long id = service.validUser(subjectId, userId, valid);
         if (id <= 0) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
-            result.setStatus(Status.FAIL);
         }
         return result;
     }
@@ -101,9 +92,8 @@ public class SubjectController {
                                   @RequestParam("user_id") Long userId,
                                   @RequestParam("invalid") Boolean invalid) {
         BaseResult result = new BaseResult();
-        if (subjectId == null || subjectId == 0 || userId == null || userId == 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "subject id or user id");
-            result.setStatus(Status.FAIL);
+        if (subjectId <= 0 || userId <= 0) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id or/and user_id");
             return result;
         }
         if (invalid == null) {
@@ -112,7 +102,6 @@ public class SubjectController {
         Long id = service.invalidUser(subjectId, userId, invalid);
         if (id <= 0) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
-            result.setStatus(Status.FAIL);
         }
         return result;
     }
@@ -124,13 +113,9 @@ public class SubjectController {
                                                                 @RequestParam(name = "page_size", defaultValue = "20",
                                                                         required = false) Integer pageSize) {
         DataResult<Page<ContentPraise>> result = new DataResult<>();
-        if (subjectId == null || subjectId == 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "subject id");
-            result.setStatus(Status.FAIL);
+        if (subjectId <= 0 || pageNum < 1) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id or/and page_num");
             return result;
-        }
-        if (pageNum == null || pageNum < 1) {
-            pageNum = 1L;
         }
         Page<ContentPraise> praisePage = service.findValidUsersByPage(subjectId, pageNum, pageSize);
         result.setData(praisePage);
@@ -144,13 +129,9 @@ public class SubjectController {
                                                                   @RequestParam(name = "page_size", defaultValue = "20",
                                                                           required = false) Integer pageSize) {
         DataResult<Page<ContentPraise>> result = new DataResult<>();
-        if (subjectId == null || subjectId == 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "subject id");
-            result.setStatus(Status.FAIL);
+        if (subjectId <= 0 || pageNum < 1) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id or/and page_num");
             return result;
-        }
-        if (pageNum == null || pageNum < 1) {
-            pageNum = 1L;
         }
         Page<ContentPraise> praisePage = service.findInvalidUsersByPage(subjectId, pageNum, pageSize);
         result.setData(praisePage);
@@ -162,15 +143,13 @@ public class SubjectController {
     public BaseResult addVerifier(@RequestParam("subject_id") Long subjectId,
                                   @RequestParam("user_id") Long userId) {
         BaseResult result = new BaseResult();
-        if (subjectId == null || subjectId == 0 || userId == null || userId == 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "subject id or user id");
-            result.setStatus(Status.FAIL);
+        if (subjectId <= 0 || userId <= 0) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id or/and user_id");
             return result;
         }
         Long id = service.addVerifier(subjectId, userId);
         if (id <= 0) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
-            result.setStatus(Status.FAIL);
         }
         return result;
     }
@@ -181,18 +160,13 @@ public class SubjectController {
                                      @RequestParam("user_id") Long userId,
                                      @RequestParam("valid") Boolean valid) {
         BaseResult result = new BaseResult();
-        if (subjectId == null || subjectId == 0 || userId == null || userId == 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "subject id or user id");
-            result.setStatus(Status.FAIL);
+        if (subjectId <= 0 || userId <= 0) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id or/and user_id");
             return result;
-        }
-        if (valid == null) {
-            valid = false;
         }
         Long id = service.updateVerifier(subjectId, userId, valid);
         if (id <= 0) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
-            result.setStatus(Status.FAIL);
         }
         return result;
     }
@@ -204,13 +178,9 @@ public class SubjectController {
                                                         @RequestParam(name = "page_size", defaultValue = "20",
                                                                 required = false) Integer pageSize) {
         DataResult<Page<ContentPraise>> result = new DataResult<>();
-        if (subjectId == null || subjectId == 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "subject id");
-            result.setStatus(Status.FAIL);
+        if (subjectId == 0 || pageNum < 1) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id or/and page_num");
             return result;
-        }
-        if (pageNum == null || pageNum < 1) {
-            pageNum = 1L;
         }
         Page<ContentPraise> praisePage = service.findVerifierByPage(subjectId, pageNum, pageSize);
         result.setData(praisePage);
@@ -223,18 +193,13 @@ public class SubjectController {
                                      @RequestParam("user_id") Long userId,
                                      @RequestParam("collected") Boolean collected) {
         BaseResult result = new BaseResult();
-        if (subjectId == null || subjectId == 0 || userId == null || userId == 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "subject id or user id");
-            result.setStatus(Status.FAIL);
+        if (subjectId <= 0 || userId <= 0) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id or/and user_id");
             return result;
-        }
-        if (collected == null) {
-            collected = false;
         }
         Long id = service.collectSubject(subjectId, userId, collected);
         if (id <= 0) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
-            result.setStatus(Status.FAIL);
         }
         return result;
     }
@@ -243,15 +208,12 @@ public class SubjectController {
     @ResponseBody
     public DataResult<Page<Subject>> findCollected(@RequestParam("user_id") Long userId,
                                                    @RequestParam("page_num") Long pageNum,
-                                                   @RequestParam("page_size") Integer pageSize) {
+                                                   @RequestParam(name = "page_size", defaultValue = "20",
+                                                           required = false) Integer pageSize) {
         DataResult<Page<Subject>> result = new DataResult<>();
-        if (userId == null || userId == 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "user id");
-            result.setStatus(Status.FAIL);
+        if (userId <= 0 || pageNum < 1) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "user_id or/and page_num");
             return result;
-        }
-        if (pageNum == null || pageNum < 1) {
-            pageNum = 1L;
         }
         Page<Subject> subjectPage = service.findCollectedByPage(userId, pageNum, pageSize);
         result.setData(subjectPage);

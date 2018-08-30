@@ -1,5 +1,6 @@
-package com.tricks4live;
+package com.tricks4live.service;
 
+import com.tricks4live.LogAbleClass;
 import com.tricks4live.entries.Category;
 import com.tricks4live.services.ICategoryService;
 import org.junit.Test;

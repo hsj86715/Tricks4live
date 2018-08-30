@@ -31,6 +31,7 @@ public class Constants {
 
         CODE_MSG.put(ErrCode.REQUEST_PARAMETER_LOST, new CodeMsg(ErrCode.REQUEST_PARAMETER_LOST,
                 "The request %s must not be null or empty."));
+        CODE_MSG.put(ErrCode.ILLEGAL_ARGUMENT, new CodeMsg(ErrCode.ILLEGAL_ARGUMENT, "The argument %s is/are not illegal."));
     }
 
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
