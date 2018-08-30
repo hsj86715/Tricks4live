@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class CommentServiceImpl extends PraiseAbleService implements ICommentService {
     @Autowired
-    CommentMapper mapper;
+    private CommentMapper mapper;
 
     @Override
     public Page<Comment> findByPageInSubject(Long subjectId, Long pageNum, Integer pageSize) {

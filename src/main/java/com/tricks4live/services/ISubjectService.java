@@ -1,8 +1,8 @@
 package com.tricks4live.services;
 
-import com.tricks4live.entries.ContentPraise;
 import com.tricks4live.entries.Page;
 import com.tricks4live.entries.Subject;
+import com.tricks4live.entries.UserSimple;
 
 public interface ISubjectService {
 
@@ -16,19 +16,21 @@ public interface ISubjectService {
 
     Long validUser(Long subjectId, Long userId, Boolean valid);
 
-    Page<ContentPraise> findValidUsersByPage(Long subjectId, Long pageNum, Integer pageSize);
+    Page<UserSimple> findValidUsersByPage(Long subjectId, Long pageNum, Integer pageSize);
 
     Long invalidUser(Long subjectId, Long userId, Boolean invalid);
 
-    Page<ContentPraise> findInvalidUsersByPage(Long subjectId, Long pageNum, Integer pageSize);
+    Page<UserSimple> findInvalidUsersByPage(Long subjectId, Long pageNum, Integer pageSize);
 
     Long addVerifier(Long subjectId, Long userId);
 
     Long updateVerifier(Long subjectId, Long userId, Boolean valid);
 
-    Page<ContentPraise> findVerifierByPage(Long subjectId, Long pageNum, Integer pageSize);
+    Page<UserSimple> findVerifierByPage(Long subjectId, Long pageNum, Integer pageSize);
 
     Long collectSubject(Long subjectId, Long userId, Boolean collected);
 
     Page<Subject> findCollectedByPage(Long userId, Long pageNum, Integer pageSize);
+
+    Page<Subject> findByPageForNewest(Long pageNum, Integer pageSize);
 }

@@ -21,9 +21,6 @@ public class Subject extends BaseDBEntry implements Serializable {
     private List<Label> labels;
     private Boolean deleted = false;
 
-    public Subject() {
-    }
-
     public Subject(String title, Long categoryId, Long userId, String content) {
         this.title = title;
         this.categoryId = categoryId;

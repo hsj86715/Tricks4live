@@ -1,9 +1,9 @@
 package com.tricks4live.controller;
 
 import com.tricks4live.annotation.ErrCode;
-import com.tricks4live.entries.ContentPraise;
 import com.tricks4live.entries.Page;
 import com.tricks4live.entries.Subject;
+import com.tricks4live.entries.UserSimple;
 import com.tricks4live.entries.result.BaseResult;
 import com.tricks4live.entries.result.DataResult;
 import com.tricks4live.services.ISubjectService;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/subject")
 public class SubjectController {
     @Autowired
-    ISubjectService service;
+    private ISubjectService service;
 
     @RequestMapping("/findByPage")
     @ResponseBody
@@ -108,32 +108,32 @@ public class SubjectController {
 
     @RequestMapping("/findValidUsers")
     @ResponseBody
-    public DataResult<Page<ContentPraise>> findValidUsersByPage(@RequestParam("subject_id") Long subjectId,
-                                                                @RequestParam("page_num") Long pageNum,
-                                                                @RequestParam(name = "page_size", defaultValue = "20",
-                                                                        required = false) Integer pageSize) {
-        DataResult<Page<ContentPraise>> result = new DataResult<>();
+    public DataResult<Page<UserSimple>> findValidUsersByPage(@RequestParam("subject_id") Long subjectId,
+                                                             @RequestParam("page_num") Long pageNum,
+                                                             @RequestParam(name = "page_size", defaultValue = "20",
+                                                                     required = false) Integer pageSize) {
+        DataResult<Page<UserSimple>> result = new DataResult<>();
         if (subjectId <= 0 || pageNum < 1) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id or/and page_num");
             return result;
         }
-        Page<ContentPraise> praisePage = service.findValidUsersByPage(subjectId, pageNum, pageSize);
+        Page<UserSimple> praisePage = service.findValidUsersByPage(subjectId, pageNum, pageSize);
         result.setData(praisePage);
         return result;
     }
 
     @RequestMapping("/findInvalidUsers")
     @ResponseBody
-    public DataResult<Page<ContentPraise>> findInvalidUsersByPage(@RequestParam("subject_id") Long subjectId,
-                                                                  @RequestParam("page_num") Long pageNum,
-                                                                  @RequestParam(name = "page_size", defaultValue = "20",
-                                                                          required = false) Integer pageSize) {
-        DataResult<Page<ContentPraise>> result = new DataResult<>();
+    public DataResult<Page<UserSimple>> findInvalidUsersByPage(@RequestParam("subject_id") Long subjectId,
+                                                               @RequestParam("page_num") Long pageNum,
+                                                               @RequestParam(name = "page_size", defaultValue = "20",
+                                                                       required = false) Integer pageSize) {
+        DataResult<Page<UserSimple>> result = new DataResult<>();
         if (subjectId <= 0 || pageNum < 1) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id or/and page_num");
             return result;
         }
-        Page<ContentPraise> praisePage = service.findInvalidUsersByPage(subjectId, pageNum, pageSize);
+        Page<UserSimple> praisePage = service.findInvalidUsersByPage(subjectId, pageNum, pageSize);
         result.setData(praisePage);
         return result;
     }
@@ -173,16 +173,16 @@ public class SubjectController {
 
     @RequestMapping("/findVerifier")
     @ResponseBody
-    public DataResult<Page<ContentPraise>> findVerifier(@RequestParam("subject_id") Long subjectId,
-                                                        @RequestParam("page_num") Long pageNum,
-                                                        @RequestParam(name = "page_size", defaultValue = "20",
-                                                                required = false) Integer pageSize) {
-        DataResult<Page<ContentPraise>> result = new DataResult<>();
+    public DataResult<Page<UserSimple>> findVerifier(@RequestParam("subject_id") Long subjectId,
+                                                     @RequestParam("page_num") Long pageNum,
+                                                     @RequestParam(name = "page_size", defaultValue = "20",
+                                                             required = false) Integer pageSize) {
+        DataResult<Page<UserSimple>> result = new DataResult<>();
         if (subjectId == 0 || pageNum < 1) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id or/and page_num");
             return result;
         }
-        Page<ContentPraise> praisePage = service.findVerifierByPage(subjectId, pageNum, pageSize);
+        Page<UserSimple> praisePage = service.findVerifierByPage(subjectId, pageNum, pageSize);
         result.setData(praisePage);
         return result;
     }
@@ -216,6 +216,21 @@ public class SubjectController {
             return result;
         }
         Page<Subject> subjectPage = service.findCollectedByPage(userId, pageNum, pageSize);
+        result.setData(subjectPage);
+        return result;
+    }
+
+    @RequestMapping("/findNewest")
+    @ResponseBody
+    public DataResult<Page<Subject>> findNewest(@RequestParam("page_num") Long pageNum,
+                                                @RequestParam(name = "page_size", defaultValue = "20",
+                                                        required = false) Integer pageSize) {
+        DataResult<Page<Subject>> result = new DataResult<>();
+        if (pageNum < 1) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "page_num");
+            return result;
+        }
+        Page<Subject> subjectPage = service.findByPageForNewest(pageNum, pageSize);
         result.setData(subjectPage);
         return result;
     }

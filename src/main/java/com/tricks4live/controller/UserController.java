@@ -4,7 +4,6 @@ import com.tricks4live.annotation.ErrCode;
 import com.tricks4live.entries.User;
 import com.tricks4live.entries.result.BaseResult;
 import com.tricks4live.entries.result.DataResult;
-import com.tricks4live.entries.result.UserCheckResult;
 import com.tricks4live.services.IUserService;
 import com.tricks4live.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,19 +17,19 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/user")
 public class UserController {
     @Autowired
-    IUserService userService;
+    private IUserService userService;
 
     @RequestMapping("/check_username")
     @ResponseBody
-    public BaseResult isUserNameUsable(@RequestParam("user_name") String userName) {
-        UserCheckResult result = new UserCheckResult();
+    public DataResult<Boolean> isUserNameUsable(@RequestParam("user_name") String userName) {
+        DataResult<Boolean> result = new DataResult<>();
         if (StringUtils.isEmpty(userName)) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "user_name");
             return result;
         }
 
         Boolean usable = userService.userNameUsable(userName);
-        result.setUsable(usable);
+        result.setData(usable);
         if (usable) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.USER_NOT_EXISTS), userName);
         } else {
@@ -41,15 +40,15 @@ public class UserController {
 
     @RequestMapping("/check_email")
     @ResponseBody
-    public BaseResult isEmailUsable(@RequestParam("email") String email) {
-        UserCheckResult result = new UserCheckResult();
+    public DataResult<Boolean> isEmailUsable(@RequestParam("email") String email) {
+        DataResult<Boolean> result = new DataResult<>();
         if (StringUtils.isEmpty(email)) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "email");
             return result;
         }
 
         Boolean usable = userService.emailUsable(email);
-        result.setUsable(usable);
+        result.setData(usable);
         if (usable) {
             result.setMsg("The email: " + email + " is usable.");
         } else {
@@ -60,15 +59,15 @@ public class UserController {
 
     @RequestMapping("/check_phone")
     @ResponseBody
-    public BaseResult isPhoneUsable(@RequestParam("phone") String phone) {
-        UserCheckResult result = new UserCheckResult();
+    public DataResult<Boolean> isPhoneUsable(@RequestParam("phone") String phone) {
+        DataResult<Boolean> result = new DataResult<>();
         if (StringUtils.isEmpty(phone)) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.REQUEST_PARAMETER_LOST), "phone");
             return result;
         }
 
         Boolean usable = userService.phoneUsable(phone);
-        result.setUsable(usable);
+        result.setData(usable);
         if (usable) {
             result.setMsg("The phone: " + phone + " is usable.");
         } else {
@@ -103,7 +102,8 @@ public class UserController {
 
     @PostMapping("/login")
     @ResponseBody
-    public DataResult<User> login(String userName, String password, HttpServletRequest request) {
+    public DataResult<User> login(@RequestParam("user_name") String userName,
+                                  @RequestParam("password") String password, HttpServletRequest request) {
         DataResult<User> result = new DataResult<>();
 
         if (StringUtils.isEmpty(userName)) {
@@ -119,6 +119,23 @@ public class UserController {
                 result.setMsg("User login successful");
                 result.setData(user);
             }
+        }
+        return result;
+    }
+
+    @RequestMapping("/focus")
+    @ResponseBody
+    public BaseResult focusUser(@RequestParam("which_user") Long whichUser,
+                                @RequestParam("focus_who") Long focusWho,
+                                @RequestParam("focused") Boolean focused) {
+        BaseResult result = new BaseResult();
+        if (whichUser <= 0 || focusWho <= 0) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "which_user or/and focus_who");
+            return result;
+        }
+        Long id = userService.focusUser(whichUser, focusWho, focused);
+        if (id <= 0) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
         }
         return result;
     }

@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 public class CategoryServiceImpl extends LogAbleClass implements ICategoryService {
     @Autowired
-    CategoryMapper mapper;
+    private CategoryMapper mapper;
 
     @Override
     public List<Category> findByLevel(Integer level) {

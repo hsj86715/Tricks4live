@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public class LabelServiceImpl extends LogAbleClass implements ILabelService {
     @Autowired
-    LabelMapper mapper;
+    private LabelMapper mapper;
 
     @Override
     public List<Label> findAll() {

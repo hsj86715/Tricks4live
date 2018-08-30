@@ -1,8 +1,16 @@
 package com.tricks4live.vo;
 
-public abstract class PageVO {
+public class PageVO {
     private Long limitOff;
     private Integer limitRows;
+
+    public PageVO() {
+    }
+
+    public PageVO(Long limitOff, Integer limitRows) {
+        this.limitOff = limitOff;
+        this.limitRows = limitRows;
+    }
 
     public Long getLimitOff() {
         return limitOff;

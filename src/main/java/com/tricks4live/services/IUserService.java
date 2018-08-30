@@ -23,4 +23,6 @@ public interface IUserService {
     void findBackPassword(String token, String newpwd);
 
     List<User> findAll();
+
+    Long focusUser(Long whichUser, Long focusWho, Boolean focused);
 }

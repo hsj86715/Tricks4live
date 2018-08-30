@@ -6,6 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Constants {
+    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String DATE_FORMAT_MILLI = "yyyy-MM-dd HH:mm:ss.SSS";
+    public static final String DATE_FORMAT_DAY = "yyyy-MM-dd";
+    public static final String HEADER = "Accept=application/json";
+    public static final String APPLICATION_JSON = "application/json";
     private static final Map<Integer, CodeMsg> CODE_MSG;
 
     static {
@@ -34,12 +39,9 @@ public class Constants {
         CODE_MSG.put(ErrCode.ILLEGAL_ARGUMENT, new CodeMsg(ErrCode.ILLEGAL_ARGUMENT, "The argument %s is/are not illegal."));
     }
 
-    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    public static final String DATE_FORMAT_MILLI = "yyyy-MM-dd HH:mm:ss.SSS";
-    public static final String DATE_FORMAT_DAY = "yyyy-MM-dd";
-
-    public static final String HEADER = "Accept=application/json";
-    public static final String APPLICATION_JSON = "application/json";
+    public static CodeMsg getErrorMsg(@ErrCode Integer errCode) {
+        return CODE_MSG.get(errCode);
+    }
 
     public static class CodeMsg {
         private Integer code;
@@ -57,9 +59,5 @@ public class Constants {
         public String getMsg() {
             return msg;
         }
-    }
-
-    public static CodeMsg getErrorMsg(@ErrCode Integer errCode) {
-        return CODE_MSG.get(errCode);
     }
 }

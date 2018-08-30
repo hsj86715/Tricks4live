@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping("/label")
 public class LabelController {
     @Autowired
-    ILabelService service;
+    private ILabelService service;
 
     @PostMapping("/add")
     @ResponseBody

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
 
 @JsonSerialize
-public class UserSimple implements Serializable{
+public class UserSimple implements Serializable {
     private Long id;//自身ID
     private String nickName;
     private String avatar;

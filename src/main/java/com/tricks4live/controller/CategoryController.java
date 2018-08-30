@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping("/category")
 public class CategoryController {
     @Autowired
-    ICategoryService service;
+    private ICategoryService service;
 
     @PostMapping("/add")
     @ResponseBody

@@ -1,7 +1,8 @@
 package com.tricks4live.vo;
 
-public class CommentVO extends PageVO{
+public class CommentVO extends PageVO {
     private Long subjectId;
+
     public Long getSubjectId() {
         return subjectId;
     }

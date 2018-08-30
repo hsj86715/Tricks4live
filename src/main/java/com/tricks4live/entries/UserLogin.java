@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  * 用户登录信息，MySQL存储
  */
 @JsonSerialize
-public class UserLogin extends BaseDBEntry{
+public class UserLogin extends BaseDBEntry {
     private Long userId;
 
     private String loginIp;

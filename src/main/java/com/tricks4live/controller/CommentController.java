@@ -1,7 +1,6 @@
 package com.tricks4live.controller;
 
 import com.tricks4live.annotation.ErrCode;
-import com.tricks4live.annotation.Status;
 import com.tricks4live.entries.Comment;
 import com.tricks4live.entries.Page;
 import com.tricks4live.entries.result.BaseResult;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/comment")
 public class CommentController {
     @Autowired
-    ICommentService service;
+    private ICommentService service;
 
     @PostMapping(value = "/add", headers = Constants.HEADER, produces = Constants.APPLICATION_JSON)
     @ResponseBody

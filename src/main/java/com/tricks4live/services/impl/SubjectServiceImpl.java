@@ -4,8 +4,10 @@ import com.tricks4live.annotation.PraiseType;
 import com.tricks4live.entries.ContentPraise;
 import com.tricks4live.entries.Page;
 import com.tricks4live.entries.Subject;
+import com.tricks4live.entries.UserSimple;
 import com.tricks4live.mappers.SubjectMapper;
 import com.tricks4live.services.ISubjectService;
+import com.tricks4live.vo.PageVO;
 import com.tricks4live.vo.PraiseVO;
 import com.tricks4live.vo.SubjectVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ import java.util.List;
 @Service
 public class SubjectServiceImpl extends PraiseAbleService implements ISubjectService {
     @Autowired
-    SubjectMapper mapper;
+    private SubjectMapper mapper;
 
     @Override
     public Subject findById(Long subjectId) {
@@ -71,6 +73,26 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
         Long totalCount = praiseMapper.getPraiseCount(praiseVO);
         List<Subject> result = mapper.findCollectedByPage(praiseVO);
 
+        Page<Subject> subjectPage = new Page<>();
+        subjectPage.setPageNum(pageNum);
+        subjectPage.setPageSize(pageSize);
+        subjectPage.setContentResults(result);
+        subjectPage.setTotalCount(totalCount);
+        return subjectPage;
+    }
+
+    @Override
+    public Page<Subject> findByPageForNewest(Long pageNum, Integer pageSize) {
+        PageVO pageVO = new PraiseVO();
+        Long pageIdx = pageNum - 1;
+        if (pageIdx < 0) {
+            pageIdx = 0L;
+        }
+        pageVO.setLimitOff(pageIdx * pageSize);
+        pageVO.setLimitRows(pageSize);
+
+        Long totalCount = mapper.getCount();
+        List<Subject> result = mapper.findByPageForNewest(pageVO);
         Page<Subject> subjectPage = new Page<>();
         subjectPage.setPageNum(pageNum);
         subjectPage.setPageSize(pageSize);
@@ -143,7 +165,7 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
     }
 
     @Override
-    public Page<ContentPraise> findValidUsersByPage(Long subjectId, Long pageNum, Integer pageSize) {
+    public Page<UserSimple> findValidUsersByPage(Long subjectId, Long pageNum, Integer pageSize) {
         if (subjectId == null || subjectId == 0) {
             return null;
         }
@@ -152,7 +174,7 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
     }
 
     @Override
-    public Page<ContentPraise> findInvalidUsersByPage(Long subjectId, Long pageNum, Integer pageSize) {
+    public Page<UserSimple> findInvalidUsersByPage(Long subjectId, Long pageNum, Integer pageSize) {
         if (subjectId == null || subjectId == 0) {
             return null;
         }
@@ -161,7 +183,7 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
     }
 
     @Override
-    public Page<ContentPraise> findVerifierByPage(Long subjectId, Long pageNum, Integer pageSize) {
+    public Page<UserSimple> findVerifierByPage(Long subjectId, Long pageNum, Integer pageSize) {
         if (subjectId == null || subjectId == 0) {
             return null;
         }

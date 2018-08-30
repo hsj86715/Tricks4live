@@ -22,9 +22,6 @@ public class Comment extends BaseDBEntry implements Serializable {
     private Comment follow;
     private Boolean deleted = false;
 
-    public Comment() {
-    }
-
     public Comment(Long subjectId, Long userId, String content) {
         this(subjectId, userId, content, null);
     }

@@ -1,6 +1,7 @@
 package com.tricks4live.mappers;
 
 import com.tricks4live.entries.ContentPraise;
+import com.tricks4live.entries.UserSimple;
 import com.tricks4live.vo.PraiseVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -19,5 +20,5 @@ public interface PraiseMapper {
 
     Long getPraiseCount(PraiseVO vo);
 
-    List<ContentPraise> findPraiseUserByPage(PraiseVO vo);
+    List<UserSimple> findPraiseUserByPage(PraiseVO vo);
 }

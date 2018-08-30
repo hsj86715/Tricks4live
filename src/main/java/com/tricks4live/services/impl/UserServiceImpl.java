@@ -1,6 +1,7 @@
 package com.tricks4live.services.impl;
 
-import com.tricks4live.LogAbleClass;
+import com.tricks4live.annotation.PraiseType;
+import com.tricks4live.entries.ContentPraise;
 import com.tricks4live.entries.User;
 import com.tricks4live.mappers.UserMapper;
 import com.tricks4live.services.IUserService;
@@ -13,10 +14,10 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class UserServiceImpl extends LogAbleClass implements IUserService {
+public class UserServiceImpl extends PraiseAbleService implements IUserService {
 
     @Autowired
-    UserMapper mapper;
+    private UserMapper mapper;
 
     @Override
     public boolean userNameUsable(String userName) {
@@ -81,5 +82,11 @@ public class UserServiceImpl extends LogAbleClass implements IUserService {
         List<User> users = mapper.findAll();
         println("findAll", users);
         return users;
+    }
+
+    @Override
+    public Long focusUser(Long whichUser, Long focusWho, Boolean focused) {
+        ContentPraise praise = new ContentPraise(whichUser, focusWho, PraiseType.FOCUS_USER);
+        return setPraised(praise, focused);
     }
 }
