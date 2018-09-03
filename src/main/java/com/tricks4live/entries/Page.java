@@ -62,7 +62,7 @@ public class Page<T> implements Serializable {
         return "Page{" +
                 "pageNum=" + pageNum +
                 ", pageSize=" + pageSize +
-//                ", contentResults=" + contentResults +
+                ", contentResults=" + contentResults +
                 ", totalCount=" + totalCount +
                 ", totalPages=" + getTotalPages() +
                 '}';

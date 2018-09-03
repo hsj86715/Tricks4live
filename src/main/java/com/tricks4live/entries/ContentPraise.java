@@ -13,6 +13,10 @@ public class ContentPraise extends BaseDBEntry implements Serializable {
     private String praiseType = PraiseType.PRAISE_TREAD;
     private Boolean praised = null;
 
+    public ContentPraise(){
+
+    }
+
     public ContentPraise(Long userId, Long contentId, @PraiseType String praiseType) {
         this(userId, contentId, praiseType, null);
     }

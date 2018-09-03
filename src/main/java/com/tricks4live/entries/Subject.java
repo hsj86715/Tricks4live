@@ -1,6 +1,7 @@
 package com.tricks4live.entries;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.tricks4live.annotation.ContentType;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,12 +15,17 @@ public class Subject extends BaseDBEntry implements Serializable {
     private Long categoryId;//所属分类
     private UserSimple user;//发布者
     private String content;
+    @ContentType
+    private String contentType = ContentType.SIMPLE;
     private List<String> picUrls;
     private String videoUrl;
     private Integer validCount;//觉得有用的人
     private Integer invalidCount;//觉得没有用的人
     private List<Label> labels;
     private Boolean deleted = false;
+
+    public Subject() {
+    }
 
     public Subject(String title, Long categoryId, Long userId, String content) {
         this.title = title;
@@ -58,6 +64,14 @@ public class Subject extends BaseDBEntry implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(@ContentType String contentType) {
+        this.contentType = contentType;
     }
 
     public List<String> getPicUrls() {
@@ -115,6 +129,7 @@ public class Subject extends BaseDBEntry implements Serializable {
                 ", categoryId=" + categoryId +
                 ", user=" + user +
                 ", content='" + content + '\'' +
+                ", contentType='" + contentType + "\'" +
                 ", picUrls=" + picUrls +
                 ", videoUrl='" + videoUrl + '\'' +
                 ", validCount=" + validCount +

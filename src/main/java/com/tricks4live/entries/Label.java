@@ -12,6 +12,9 @@ public class Label extends BaseDBEntry implements Serializable {
     private String nameCN;
     private String nameEN;
 
+    public Label() {
+    }
+
     public Label(String nameCN, String nameEN) {
         this.nameCN = nameCN;
         this.nameEN = nameEN;

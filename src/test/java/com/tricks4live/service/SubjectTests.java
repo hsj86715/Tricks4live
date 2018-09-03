@@ -59,4 +59,11 @@ public class SubjectTests extends LogAbleClass {
             println(subject.toString());
         }
     }
+
+    @Test
+    public void testFindNewest() {
+        Page<Subject> subjectPage = service.findByPageForNewest(1L, 5);
+        assert subjectPage != null;
+        println(subjectPage.toString());
+    }
 }

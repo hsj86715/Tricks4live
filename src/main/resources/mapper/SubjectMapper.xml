@@ -7,17 +7,18 @@
         <result property="title" column="title" jdbcType="VARCHAR"/>
         <result property="categoryId" column="category_id" jdbcType="BIGINT"/>
         <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="contentType" column="content_type" jdbcType="VARCHAR"/>
         <result property="videoUrl" column="video_url" jdbcType="VARCHAR"/>
         <result property="deleted" column="deleted" jdbcType="BIT"/>
-    </resultMap>
-
-    <resultMap id="subjectResultMapFull" extends="subjectResultMapBase" type="com.tricks4live.entries.Subject">
         <association property="user" resultMap="Base.simpleUserResultMap"/>
         <collection property="picUrls" ofType="string">
             <result column="picture_path" jdbcType="VARCHAR"/>
         </collection>
+    </resultMap>
+
+    <resultMap id="subjectResultMapFull" extends="subjectResultMapBase" type="com.tricks4live.entries.Subject">
         <collection property="labels" ofType="com.tricks4live.entries.Label">
-            <id property="id" column="tl_id" jdbcType="INTEGER"/>
+            <id property="id" column="tl_id" jdbcType="BIGINT"/>
             <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
             <result property="nameCN" column="name_cn" jdbcType="VARCHAR"/>
             <result property="nameEN" column="name_en" jdbcType="VARCHAR"/>
@@ -75,13 +76,7 @@
         WHERE category_id = #{categoryId, jdbcType=BIGINT} AND enabled = 1 AND deleted = 0
     </select>
 
-    <resultMap id="subjectResultMapSimple" extends="subjectResultMapBase" type="com.tricks4live.entries.Subject">
-        <collection property="picUrls" ofType="string">
-            <result column="picture_path" jdbcType="VARCHAR"/>
-        </collection>
-    </resultMap>
-
-    <select id="findByPageInCategory" parameterType="com.tricks4live.vo.SubjectVO" resultMap="subjectResultMapSimple">
+    <select id="findByPageInCategory" parameterType="com.tricks4live.vo.SubjectVO" resultMap="subjectResultMapBase">
         SELECT
             ts.*,
             sp.picture_path
@@ -101,10 +96,12 @@
         WHERE enabled = 1 AND deleted = 0
     </select>
 
-    <select id="findByPageForNewest" parameterType="com.tricks4live.vo.PageVO" resultMap="subjectResultMapSimple">
+    <select id="findByPageForNewest" parameterType="com.tricks4live.vo.PageVO" resultMap="subjectResultMapBase">
         SELECT
             ts.*,
-            sp.picture_path
+            sp.picture_path,
+            tu.nick_name,
+            tu.avatar
         FROM (
                  SELECT *
                  FROM t_subject
@@ -112,10 +109,11 @@
                  ORDER BY update_date DESC
                  LIMIT #{limitOff, jdbcType=BIGINT}, #{limitRows, jdbcType=INTEGER}) ts LEFT JOIN subject_picture sp
                 ON ts._id = sp.subject_id
+            LEFT JOIN t_user tu ON ts.user_id = tu._id
         ORDER BY update_date DESC, ts._id DESC
     </select>
 
-    <select id="findCollectedByPage" parameterType="com.tricks4live.vo.PraiseVO" resultMap="subjectResultMapSimple">
+    <select id="findCollectedByPage" parameterType="com.tricks4live.vo.PraiseVO" resultMap="subjectResultMapBase">
         SELECT ts.*
         FROM t_praise tp LEFT JOIN t_subject ts ON tp.content_id = ts._id
         WHERE tp.user_id = #{userId, jdbcType=BIGINT} AND tp.praise_type = #{praiseType, jdbcType=VARCHAR} AND
