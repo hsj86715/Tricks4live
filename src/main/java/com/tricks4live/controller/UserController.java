@@ -83,42 +83,67 @@ public class UserController {
 
         if (StringUtils.isEmpty(user.getUserName())) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMPTY_USERNAME));
-        } else if (StringUtils.isEmpty(user.getPassword())) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMPTY_PWD));
-        } else if (StringUtils.isEmpty(user.getEmail())) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMPTY_EMAIL));
+            return result;
         } else {
-            String password = user.getPassword();
-            if (password.length() < 6) {
-                result.setCodeMsg(Constants.getErrorMsg(ErrCode.PWD_SHORT));
-            } else {
-                String userAgent = request.getHeader("User-Agent");
-                user = userService.register(user, userAgent);
-                result.setData(user);
+            Boolean usable = userService.userNameUsable(user.getUserName());
+            if (!usable) {
+                result.setCodeMsg(Constants.getErrorMsg(ErrCode.USERNAME_OCCUPIED), user.getUserName());
+                return result;
             }
         }
+        if (StringUtils.isEmpty(user.getPassword())) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMPTY_PWD));
+            return result;
+        }
+        if (StringUtils.isEmpty(user.getEmail())) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMPTY_EMAIL));
+            return result;
+        } else {
+            Boolean usable = userService.emailUsable(user.getEmail());
+            if (!usable) {
+                result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMAIL_OCCUPIED), user.getEmail());
+                return result;
+            }
+        }
+        if (!StringUtils.isEmpty(user.getPhone())) {
+            Boolean usable = userService.phoneUsable(user.getPhone());
+            if (!usable) {
+                result.setCodeMsg(Constants.getErrorMsg(ErrCode.PHONE_OCCUPIED), user.getPhone());
+                return result;
+            }
+        }
+        String userAgent = request.getHeader("User-Agent");
+        user = userService.register(user, userAgent);
+        result.setData(user);
         return result;
     }
 
     @PostMapping("/login")
     @ResponseBody
-    public DataResult<User> login(@RequestParam("user_name") String userName,
-                                  @RequestParam("password") String password, HttpServletRequest request) {
+    public DataResult<User> login(@RequestBody User user, HttpServletRequest request) {
         DataResult<User> result = new DataResult<>();
 
-        if (StringUtils.isEmpty(userName)) {
+        if (StringUtils.isEmpty(user.getUserName())) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMPTY_USERNAME));
-        } else if (StringUtils.isEmpty(password)) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMPTY_PWD));
+            return result;
         } else {
-            String userAgent = request.getHeader("User-Agent");
-            User user = userService.login(userName, password, userAgent);
-            if (user == null) {
-                result.setCodeMsg(Constants.getErrorMsg(ErrCode.USERNAME_OR_PWD_ERR));
-            } else {
-                result.setMsg("User login successful");
-                result.setData(user);
+            Boolean usable = userService.userNameUsable(user.getUserName());
+            if (usable) {
+                result.setCodeMsg(Constants.getErrorMsg(ErrCode.USER_NOT_EXISTS), user.getUserName());
+                return result;
             }
+        }
+        if (StringUtils.isEmpty(user.getPassword())) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMPTY_PWD));
+            return result;
+        }
+
+        String userAgent = request.getHeader("User-Agent");
+        User userLogin = userService.login(user.getUserName(), user.getPassword(), userAgent);
+        if (userLogin == null) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.USERNAME_OR_PWD_ERR));
+        } else {
+            result.setData(userLogin);
         }
         return result;
     }

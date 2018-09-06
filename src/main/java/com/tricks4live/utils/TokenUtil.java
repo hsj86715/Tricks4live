@@ -20,7 +20,7 @@ public class TokenUtil {
                 .withIssuer("tricks4live")
                 .withIssuedAt(new Date())
                 .withSubject("login")
-                .withJWTId(user.getId().toString())
+                .withJWTId(user.getUserName())
                 .withAudience(userAgent)
                 .withClaim("permission", user.getPermission())
                 .withClaim("nickName", user.getNickName())
