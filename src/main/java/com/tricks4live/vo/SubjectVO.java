@@ -6,7 +6,6 @@ import java.util.List;
 
 public class SubjectVO extends PageVO {
     private Long id;
-    private List<String> picturePaths;
     private List<Label> labelList;
     private Long categoryId;
     private Long userId;
@@ -17,14 +16,6 @@ public class SubjectVO extends PageVO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public List<String> getPicturePaths() {
-        return picturePaths;
-    }
-
-    public void setPicturePaths(List<String> picturePaths) {
-        this.picturePaths = picturePaths;
     }
 
     public List<Label> getLabelList() {

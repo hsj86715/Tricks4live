@@ -15,9 +15,10 @@ public class Subject extends BaseDBEntry implements Serializable {
     private Long categoryId;//所属分类
     private UserSimple user;//发布者
     private String content;
+    private String coverPicture;
     @ContentType
     private String contentType = ContentType.SIMPLE;
-    private List<String> picUrls;
+    private String operateSteps;//json格式字符串
     private String videoUrl;
     private Integer validCount;//觉得有用的人
     private Integer invalidCount;//觉得没有用的人
@@ -74,12 +75,20 @@ public class Subject extends BaseDBEntry implements Serializable {
         this.contentType = contentType;
     }
 
-    public List<String> getPicUrls() {
-        return picUrls;
+    public String getCoverPicture() {
+        return coverPicture;
     }
 
-    public void setPicUrls(List<String> picUrls) {
-        this.picUrls = picUrls;
+    public void setCoverPicture(String coverPicture) {
+        this.coverPicture = coverPicture;
+    }
+
+    public String getOperateSteps() {
+        return operateSteps;
+    }
+
+    public void setOperateSteps(String operateSteps) {
+        this.operateSteps = operateSteps;
     }
 
     public String getVideoUrl() {
@@ -128,9 +137,10 @@ public class Subject extends BaseDBEntry implements Serializable {
                 ", title='" + title + '\'' +
                 ", categoryId=" + categoryId +
                 ", user=" + user +
+                ", coverPicture='" + coverPicture + "\'" +
                 ", content='" + content + '\'' +
                 ", contentType='" + contentType + "\'" +
-                ", picUrls=" + picUrls +
+                ", operateSteps='" + operateSteps + "\'" +
                 ", videoUrl='" + videoUrl + '\'' +
                 ", validCount=" + validCount +
                 ", invalidCount" + invalidCount +

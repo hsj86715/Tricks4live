@@ -101,9 +101,25 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
         return subjectPage;
     }
 
-    private Long addPicture(SubjectVO subjectVO) {
-        mapper.addPicture(subjectVO);
-        return subjectVO.getId();
+    @Override
+    public Page<Subject> findUserPublishByPage(Long userId, Long pageNum, Integer pageSize) {
+        SubjectVO subjectVO = new SubjectVO();
+        Long pageIdx = pageNum - 1;
+        if (pageIdx < 0) {
+            pageIdx = 0L;
+        }
+
+        subjectVO.setLimitOff(pageIdx * pageSize);
+        subjectVO.setLimitRows(pageSize);
+
+        Long totalCount = mapper.getUsersCount(userId);
+        List<Subject> result = mapper.findByPageForUser(subjectVO);
+        Page<Subject> subjectPage = new Page<>();
+        subjectPage.setPageNum(pageNum);
+        subjectPage.setPageSize(pageSize);
+        subjectPage.setContentResults(result);
+        subjectPage.setTotalCount(totalCount);
+        return subjectPage;
     }
 
     private Long addLabel(SubjectVO subjectVO) {
@@ -124,12 +140,6 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
             subjectVO.setId(sid);
             subjectVO.setLabelList(subject.getLabels());
             addLabel(subjectVO);
-        }
-        if (subject.getPicUrls() != null) {
-            subjectVO = new SubjectVO();
-            subjectVO.setId(sid);
-            subjectVO.setPicturePaths(subject.getPicUrls());
-            addPicture(subjectVO);
         }
         println(subject.toString());
         return sid;

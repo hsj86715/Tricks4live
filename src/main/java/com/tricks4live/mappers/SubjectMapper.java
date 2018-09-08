@@ -15,8 +15,6 @@ public interface SubjectMapper {
 
     Subject findById(Long subjectId);
 
-    void addPicture(SubjectVO subjectVO);
-
     void addLabel(SubjectVO subjectVO);
 
     void addSubject(Subject subject);
@@ -32,4 +30,8 @@ public interface SubjectMapper {
     Long getCount();
 
     List<Subject> findByPageForNewest(PageVO pageVO);
+
+    List<Subject> findByPageForUser(SubjectVO subjectVO);
+
+    Long getUsersCount(Long userId);
 }

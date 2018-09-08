@@ -33,4 +33,6 @@ public interface ISubjectService {
     Page<Subject> findCollectedByPage(Long userId, Long pageNum, Integer pageSize);
 
     Page<Subject> findByPageForNewest(Long pageNum, Integer pageSize);
+
+    Page<Subject> findUserPublishByPage(Long userId, Long pageNum, Integer pageSize);
 }

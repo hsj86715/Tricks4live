@@ -1,8 +1,11 @@
 package com.tricks4live.service;
 
+import com.google.gson.Gson;
 import com.tricks4live.LogAbleClass;
+import com.tricks4live.annotation.ContentType;
 import com.tricks4live.entries.Label;
 import com.tricks4live.entries.Page;
+import com.tricks4live.Steps;
 import com.tricks4live.entries.Subject;
 import com.tricks4live.services.ILabelService;
 import com.tricks4live.services.ISubjectService;
@@ -35,17 +38,26 @@ public class SubjectTests extends LogAbleClass {
         int start = random.nextInt(100 - size);
         println("testAddSubject", labels);
         subject.setLabels(labels.subList(start, start + size));
-        List<String> pics = new ArrayList<>();
-        pics.add("pic1akdjfkdjfkladjfl" + size + start);
-        pics.add("pic2akjdfaldjflakfalfanldfklk" + size + start);
-        subject.setPicUrls(pics);
+        subject.setCoverPicture("cover_picture_akndfkjankfankf" + size + start);
+        subject.setContentType(ContentType.STEP);
+        List<Steps> stepsList = new ArrayList<>();
+        Steps steps = new Steps();
+        steps.setOperation("Step1:aknfaknfkanfafn");
+        steps.setStepPicture("Step1_picture_laknkfankdlkad");
+        stepsList.add(steps);
+
+        steps = new Steps();
+        steps.setOperation("Step2:aknfaknfkanfafn");
+        steps.setStepPicture("Step2_picture_laknkfankdlkad");
+        stepsList.add(steps);
+        subject.setOperateSteps(new Gson().toJson(stepsList));
         service.addSubject(subject);
 //        }
     }
 
     @Test
     public void testFindById() {
-        Subject subject = service.findById(2L);
+        Subject subject = service.findById(17L);
         println("testFindById", subject);
     }
 

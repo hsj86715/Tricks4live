@@ -234,4 +234,20 @@ public class SubjectController {
         result.setData(subjectPage);
         return result;
     }
+
+    @RequestMapping("/findMyPublish")
+    @ResponseBody
+    public DataResult<Page<Subject>> findMyPublish(@RequestParam("user_id") Long userId,
+                                                   @RequestParam("page_num") Long pageNum,
+                                                   @RequestParam(name = "page_size", defaultValue = "20",
+                                                           required = false) Integer pageSize) {
+        DataResult<Page<Subject>> result = new DataResult<>();
+        if (userId <= 0 || pageNum < 1) {
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "user_id or/and page_num");
+            return result;
+        }
+        Page<Subject> subjectPage = service.findUserPublishByPage(userId, pageNum, pageSize);
+        result.setData(subjectPage);
+        return result;
+    }
 }
