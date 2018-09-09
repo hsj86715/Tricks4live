@@ -19,4 +19,10 @@
         <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
         <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
     </resultMap>
+
+    <resultMap id="simpleCategoryResultMap" type="com.tricks4live.entries.CategorySimple">
+        <id property="id" column="category_id" jdbcType="BIGINT"/>
+        <result property="nameCN" column="cat_name_cn" jdbcType="VARCHAR"/>
+        <result property="nameEN" column="cat_name_en" jdbcType="VARCHAR"/>
+    </resultMap>
 </mapper>

@@ -4,8 +4,8 @@ import java.lang.reflect.Type;
 
 public class Steps implements Type{
     private String operation;
-    private String stepPicture;
-    private Integer stepCost;
+    private String picture;
+    private Integer timeCosts;
 
     public String getOperation() {
         return operation;
@@ -15,28 +15,28 @@ public class Steps implements Type{
         this.operation = operation;
     }
 
-    public String getStepPicture() {
-        return stepPicture;
+    public String getPicture() {
+        return picture;
     }
 
-    public void setStepPicture(String stepPicture) {
-        this.stepPicture = stepPicture;
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 
-    public Integer getStepCost() {
-        return stepCost;
+    public Integer getTimeCosts() {
+        return timeCosts;
     }
 
-    public void setStepCost(Integer stepCost) {
-        this.stepCost = stepCost;
+    public void setTimeCosts(Integer timeCosts) {
+        this.timeCosts = timeCosts;
     }
 
     @Override
     public String toString() {
         return "Steps{" +
                 "operation='" + operation + '\'' +
-                ", stepPicture='" + stepPicture + '\'' +
-                ", stepCost=" + stepCost +
+                ", picture='" + picture + '\'' +
+                ", timeCosts=" + timeCosts +
                 '}';
     }
 }

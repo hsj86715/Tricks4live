@@ -1,12 +1,12 @@
 package com.tricks4live.vo;
 
-import com.tricks4live.entries.Label;
+import com.tricks4live.entries.LabelSimple;
 
 import java.util.List;
 
 public class SubjectVO extends PageVO {
     private Long id;
-    private List<Label> labelList;
+    private List<LabelSimple> labelList;
     private Long categoryId;
     private Long userId;
 
@@ -18,11 +18,11 @@ public class SubjectVO extends PageVO {
         this.id = id;
     }
 
-    public List<Label> getLabelList() {
+    public List<LabelSimple> getLabelList() {
         return labelList;
     }
 
-    public void setLabelList(List<Label> labelList) {
+    public void setLabelList(List<LabelSimple> labelList) {
         this.labelList = labelList;
     }
 

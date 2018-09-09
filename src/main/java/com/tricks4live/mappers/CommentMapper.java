@@ -1,6 +1,7 @@
 package com.tricks4live.mappers;
 
 import com.tricks4live.entries.Comment;
+import com.tricks4live.entries.CommentInfo;
 import com.tricks4live.vo.CommentVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -14,9 +15,9 @@ public interface CommentMapper {
 
     Long getCountInSubject(Long subjectId);
 
-    List<Comment> findByPageInSubject(CommentVO vo);
+    List<CommentInfo> findByPageInSubject(CommentVO vo);
 
-    Comment findSuperComment(Long superId);
+    CommentInfo findSuperComment(Long superId);
 
-    Comment findSubComment(Long commId);
+    CommentInfo findSubComment(Long commId);
 }

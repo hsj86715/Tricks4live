@@ -3,40 +3,52 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tricks4live.mappers.SubjectMapper">
-    <resultMap id="subjectResultMapBase" extends="Base.baseResultMap" type="com.tricks4live.entries.Subject">
+    <resultMap id="subjectResultMap" extends="Base.baseResultMap" type="com.tricks4live.entries.Subject">
         <result property="title" column="title" jdbcType="VARCHAR"/>
         <result property="categoryId" column="category_id" jdbcType="BIGINT"/>
         <result property="coverPicture" column="cover_picture" jdbcType="VARCHAR"/>
         <result property="content" column="content" jdbcType="VARCHAR"/>
         <result property="contentType" column="content_type" jdbcType="VARCHAR"/>
-        <result property="operateSteps" column="operate_steps" jdbcType="VARCHAR"/>
         <result property="videoUrl" column="video_url" jdbcType="VARCHAR"/>
         <result property="deleted" column="deleted" jdbcType="BIT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <resultMap id="subjectInfoResultMap" type="com.tricks4live.entries.SubjectInfo">
+        <id property="id" column="_id" jdbcType="BIGINT"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="coverPicture" column="cover_picture" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="contentType" column="content_type" jdbcType="VARCHAR"/>
+        <result property="deleted" column="deleted" jdbcType="BIT"/>
+        <result property="validCount" column="valid_count"/>
+        <result property="invalidCount" column="invalid_count"/>
         <association property="user" resultMap="Base.simpleUserResultMap"/>
     </resultMap>
 
-    <resultMap id="subjectResultMapFull" extends="subjectResultMapBase" type="com.tricks4live.entries.Subject">
-        <collection property="labels" ofType="com.tricks4live.entries.Label">
+    <resultMap id="subjectInfoResultMapFull" extends="subjectInfoResultMap" type="com.tricks4live.entries.SubjectInfo">
+        <result property="videoUrl" column="video_url" jdbcType="VARCHAR"/>
+        <result property="operateSteps" column="operate_steps" jdbcType="VARCHAR"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"/>
+        <association property="category" resultMap="Base.simpleCategoryResultMap"/>
+        <collection property="labels" ofType="com.tricks4live.entries.LabelSimple">
             <id property="id" column="tl_id" jdbcType="BIGINT"/>
-            <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
             <result property="nameCN" column="name_cn" jdbcType="VARCHAR"/>
             <result property="nameEN" column="name_en" jdbcType="VARCHAR"/>
         </collection>
     </resultMap>
 
-    <select id="findById" parameterType="long" resultMap="subjectResultMapFull">
+    <select id="findById" parameterType="long" resultMap="subjectInfoResultMapFull">
         SELECT
-            ts.*,
+            si.*,
             tl._id tl_id,
             tl.name_cn,
-            tl.name_en,
-            tu.nick_name,
-            tu.avatar
-        FROM t_subject ts, label_subject ls, t_label tl, t_user tu
-        WHERE ts._id = ls.subject_id AND
-              ts.user_id = tu._id AND
+            tl.name_en
+        FROM subject_info si, label_subject ls, t_label tl
+        WHERE si._id = ls.subject_id AND
               ls.label_id = tl._id AND
-              ts._id = #{id, jdbcType=BIGINT} AND ts.enabled = 1 AND ts.deleted = 0
+              si._id = #{id, jdbcType=BIGINT}
     </select>
 
     <insert id="addLabel" parameterType="com.tricks4live.vo.SubjectVO" useGeneratedKeys="true" keyProperty="id">
@@ -62,65 +74,55 @@
 
     <select id="getCountInCategory" parameterType="long" resultType="long">
         SELECT COUNT(*)
-        FROM t_subject
-        WHERE category_id = #{categoryId, jdbcType=BIGINT} AND enabled = 1 AND deleted = 0
+        FROM subject_info
+        WHERE category_id = #{categoryId, jdbcType=BIGINT}
     </select>
 
-    <select id="findByPageInCategory" parameterType="com.tricks4live.vo.SubjectVO" resultMap="subjectResultMapBase">
-        SELECT
-            ts.*,
-            tu.nick_name,
-            tu.avatar
-        FROM t_subject ts LEFT JOIN t_user tu ON ts.user_id = tu._id
-        WHERE ts.category_id = #{categoryId, jdbcType=BIGINT} AND ts.enabled = 1 AND ts.deleted = 0
-        ORDER BY ts.update_date DESC
+    <select id="findByPageInCategory" parameterType="com.tricks4live.vo.SubjectVO" resultMap="subjectInfoResultMap">
+        SELECT *
+        FROM subject_info
+        WHERE category_id = #{categoryId, jdbcType=BIGINT}
+        ORDER BY update_date DESC
         LIMIT #{limitOff, jdbcType=BIGINT}, #{limitRows, jdbcType=INTEGER}
     </select>
 
     <select id="getCount" resultType="long">
         SELECT COUNT(*)
-        FROM t_subject
-        WHERE enabled = 1 AND deleted = 0
+        FROM subject_info
     </select>
 
-    <select id="findByPageForNewest" parameterType="com.tricks4live.vo.PageVO" resultMap="subjectResultMapBase">
-        SELECT
-            ts.*,
-            tu.nick_name,
-            tu.avatar
-        FROM t_subject ts LEFT JOIN t_user tu ON ts.user_id = tu._id
-        WHERE ts.enabled = 1 AND ts.deleted = 0
-        ORDER BY ts.update_date DESC
+    <select id="findByPageForNewest" parameterType="com.tricks4live.vo.PageVO" resultMap="subjectInfoResultMap">
+        SELECT *
+        FROM subject_info ts
+        ORDER BY update_date DESC
         LIMIT #{limitOff, jdbcType=BIGINT}, #{limitRows, jdbcType=INTEGER}
     </select>
 
-    <select id="findCollectedByPage" parameterType="com.tricks4live.vo.PraiseVO" resultMap="subjectResultMapBase">
-        SELECT
-            ts.*,
-            tu.nick_name,
-            tu.avatar
-        FROM t_praise tp LEFT JOIN t_subject ts ON tp.content_id = ts._id
-            LEFT JOIN t_user tu ON ts.user_id = tu._id
-        WHERE tp.user_id = #{userId, jdbcType=BIGINT} AND tp.praise_type = #{praiseType, jdbcType=VARCHAR} AND
-              tp.praised = #{praised, jdbcType=BIT}
-        LIMIT #{limitOff, jdbcType=BIGINT}, #{limitRows, jdbcType=INTEGER}
+    <select id="getCollectedCount" parameterType="long" resultType="long">
+        SELECT COUNT(*)
+        FROM subject_collect
+        WHERE user_id = #{userId, jdbcType=BIGINT}
     </select>
 
-    <select id="findByPageForUser" parameterType="com.tricks4live.vo.SubjectVO" resultMap="subjectResultMapBase">
-        SELECT
-            ts.*,
-            tu.nick_name,
-            tu.avatar
-        FROM t_subject ts LEFT JOIN t_user tu ON ts.user_id = tu._id
-        WHERE ts.user_id = #{userId, jdbcType=BIGINT} AND ts.enabled = 1 AND ts.deleted = 0
-        ORDER BY ts.update_date DESC
+    <select id="findCollectedByPage" parameterType="com.tricks4live.vo.SubjectVO" resultMap="subjectInfoResultMap">
+        SELECT *
+        FROM subject_collect sc LEFT JOIN subject_info si ON sc.subject_id = si._id
+        WHERE sc.user_id = #{userId, jdbcType=BIGINT}
         LIMIT #{limitOff, jdbcType=BIGINT}, #{limitRows, jdbcType=INTEGER}
     </select>
 
     <select id="getUsersCount" parameterType="long" resultType="long">
         SELECT COUNT(*)
-        FROM t_subject
-        WHERE user_id = #{userId, jdbcType=BIGINT} AND enabled = 1 AND deleted = 0
+        FROM subject_info
+        WHERE user_id = #{userId, jdbcType=BIGINT}
+    </select>
+
+    <select id="findByPageForUser" parameterType="com.tricks4live.vo.SubjectVO" resultMap="subjectInfoResultMap">
+        SELECT *
+        FROM subject_info
+        WHERE user_id = #{userId, jdbcType=BIGINT}
+        ORDER BY update_date DESC
+        LIMIT #{limitOff, jdbcType=BIGINT}, #{limitRows, jdbcType=INTEGER}
     </select>
 
     <update id="deleteSubject" parameterType="long">

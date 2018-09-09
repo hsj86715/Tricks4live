@@ -2,6 +2,7 @@ package com.tricks4live.controller;
 
 import com.tricks4live.annotation.ErrCode;
 import com.tricks4live.entries.Comment;
+import com.tricks4live.entries.CommentInfo;
 import com.tricks4live.entries.Page;
 import com.tricks4live.entries.result.BaseResult;
 import com.tricks4live.entries.result.DataResult;
@@ -50,15 +51,15 @@ public class CommentController {
 
     @RequestMapping("/findByPage")
     @ResponseBody
-    public DataResult<Page<Comment>> findByPage(@RequestParam("subject_id") Long subjectId,
+    public DataResult<Page<CommentInfo>> findByPage(@RequestParam("subject_id") Long subjectId,
                                                 @RequestParam("page_num") Long pageNum,
                                                 @RequestParam(name = "page_size", required = false, defaultValue = "20") Integer pageSize) {
-        DataResult<Page<Comment>> result = new DataResult<>();
+        DataResult<Page<CommentInfo>> result = new DataResult<>();
         if (subjectId <= 0 || pageNum < 1) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id or/and page_num");
             return result;
         }
-        Page<Comment> commentPage = service.findByPageInSubject(subjectId, pageNum, pageSize);
+        Page<CommentInfo> commentPage = service.findByPageInSubject(subjectId, pageNum, pageSize);
         result.setData(commentPage);
         return result;
     }

@@ -2,7 +2,7 @@ package com.tricks4live.controller;
 
 import com.tricks4live.annotation.ErrCode;
 import com.tricks4live.entries.Page;
-import com.tricks4live.entries.Subject;
+import com.tricks4live.entries.SubjectInfo;
 import com.tricks4live.entries.UserSimple;
 import com.tricks4live.entries.result.BaseResult;
 import com.tricks4live.entries.result.DataResult;
@@ -20,24 +20,24 @@ public class SubjectController {
 
     @RequestMapping("/findByPage")
     @ResponseBody
-    public DataResult<Page<Subject>> findByPage(@RequestParam("category_id") Long categoryId,
-                                                @RequestParam("page_num") Long pageNum,
-                                                @RequestParam(name = "page_size", defaultValue = "20",
-                                                        required = false) Integer pageSize) {
-        DataResult<Page<Subject>> result = new DataResult<>();
+    public DataResult<Page<SubjectInfo>> findByPage(@RequestParam("category_id") Long categoryId,
+                                                    @RequestParam("page_num") Long pageNum,
+                                                    @RequestParam(name = "page_size", defaultValue = "20",
+                                                            required = false) Integer pageSize) {
+        DataResult<Page<SubjectInfo>> result = new DataResult<>();
         if (categoryId <= 0 || pageNum < 1) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "category_id or/and page_num");
             return result;
         }
-        Page<Subject> subjectPage = service.findByPageInCategory(categoryId, pageNum, pageSize);
+        Page<SubjectInfo> subjectPage = service.findByPageInCategory(categoryId, pageNum, pageSize);
         result.setData(subjectPage);
         return result;
     }
 
     @RequestMapping("/findById")
     @ResponseBody
-    public DataResult<Subject> findById(@RequestParam("subject_id") Long subjectId) {
-        DataResult<Subject> result = new DataResult<>();
+    public DataResult<SubjectInfo> findById(@RequestParam("subject_id") Long subjectId) {
+        DataResult<SubjectInfo> result = new DataResult<>();
         if (subjectId <= 0) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id");
             return result;
@@ -48,7 +48,7 @@ public class SubjectController {
 
     @PostMapping(value = "/addSubject", headers = Constants.HEADER, produces = Constants.APPLICATION_JSON)
     @ResponseBody
-    public BaseResult addSubject(@RequestBody Subject subject) {
+    public BaseResult addSubject(@RequestBody SubjectInfo subject) {
         BaseResult result = new BaseResult();
         Long id = service.addSubject(subject);
         if (id <= 0) {
@@ -206,47 +206,47 @@ public class SubjectController {
 
     @RequestMapping("/findCollected")
     @ResponseBody
-    public DataResult<Page<Subject>> findCollected(@RequestParam("user_id") Long userId,
-                                                   @RequestParam("page_num") Long pageNum,
-                                                   @RequestParam(name = "page_size", defaultValue = "20",
-                                                           required = false) Integer pageSize) {
-        DataResult<Page<Subject>> result = new DataResult<>();
+    public DataResult<Page<SubjectInfo>> findCollected(@RequestParam("user_id") Long userId,
+                                                       @RequestParam("page_num") Long pageNum,
+                                                       @RequestParam(name = "page_size", defaultValue = "20",
+                                                               required = false) Integer pageSize) {
+        DataResult<Page<SubjectInfo>> result = new DataResult<>();
         if (userId <= 0 || pageNum < 1) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "user_id or/and page_num");
             return result;
         }
-        Page<Subject> subjectPage = service.findCollectedByPage(userId, pageNum, pageSize);
+        Page<SubjectInfo> subjectPage = service.findCollectedByPage(userId, pageNum, pageSize);
         result.setData(subjectPage);
         return result;
     }
 
     @RequestMapping("/findNewest")
     @ResponseBody
-    public DataResult<Page<Subject>> findNewest(@RequestParam("page_num") Long pageNum,
-                                                @RequestParam(name = "page_size", defaultValue = "20",
-                                                        required = false) Integer pageSize) {
-        DataResult<Page<Subject>> result = new DataResult<>();
+    public DataResult<Page<SubjectInfo>> findNewest(@RequestParam("page_num") Long pageNum,
+                                                    @RequestParam(name = "page_size", defaultValue = "20",
+                                                            required = false) Integer pageSize) {
+        DataResult<Page<SubjectInfo>> result = new DataResult<>();
         if (pageNum < 1) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "page_num");
             return result;
         }
-        Page<Subject> subjectPage = service.findByPageForNewest(pageNum, pageSize);
+        Page<SubjectInfo> subjectPage = service.findByPageForNewest(pageNum, pageSize);
         result.setData(subjectPage);
         return result;
     }
 
     @RequestMapping("/findMyPublish")
     @ResponseBody
-    public DataResult<Page<Subject>> findMyPublish(@RequestParam("user_id") Long userId,
-                                                   @RequestParam("page_num") Long pageNum,
-                                                   @RequestParam(name = "page_size", defaultValue = "20",
-                                                           required = false) Integer pageSize) {
-        DataResult<Page<Subject>> result = new DataResult<>();
+    public DataResult<Page<SubjectInfo>> findMyPublish(@RequestParam("user_id") Long userId,
+                                                       @RequestParam("page_num") Long pageNum,
+                                                       @RequestParam(name = "page_size", defaultValue = "20",
+                                                               required = false) Integer pageSize) {
+        DataResult<Page<SubjectInfo>> result = new DataResult<>();
         if (userId <= 0 || pageNum < 1) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "user_id or/and page_num");
             return result;
         }
-        Page<Subject> subjectPage = service.findUserPublishByPage(userId, pageNum, pageSize);
+        Page<SubjectInfo> subjectPage = service.findUserPublishByPage(userId, pageNum, pageSize);
         result.setData(subjectPage);
         return result;
     }

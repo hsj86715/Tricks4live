@@ -3,7 +3,7 @@ package com.tricks4live.services.impl;
 import com.tricks4live.annotation.PraiseType;
 import com.tricks4live.entries.ContentPraise;
 import com.tricks4live.entries.Page;
-import com.tricks4live.entries.Subject;
+import com.tricks4live.entries.SubjectInfo;
 import com.tricks4live.entries.UserSimple;
 import com.tricks4live.mappers.SubjectMapper;
 import com.tricks4live.services.ISubjectService;
@@ -22,8 +22,8 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
     private SubjectMapper mapper;
 
     @Override
-    public Subject findById(Long subjectId) {
-        Subject subject = mapper.findById(subjectId);
+    public SubjectInfo findById(Long subjectId) {
+        SubjectInfo subject = mapper.findById(subjectId);
         PraiseVO praiseVO = new PraiseVO(subjectId, PraiseType.PRAISE_TREAD, true);
         subject.setValidCount(Math.toIntExact(praiseMapper.getPraiseCount(praiseVO)));
         praiseVO.setPraised(false);
@@ -32,10 +32,7 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
     }
 
     @Override
-    public Page<Subject> findByPageInCategory(Long catId, Long pageNum, Integer pageSize) {
-        if (catId == null || catId == 0) {
-            return null;
-        }
+    public Page<SubjectInfo> findByPageInCategory(Long catId, Long pageNum, Integer pageSize) {
         SubjectVO vo = new SubjectVO();
         vo.setCategoryId(catId);
         Long pageIdx = pageNum - 1;
@@ -46,9 +43,9 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
         vo.setLimitRows(pageSize);
 
         Long totalCount = mapper.getCountInCategory(catId);
-        List<Subject> result = mapper.findByPageInCategory(vo);
+        List<SubjectInfo> result = mapper.findByPageInCategory(vo);
 
-        Page<Subject> subjectPage = new Page<>();
+        Page<SubjectInfo> subjectPage = new Page<>();
         subjectPage.setPageNum(pageNum);
         subjectPage.setPageSize(pageSize);
         subjectPage.setContentResults(result);
@@ -57,23 +54,20 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
     }
 
     @Override
-    public Page<Subject> findCollectedByPage(Long userId, Long pageNum, Integer pageSize) {
-        if (userId == null || userId == 0) {
-            return null;
-        }
-        PraiseVO praiseVO = new PraiseVO(PraiseType.COLLECT_SUBJECT, true);
-        praiseVO.setUserId(userId);
+    public Page<SubjectInfo> findCollectedByPage(Long userId, Long pageNum, Integer pageSize) {
+        SubjectVO subjectVO = new SubjectVO();
+        subjectVO.setUserId(userId);
         Long pageIdx = pageNum - 1;
         if (pageIdx < 0) {
             pageIdx = 0L;
         }
-        praiseVO.setLimitOff(pageIdx * pageSize);
-        praiseVO.setLimitRows(pageSize);
+        subjectVO.setLimitOff(pageIdx * pageSize);
+        subjectVO.setLimitRows(pageSize);
 
-        Long totalCount = praiseMapper.getPraiseCount(praiseVO);
-        List<Subject> result = mapper.findCollectedByPage(praiseVO);
+        Long totalCount = mapper.getCollectedCount(userId);
+        List<SubjectInfo> result = mapper.findCollectedByPage(subjectVO);
 
-        Page<Subject> subjectPage = new Page<>();
+        Page<SubjectInfo> subjectPage = new Page<>();
         subjectPage.setPageNum(pageNum);
         subjectPage.setPageSize(pageSize);
         subjectPage.setContentResults(result);
@@ -82,7 +76,7 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
     }
 
     @Override
-    public Page<Subject> findByPageForNewest(Long pageNum, Integer pageSize) {
+    public Page<SubjectInfo> findByPageForNewest(Long pageNum, Integer pageSize) {
         PageVO pageVO = new PraiseVO();
         Long pageIdx = pageNum - 1;
         if (pageIdx < 0) {
@@ -92,8 +86,8 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
         pageVO.setLimitRows(pageSize);
 
         Long totalCount = mapper.getCount();
-        List<Subject> result = mapper.findByPageForNewest(pageVO);
-        Page<Subject> subjectPage = new Page<>();
+        List<SubjectInfo> result = mapper.findByPageForNewest(pageVO);
+        Page<SubjectInfo> subjectPage = new Page<>();
         subjectPage.setPageNum(pageNum);
         subjectPage.setPageSize(pageSize);
         subjectPage.setContentResults(result);
@@ -102,7 +96,7 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
     }
 
     @Override
-    public Page<Subject> findUserPublishByPage(Long userId, Long pageNum, Integer pageSize) {
+    public Page<SubjectInfo> findUserPublishByPage(Long userId, Long pageNum, Integer pageSize) {
         SubjectVO subjectVO = new SubjectVO();
         Long pageIdx = pageNum - 1;
         if (pageIdx < 0) {
@@ -113,8 +107,8 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
         subjectVO.setLimitRows(pageSize);
 
         Long totalCount = mapper.getUsersCount(userId);
-        List<Subject> result = mapper.findByPageForUser(subjectVO);
-        Page<Subject> subjectPage = new Page<>();
+        List<SubjectInfo> result = mapper.findByPageForUser(subjectVO);
+        Page<SubjectInfo> subjectPage = new Page<>();
         subjectPage.setPageNum(pageNum);
         subjectPage.setPageSize(pageSize);
         subjectPage.setContentResults(result);
@@ -128,11 +122,11 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
     }
 
     @Override
-    public Long addSubject(Subject subject) {
+    public Long addSubject(SubjectInfo subject) {
         Date date = new Date();
         subject.setCreateDate(date);
         subject.setUpdateDate(date);
-        mapper.addSubject(subject);
+        mapper.addSubject(subject.toSubject());
         Long sid = subject.getId();
         SubjectVO subjectVO = null;
         if (subject.getLabels() != null) {

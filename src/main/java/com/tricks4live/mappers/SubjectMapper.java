@@ -1,8 +1,8 @@
 package com.tricks4live.mappers;
 
 import com.tricks4live.entries.Subject;
+import com.tricks4live.entries.SubjectInfo;
 import com.tricks4live.vo.PageVO;
-import com.tricks4live.vo.PraiseVO;
 import com.tricks4live.vo.SubjectVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 public interface SubjectMapper {
 
-    Subject findById(Long subjectId);
+    SubjectInfo findById(Long subjectId);
 
     void addLabel(SubjectVO subjectVO);
 
@@ -21,17 +21,19 @@ public interface SubjectMapper {
 
     void deleteSubject(Long subjectId);
 
-    List<Subject> findByPageInCategory(SubjectVO subjectVO);
+    List<SubjectInfo> findByPageInCategory(SubjectVO subjectVO);
 
     Long getCountInCategory(Long catId);
 
-    List<Subject> findCollectedByPage(PraiseVO praiseVO);
+    List<SubjectInfo> findCollectedByPage(SubjectVO subjectVO);
+
+    Long getCollectedCount(Long userId);
+
+    List<SubjectInfo> findByPageForNewest(PageVO pageVO);
 
     Long getCount();
 
-    List<Subject> findByPageForNewest(PageVO pageVO);
-
-    List<Subject> findByPageForUser(SubjectVO subjectVO);
+    List<SubjectInfo> findByPageForUser(SubjectVO subjectVO);
 
     Long getUsersCount(Long userId);
 }

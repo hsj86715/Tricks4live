@@ -1,15 +1,10 @@
 package com.tricks4live.entries;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.tricks4live.utils.Constants;
-
 import java.util.Date;
 
 public abstract class BaseDBEntry {
     protected Long id;//自身ID
-    @JsonFormat(pattern = Constants.DATE_FORMAT, timezone = "GMT+8")
     private Date createDate;
-    @JsonFormat(pattern = Constants.DATE_FORMAT, timezone = "GMT+8")
     private Date updateDate;
     private Integer version = 1;
     private String createBy;

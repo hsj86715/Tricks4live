@@ -1,20 +1,21 @@
 package com.tricks4live.entries;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.io.Serializable;
 
-/**
- * 标签，MySQL存储
- */
-public class Label extends BaseDBEntry implements Serializable {
+@JsonSerialize
+public class LabelSimple implements Serializable{
+    private Long id;
     private String nameCN;
     private String nameEN;
 
-    public Label() {
+    public Long getId() {
+        return id;
     }
 
-    public Label(String nameCN, String nameEN) {
-        this.nameCN = nameCN;
-        this.nameEN = nameEN;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNameCN() {
@@ -35,7 +36,8 @@ public class Label extends BaseDBEntry implements Serializable {
 
     @Override
     public String toString() {
-        return "Label{" + super.toString() +
+        return "LabelSimple{" +
+                "id=" + id +
                 ", nameCN='" + nameCN + '\'' +
                 ", nameEN='" + nameEN + '\'' +
                 '}';

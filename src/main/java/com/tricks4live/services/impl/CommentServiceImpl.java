@@ -2,6 +2,7 @@ package com.tricks4live.services.impl;
 
 import com.tricks4live.annotation.PraiseType;
 import com.tricks4live.entries.Comment;
+import com.tricks4live.entries.CommentInfo;
 import com.tricks4live.entries.ContentPraise;
 import com.tricks4live.entries.Page;
 import com.tricks4live.mappers.CommentMapper;
@@ -19,7 +20,7 @@ public class CommentServiceImpl extends PraiseAbleService implements ICommentSer
     private CommentMapper mapper;
 
     @Override
-    public Page<Comment> findByPageInSubject(Long subjectId, Long pageNum, Integer pageSize) {
+    public Page<CommentInfo> findByPageInSubject(Long subjectId, Long pageNum, Integer pageSize) {
         if (subjectId == null || subjectId == 0) {
             return null;
         }
@@ -33,16 +34,16 @@ public class CommentServiceImpl extends PraiseAbleService implements ICommentSer
         vo.setLimitRows(pageSize);
 
         Long totalCount = mapper.getCountInSubject(subjectId);
-        List<Comment> result = mapper.findByPageInSubject(vo);
-        for (Comment comment : result) {
-            Comment sub = null;
+        List<CommentInfo> result = mapper.findByPageInSubject(vo);
+        for (CommentInfo comment : result) {
+            CommentInfo sub = null;
             while ((sub = mapper.findSubComment(comment.getId())) != null) {
                 comment.setFollow(sub);
                 comment = sub;
             }
         }
 
-        Page<Comment> pageComments = new Page<>();
+        Page<CommentInfo> pageComments = new Page<>();
         pageComments.setTotalCount(totalCount);
         pageComments.setContentResults(result);
         pageComments.setPageSize(pageSize);
@@ -54,7 +55,7 @@ public class CommentServiceImpl extends PraiseAbleService implements ICommentSer
     public Long addComment(Comment comment) {
         Long superId = comment.getSuperId();
         if (superId != null && superId > 0) {
-            Comment superCom = mapper.findSuperComment(superId);
+            CommentInfo superCom = mapper.findSuperComment(superId);
             if (superCom == null) {
                 comment.setSuperId(null);
             } else {

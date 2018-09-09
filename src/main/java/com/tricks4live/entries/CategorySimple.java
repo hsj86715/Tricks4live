@@ -1,20 +1,16 @@
 package com.tricks4live.entries;
 
-import java.io.Serializable;
+public class CategorySimple {
+    private Long id;//自身ID
+    private String nameCN;//中文分类名称
+    private String nameEN;//英文分类名称
 
-/**
- * 标签，MySQL存储
- */
-public class Label extends BaseDBEntry implements Serializable {
-    private String nameCN;
-    private String nameEN;
-
-    public Label() {
+    public Long getId() {
+        return id;
     }
 
-    public Label(String nameCN, String nameEN) {
-        this.nameCN = nameCN;
-        this.nameEN = nameEN;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNameCN() {
@@ -35,7 +31,8 @@ public class Label extends BaseDBEntry implements Serializable {
 
     @Override
     public String toString() {
-        return "Label{" + super.toString() +
+        return "CategorySimple{" +
+                "id=" + id +
                 ", nameCN='" + nameCN + '\'' +
                 ", nameEN='" + nameEN + '\'' +
                 '}';

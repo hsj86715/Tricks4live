@@ -2,6 +2,7 @@ package com.tricks4live.service;
 
 import com.tricks4live.LogAbleClass;
 import com.tricks4live.entries.Comment;
+import com.tricks4live.entries.CommentInfo;
 import com.tricks4live.entries.Page;
 import com.tricks4live.entries.User;
 import com.tricks4live.services.ICommentService;
@@ -33,7 +34,8 @@ public class CommentTests extends LogAbleClass {
         for (int i = 0; i < 100; i++) {
             List<User> users = userService.findAll();
             int userIdx = random.nextInt(users.size());
-            Comment comment = new Comment(6L, users.get(userIdx).getId(), "牛逼，写得好，这是要逆天" + random.nextInt(100) + random.nextInt(9999));
+            Comment comment = new Comment(6L, users.get(userIdx).getId(),
+                    "牛逼，写得好，这是要逆天" + random.nextInt(100) + random.nextInt(9999));
             service.addComment(comment);
             println(comment.toString());
         }
@@ -48,11 +50,11 @@ public class CommentTests extends LogAbleClass {
 
     @Test
     public void testFind() {
-        Page<Comment> comments = service.findByPageInSubject(6L, 0L, 15);
+        Page<CommentInfo> comments = service.findByPageInSubject(6L, 7L, 15);
         assert comments != null;
         println(comments.toString());
-        List<Comment> commentList = comments.getContentResults();
-        for (Comment comment : commentList) {
+        List<CommentInfo> commentList = comments.getContentResults();
+        for (CommentInfo comment : commentList) {
             println(comment.toString());
         }
     }

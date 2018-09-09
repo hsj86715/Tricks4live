@@ -1,16 +1,16 @@
 package com.tricks4live.services;
 
 import com.tricks4live.entries.Page;
-import com.tricks4live.entries.Subject;
+import com.tricks4live.entries.SubjectInfo;
 import com.tricks4live.entries.UserSimple;
 
 public interface ISubjectService {
 
-    Subject findById(Long subjectId);
+    SubjectInfo findById(Long subjectId);
 
-    Page<Subject> findByPageInCategory(Long catId, Long pageNum, Integer pageSize);
+    Page<SubjectInfo> findByPageInCategory(Long catId, Long pageNum, Integer pageSize);
 
-    Long addSubject(Subject subject);
+    Long addSubject(SubjectInfo subject);
 
     void deleteSubject(Long subjectId);
 
@@ -30,9 +30,9 @@ public interface ISubjectService {
 
     Long collectSubject(Long subjectId, Long userId, Boolean collected);
 
-    Page<Subject> findCollectedByPage(Long userId, Long pageNum, Integer pageSize);
+    Page<SubjectInfo> findCollectedByPage(Long userId, Long pageNum, Integer pageSize);
 
-    Page<Subject> findByPageForNewest(Long pageNum, Integer pageSize);
+    Page<SubjectInfo> findByPageForNewest(Long pageNum, Integer pageSize);
 
-    Page<Subject> findUserPublishByPage(Long userId, Long pageNum, Integer pageSize);
+    Page<SubjectInfo> findUserPublishByPage(Long userId, Long pageNum, Integer pageSize);
 }
