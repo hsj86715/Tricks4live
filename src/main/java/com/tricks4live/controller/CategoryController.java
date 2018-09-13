@@ -9,21 +9,17 @@ import com.tricks4live.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/category")
 public class CategoryController {
     @Autowired
     private ICategoryService service;
 
     @PostMapping("/add")
-    @ResponseBody
     public BaseResult addCategory(@RequestParam("name_cn") String nameCN,
                                   @RequestParam("name_en") String nameEN,
                                   @RequestParam(name = "super_id", required = false) Long superId,
@@ -46,7 +42,6 @@ public class CategoryController {
     }
 
     @RequestMapping("/findSubCategory")
-    @ResponseBody
     public DataResult<List<Category>> findSubCategory(@RequestParam("cat_id") Long categoryId) {
         DataResult<List<Category>> result = new DataResult<>();
         if (categoryId <= 0) {
@@ -59,7 +54,6 @@ public class CategoryController {
     }
 
     @RequestMapping("findByLevel")
-    @ResponseBody
     public DataResult<List<Category>> findByLevel(@RequestParam("level") Integer level) {
         DataResult<List<Category>> result = new DataResult<>();
         if (level <= 0 || level > 3) {
@@ -72,7 +66,6 @@ public class CategoryController {
     }
 
     @PostMapping("/update")
-    @ResponseBody
     public BaseResult updateCategory(@RequestParam("name_cn") String nameCN,
                                      @RequestParam("name_en") String nameEN,
                                      @RequestParam(name = "super_id", required = false) Long superId,
@@ -94,7 +87,6 @@ public class CategoryController {
     }
 
     @RequestMapping("deleteById")
-    @ResponseBody
     public BaseResult deleteById(@RequestParam("cat_id") Long categoryId) {
         BaseResult result = new BaseResult();
         if (categoryId <= 0) {

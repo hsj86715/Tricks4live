@@ -5,6 +5,7 @@ import com.tricks4live.entries.Category;
 import com.tricks4live.exception.DataIntegrityException;
 import com.tricks4live.mappers.CategoryMapper;
 import com.tricks4live.services.ICategoryService;
+import com.tricks4live.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -17,12 +18,21 @@ public class CategoryServiceImpl extends LogAbleClass implements ICategoryServic
     @Autowired
     private CategoryMapper mapper;
 
+    @Autowired
+    private RedisUtil<Category> redisUtil;
+
     @Override
     public List<Category> findByLevel(Integer level) {
+        String key = "CategoryServiceImpl-findByLevel-" + level;
+        if (redisUtil.hasKey(key)) {
+            println("redisUtil.hasKey(key)");
+            return redisUtil.lGet(key, 0, redisUtil.lGetListSize(key));
+        }
         if (level == null || level == 0) {
             level = 1;
         }
         List<Category> categories = mapper.findByLevel(level);
+        redisUtil.lSet(key, categories, 60);
         println("findByLevel", categories);
         return categories;
     }
@@ -32,7 +42,15 @@ public class CategoryServiceImpl extends LogAbleClass implements ICategoryServic
         if (catId == null || catId == 0) {
             return findByLevel(1);
         } else {
-            return mapper.findSubCategory(catId);
+            String key = "CategoryServiceImpl-findSubCategory-" + catId;
+            if (redisUtil.hasKey(key)) {
+                println("redisUtil.hasKey(key)");
+                return redisUtil.lGet(key, 0, redisUtil.lGetListSize(key));
+            }
+            List<Category> categories = mapper.findSubCategory(catId);
+            redisUtil.lSet(key, categories, 60);
+            println("findSubCategory", categories);
+            return categories;
         }
     }
 
@@ -41,6 +59,7 @@ public class CategoryServiceImpl extends LogAbleClass implements ICategoryServic
         category.setCreateDate(new Date());
         mapper.addCategory(category);
         println(category.toString());
+        redisUtil.clear();
         return category.getId();
     }
 
@@ -48,6 +67,7 @@ public class CategoryServiceImpl extends LogAbleClass implements ICategoryServic
     public void updateCategory(Category category) {
         category.setUpdateDate(new Date());
         mapper.updateCategory(category);
+        redisUtil.clear();
     }
 
     @Override
@@ -58,6 +78,7 @@ public class CategoryServiceImpl extends LogAbleClass implements ICategoryServic
                 throw new DataIntegrityException();
             }
             mapper.deleteById(catId);
+            redisUtil.clear();
         }
     }
 }

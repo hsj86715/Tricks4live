@@ -35,7 +35,7 @@ public class CategoryTest extends LogAbleClass {
 
     @Test
     public void testFindCategoryByLevel() {
-        List<Category> levelCat = service.findByLevel(3);
+        List<Category> levelCat = service.findByLevel(1);
         assert levelCat != null;
         for (Category category : levelCat) {
             println(category.toString());

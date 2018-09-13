@@ -11,11 +11,18 @@ public class LogAbleClass {
     }
 
     protected void println(String string) {
-//        System.out.println("================================================================================================================================");
         System.out.println();
         logger.info(string);
-//        System.out.println();
-//        System.out.println("================================================================================================================================");
+    }
 
+    protected void printlnWithDivider(String method, Object arg) {
+        printlnWithDivider(method + ": " + arg);
+    }
+
+    protected void printlnWithDivider(String string) {
+        System.out.println("================================================================================================================================");
+        println(string);
+        System.out.println();
+        System.out.println("================================================================================================================================");
     }
 }

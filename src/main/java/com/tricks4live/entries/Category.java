@@ -17,7 +17,7 @@ public class Category extends BaseDBEntry implements Serializable {
 
     private Integer level = 1;//分类等级
 
-    public Category(){
+    public Category() {
 
     }
 

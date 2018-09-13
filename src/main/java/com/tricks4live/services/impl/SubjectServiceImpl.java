@@ -23,12 +23,7 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
 
     @Override
     public SubjectInfo findById(Long subjectId) {
-        SubjectInfo subject = mapper.findById(subjectId);
-        PraiseVO praiseVO = new PraiseVO(subjectId, PraiseType.PRAISE_TREAD, true);
-        subject.setValidCount(Math.toIntExact(praiseMapper.getPraiseCount(praiseVO)));
-        praiseVO.setPraised(false);
-        subject.setInvalidCount(Math.toIntExact(praiseMapper.getPraiseCount(praiseVO)));
-        return subject;
+        return mapper.findById(subjectId);
     }
 
     @Override
