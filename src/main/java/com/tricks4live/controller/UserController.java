@@ -4,6 +4,7 @@ import com.tricks4live.annotation.ErrCode;
 import com.tricks4live.entries.User;
 import com.tricks4live.entries.result.BaseResult;
 import com.tricks4live.entries.result.DataResult;
+import com.tricks4live.exception.EmailNotVerifiedException;
 import com.tricks4live.services.IUserService;
 import com.tricks4live.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,9 +159,14 @@ public class UserController {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "which_user or/and focus_who");
             return result;
         }
-        Long id = userService.focusUser(whichUser, focusWho, focused);
-        if (id <= 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
+        try {
+            Long id = userService.focusUser(whichUser, focusWho, focused);
+            if (id <= 0) {
+                result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
+            }
+        } catch (EmailNotVerifiedException e) {
+            e.printStackTrace();
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMAIL_NEED_VERIFY));
         }
         return result;
     }

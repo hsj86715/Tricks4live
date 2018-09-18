@@ -1,8 +1,10 @@
 package com.tricks4live.services.impl;
 
+import com.tricks4live.annotation.Authority;
 import com.tricks4live.annotation.PraiseType;
 import com.tricks4live.entries.ContentPraise;
 import com.tricks4live.entries.User;
+import com.tricks4live.exception.EmailNotVerifiedException;
 import com.tricks4live.mappers.UserMapper;
 import com.tricks4live.services.IUserService;
 import com.tricks4live.utils.EncryptUtil;
@@ -85,8 +87,24 @@ public class UserServiceImpl extends PraiseAbleService implements IUserService {
     }
 
     @Override
-    public Long focusUser(Long whichUser, Long focusWho, Boolean focused) {
+    public Boolean isFocused(Long whichUser, Long focusWho) {
+        ContentPraise praise = new ContentPraise(whichUser, focusWho, PraiseType.FOCUS_USER);
+        ContentPraise praiseTemp = praiseMapper.findPraise(praise);
+        return praiseTemp.getPraised() == Boolean.TRUE;
+    }
+
+    @Override
+    public Long focusUser(Long whichUser, Long focusWho, Boolean focused) throws EmailNotVerifiedException {
+        User user = findUserById(whichUser);
+        if (!user.hasPermission(Authority.BASE)) {
+            throw new EmailNotVerifiedException();
+        }
         ContentPraise praise = new ContentPraise(whichUser, focusWho, PraiseType.FOCUS_USER);
         return setPraised(praise, focused);
+    }
+
+    @Override
+    public User findUserById(Long userId) {
+        return mapper.findById(userId);
     }
 }

@@ -60,4 +60,10 @@ public @interface ErrCode {
 
     //用户名或密码错误
     int USERNAME_OR_PWD_ERR = 110;
+
+    //需要验证邮箱
+    int EMAIL_NEED_VERIFY = 301;
+
+    //权限不够
+    int PERMISSION_PROHIBITED = 302;
 }

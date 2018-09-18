@@ -23,6 +23,10 @@ public class SubjectInfo implements Serializable {
     private String videoUrl;
     private Integer validCount;//觉得有用的人
     private Integer invalidCount;//觉得没有用的人
+    private Boolean validated = false;
+    private Boolean invalidated = false;
+    private Boolean collected = false;
+    private Boolean focused = false;
     private List<LabelSimple> labels;
     private Boolean deleted = false;
     @JsonFormat(pattern = Constants.DATE_FORMAT, timezone = "GMT+8")
@@ -118,6 +122,38 @@ public class SubjectInfo implements Serializable {
         this.invalidCount = invalidCount;
     }
 
+    public Boolean getValidated() {
+        return validated;
+    }
+
+    public void setValidated(Boolean validated) {
+        this.validated = validated;
+    }
+
+    public Boolean getInvalidated() {
+        return invalidated;
+    }
+
+    public void setInvalidated(Boolean invalidated) {
+        this.invalidated = invalidated;
+    }
+
+    public Boolean getCollected() {
+        return collected;
+    }
+
+    public void setCollected(Boolean collected) {
+        this.collected = collected;
+    }
+
+    public Boolean getFocused() {
+        return focused;
+    }
+
+    public void setFocused(Boolean focused) {
+        this.focused = focused;
+    }
+
     public List<LabelSimple> getLabels() {
         return labels;
     }
@@ -176,6 +212,10 @@ public class SubjectInfo implements Serializable {
                 ", videoUrl='" + videoUrl + '\'' +
                 ", validCount=" + validCount +
                 ", invalidCount=" + invalidCount +
+                ", validated=" + validated +
+                ", invalidated=" + invalidated +
+                ", collected=" + collected +
+                ", focused=" + focused +
                 ", labels=" + labels +
                 ", deleted=" + deleted +
                 ", createDate=" + createDate +

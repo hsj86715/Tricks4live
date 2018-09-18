@@ -6,6 +6,8 @@ import com.tricks4live.entries.SubjectInfo;
 import com.tricks4live.entries.UserSimple;
 import com.tricks4live.entries.result.BaseResult;
 import com.tricks4live.entries.result.DataResult;
+import com.tricks4live.exception.EmailNotVerifiedException;
+import com.tricks4live.exception.PermissionException;
 import com.tricks4live.services.ISubjectService;
 import com.tricks4live.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +38,13 @@ public class SubjectController {
 
     @RequestMapping("/findById")
     @ResponseBody
-    public DataResult<SubjectInfo> findById(@RequestParam("subject_id") Long subjectId) {
+    public DataResult<SubjectInfo> findById(@RequestParam("subject_id") Long subjectId, Long userId) {
         DataResult<SubjectInfo> result = new DataResult<>();
         if (subjectId <= 0) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id");
             return result;
         }
-        result.setData(service.findById(subjectId));
+        result.setData(service.findById(subjectId, userId));
         return result;
     }
 
@@ -69,39 +71,46 @@ public class SubjectController {
         return result;
     }
 
-    @RequestMapping("/valid")
+    @RequestMapping("/validate")
     @ResponseBody
     public BaseResult validUser(@RequestParam("subject_id") Long subjectId,
                                 @RequestParam("user_id") Long userId,
-                                @RequestParam("valid") Boolean valid) {
+                                @RequestParam("validated") Boolean validated) {
         BaseResult result = new BaseResult();
         if (subjectId <= 0 || userId <= 0) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id or/and user_id");
             return result;
         }
-        Long id = service.validUser(subjectId, userId, valid);
-        if (id <= 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
+        try {
+            Long id = service.validUser(subjectId, userId, validated);
+            if (id <= 0) {
+                result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
+            }
+        } catch (EmailNotVerifiedException e) {
+            e.printStackTrace();
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMAIL_NEED_VERIFY));
         }
         return result;
     }
 
-    @RequestMapping("/invalid")
+    @RequestMapping("/invalidate")
     @ResponseBody
     public BaseResult invalidUser(@RequestParam("subject_id") Long subjectId,
                                   @RequestParam("user_id") Long userId,
-                                  @RequestParam("invalid") Boolean invalid) {
+                                  @RequestParam("invalidated") Boolean invalidated) {
         BaseResult result = new BaseResult();
         if (subjectId <= 0 || userId <= 0) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id or/and user_id");
             return result;
         }
-        if (invalid == null) {
-            invalid = true;
-        }
-        Long id = service.invalidUser(subjectId, userId, invalid);
-        if (id <= 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
+        try {
+            Long id = service.invalidUser(subjectId, userId, invalidated);
+            if (id <= 0) {
+                result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
+            }
+        } catch (EmailNotVerifiedException e) {
+            e.printStackTrace();
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMAIL_NEED_VERIFY));
         }
         return result;
     }
@@ -147,9 +156,14 @@ public class SubjectController {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id or/and user_id");
             return result;
         }
-        Long id = service.addVerifier(subjectId, userId);
-        if (id <= 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
+        try {
+            Long id = service.addVerifier(subjectId, userId);
+            if (id <= 0) {
+                result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
+            }
+        } catch (PermissionException e) {
+            e.printStackTrace();
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.PERMISSION_PROHIBITED));
         }
         return result;
     }
@@ -197,9 +211,14 @@ public class SubjectController {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id or/and user_id");
             return result;
         }
-        Long id = service.collectSubject(subjectId, userId, collected);
-        if (id <= 0) {
-            result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
+        try {
+            Long id = service.collectSubject(subjectId, userId, collected);
+            if (id <= 0) {
+                result.setCodeMsg(Constants.getErrorMsg(ErrCode.UNKNOWN));
+            }
+        } catch (EmailNotVerifiedException e) {
+            e.printStackTrace();
+            result.setCodeMsg(Constants.getErrorMsg(ErrCode.EMAIL_NEED_VERIFY));
         }
         return result;
     }

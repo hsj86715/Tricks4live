@@ -60,7 +60,7 @@ public class SubjectTests extends LogAbleClass {
 
     @Test
     public void testFindById() {
-        SubjectInfo subject = service.findById(17L);
+        SubjectInfo subject = service.findById(17L,null);
         println("testFindById", subject);
     }
 

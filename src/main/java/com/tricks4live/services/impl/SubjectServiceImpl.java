@@ -1,12 +1,15 @@
 package com.tricks4live.services.impl;
 
+import com.tricks4live.annotation.Authority;
 import com.tricks4live.annotation.PraiseType;
-import com.tricks4live.entries.ContentPraise;
-import com.tricks4live.entries.Page;
-import com.tricks4live.entries.SubjectInfo;
-import com.tricks4live.entries.UserSimple;
+import com.tricks4live.entries.*;
+import com.tricks4live.exception.EmailNotVerifiedException;
+import com.tricks4live.exception.PermissionException;
 import com.tricks4live.mappers.SubjectMapper;
 import com.tricks4live.services.ISubjectService;
+import com.tricks4live.services.IUserService;
+import com.tricks4live.utils.Constants;
+import com.tricks4live.utils.RedisUtil;
 import com.tricks4live.vo.PageVO;
 import com.tricks4live.vo.PraiseVO;
 import com.tricks4live.vo.SubjectVO;
@@ -20,10 +23,29 @@ import java.util.List;
 public class SubjectServiceImpl extends PraiseAbleService implements ISubjectService {
     @Autowired
     private SubjectMapper mapper;
+    @Autowired
+    private RedisUtil<SubjectInfo> redisUtil;
+    @Autowired
+    private IUserService userService;
 
     @Override
-    public SubjectInfo findById(Long subjectId) {
-        return mapper.findById(subjectId);
+    public SubjectInfo findById(Long subjectId, Long userId) {
+        SubjectInfo subjectInfo;
+        String key = "SubjectServiceImpl-findById-" + subjectId;
+        if (redisUtil.hasKey(key)) {
+            subjectInfo = redisUtil.get(key);
+        } else {
+            subjectInfo = mapper.findById(subjectId);
+            redisUtil.set(key, subjectInfo, Constants.REDIS_CACHE_DURATION.getSeconds());
+        }
+        if (userId != null && userId >= 0) {
+            subjectInfo.setValidated(isValidated(subjectId, userId));
+            subjectInfo.setInvalidated(isInvalidated(subjectId, userId));
+            subjectInfo.setCollected(isCollected(subjectId, subjectId));
+            subjectInfo.setFocused(userService.isFocused(userId, subjectInfo.getUser().getId()));
+        }
+        printlnWithDivider("findById", subjectInfo);
+        return subjectInfo;
     }
 
     @Override
@@ -135,7 +157,18 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
     }
 
     @Override
+    public Boolean isInvalidated(Long subjectId, Long userId) {
+        ContentPraise praise = new ContentPraise(userId, subjectId, PraiseType.PRAISE_TREAD);
+        ContentPraise praiseTemp = praiseMapper.findPraise(praise);
+        return praiseTemp.getPraised() == Boolean.FALSE;
+    }
+
+    @Override
     public Long invalidUser(Long subjectId, Long userId, Boolean invalid) {
+        User user = userService.findUserById(userId);
+        if (!user.hasPermission(Authority.BASE)) {
+            throw new EmailNotVerifiedException();
+        }
         ContentPraise praise = new ContentPraise(userId, subjectId, PraiseType.PRAISE_TREAD);
 
         ContentPraise praiseTemp = praiseMapper.findPraise(praise);
@@ -192,6 +225,10 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
 
     @Override
     public Long addVerifier(Long subjectId, Long userId) {
+        User user = userService.findUserById(userId);
+        if (!user.hasPermission(Authority.VERIFIER)) {
+            throw new PermissionException();
+        }
         ContentPraise praise = new ContentPraise(userId, subjectId, PraiseType.VERIFY_SUBJECT);
         praise.setCreateDate(new Date());
         praiseMapper.addPraise(praise);
@@ -199,7 +236,18 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
     }
 
     @Override
+    public Boolean isValidated(Long subjectId, Long userId) {
+        ContentPraise praise = new ContentPraise(userId, subjectId, PraiseType.PRAISE_TREAD);
+        ContentPraise praiseTemp = praiseMapper.findPraise(praise);
+        return praiseTemp.getPraised() == Boolean.TRUE;
+    }
+
+    @Override
     public Long validUser(Long subjectId, Long userId, Boolean valid) {
+        User user = userService.findUserById(userId);
+        if (!user.hasPermission(Authority.BASE)) {
+            throw new EmailNotVerifiedException();
+        }
         ContentPraise praise = new ContentPraise(userId, subjectId, PraiseType.PRAISE_TREAD);
         return setPraised(praise, valid);
     }
@@ -211,7 +259,18 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
     }
 
     @Override
-    public Long collectSubject(Long subjectId, Long userId, Boolean collected) {
+    public Boolean isCollected(Long subjectId, Long userId) {
+        ContentPraise praise = new ContentPraise(userId, subjectId, PraiseType.VERIFY_SUBJECT);
+        ContentPraise praiseTemp = praiseMapper.findPraise(praise);
+        return praiseTemp.getPraised() == Boolean.TRUE;
+    }
+
+    @Override
+    public Long collectSubject(Long subjectId, Long userId, Boolean collected) throws EmailNotVerifiedException {
+        User user = userService.findUserById(userId);
+        if (!user.hasPermission(Authority.BASE)) {
+            throw new EmailNotVerifiedException();
+        }
         ContentPraise praise = new ContentPraise(userId, subjectId, PraiseType.COLLECT_SUBJECT);
         return setPraised(praise, collected);
     }
@@ -220,5 +279,6 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
     public void deleteSubject(Long subjectId) {
         mapper.deleteSubject(subjectId);
     }
+
 
 }

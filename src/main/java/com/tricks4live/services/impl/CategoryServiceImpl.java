@@ -5,6 +5,7 @@ import com.tricks4live.entries.Category;
 import com.tricks4live.exception.DataIntegrityException;
 import com.tricks4live.mappers.CategoryMapper;
 import com.tricks4live.services.ICategoryService;
+import com.tricks4live.utils.Constants;
 import com.tricks4live.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class CategoryServiceImpl extends LogAbleClass implements ICategoryServic
             level = 1;
         }
         List<Category> categories = mapper.findByLevel(level);
-        redisUtil.lSet(key, categories, 60);
+        redisUtil.lSet(key, categories, Constants.REDIS_CACHE_DURATION.getSeconds());
         println("findByLevel", categories);
         return categories;
     }
@@ -48,7 +49,7 @@ public class CategoryServiceImpl extends LogAbleClass implements ICategoryServic
                 return redisUtil.lGet(key, 0, redisUtil.lGetListSize(key));
             }
             List<Category> categories = mapper.findSubCategory(catId);
-            redisUtil.lSet(key, categories, 60);
+            redisUtil.lSet(key, categories, Constants.REDIS_CACHE_DURATION.getSeconds());
             println("findSubCategory", categories);
             return categories;
         }

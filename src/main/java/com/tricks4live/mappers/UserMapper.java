@@ -17,6 +17,8 @@ public interface UserMapper {
 
     User findByPhone(String phone);
 
+    User findById(Long userId);
+
     List<User> findByNickName(String nickName);
 
     void addUser(User user);

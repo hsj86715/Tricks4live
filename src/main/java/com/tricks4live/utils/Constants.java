@@ -2,10 +2,13 @@ package com.tricks4live.utils;
 
 import com.tricks4live.annotation.ErrCode;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Constants {
+    public static final Duration REDIS_CACHE_DURATION = Duration.ofSeconds(120);
+
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String DATE_FORMAT_MILLI = "yyyy-MM-dd HH:mm:ss.SSS";
     public static final String DATE_FORMAT_DAY = "yyyy-MM-dd";
@@ -37,6 +40,9 @@ public class Constants {
         CODE_MSG.put(ErrCode.REQUEST_PARAMETER_LOST, new CodeMsg(ErrCode.REQUEST_PARAMETER_LOST,
                 "The request %s must not be null or empty."));
         CODE_MSG.put(ErrCode.ILLEGAL_ARGUMENT, new CodeMsg(ErrCode.ILLEGAL_ARGUMENT, "The argument %s is/are not illegal."));
+        CODE_MSG.put(ErrCode.EMAIL_NEED_VERIFY, new CodeMsg(ErrCode.EMAIL_NEED_VERIFY, "Your email need be verified first."));
+        CODE_MSG.put(ErrCode.PERMISSION_PROHIBITED, new CodeMsg(ErrCode.PERMISSION_PROHIBITED,
+                "User operation has been refused by permission prohibited."));
     }
 
     public static CodeMsg getErrorMsg(@ErrCode Integer errCode) {

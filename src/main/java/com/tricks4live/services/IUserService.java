@@ -1,6 +1,7 @@
 package com.tricks4live.services;
 
 import com.tricks4live.entries.User;
+import com.tricks4live.exception.EmailNotVerifiedException;
 
 import java.util.List;
 
@@ -24,5 +25,9 @@ public interface IUserService {
 
     List<User> findAll();
 
-    Long focusUser(Long whichUser, Long focusWho, Boolean focused);
+    Boolean isFocused(Long whichUser, Long focusWho);
+
+    Long focusUser(Long whichUser, Long focusWho, Boolean focused) throws EmailNotVerifiedException;
+
+    User findUserById(Long userId);
 }
