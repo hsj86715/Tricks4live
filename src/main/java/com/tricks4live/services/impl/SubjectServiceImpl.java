@@ -41,7 +41,7 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
         if (userId != null && userId >= 0) {
             subjectInfo.setValidated(isValidated(subjectId, userId));
             subjectInfo.setInvalidated(isInvalidated(subjectId, userId));
-            subjectInfo.setCollected(isCollected(subjectId, subjectId));
+            subjectInfo.setCollected(isCollected(subjectId, userId));
             subjectInfo.setFocused(userService.isFocused(userId, subjectInfo.getUser().getId()));
         }
         printlnWithDivider("findById", subjectInfo);
@@ -160,7 +160,10 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
     public Boolean isInvalidated(Long subjectId, Long userId) {
         ContentPraise praise = new ContentPraise(userId, subjectId, PraiseType.PRAISE_TREAD);
         ContentPraise praiseTemp = praiseMapper.findPraise(praise);
-        return praiseTemp.getPraised() == Boolean.FALSE;
+        if (praiseTemp == null || praiseTemp.getPraised() == null) {
+            return Boolean.FALSE;
+        }
+        return Boolean.FALSE == praiseTemp.getPraised();
     }
 
     @Override
@@ -172,6 +175,7 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
         ContentPraise praise = new ContentPraise(userId, subjectId, PraiseType.PRAISE_TREAD);
 
         ContentPraise praiseTemp = praiseMapper.findPraise(praise);
+        invalid = !invalid;
         if (praiseTemp == null) {
             if (invalid) {
                 praise.setPraised(false);
@@ -239,7 +243,10 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
     public Boolean isValidated(Long subjectId, Long userId) {
         ContentPraise praise = new ContentPraise(userId, subjectId, PraiseType.PRAISE_TREAD);
         ContentPraise praiseTemp = praiseMapper.findPraise(praise);
-        return praiseTemp.getPraised() == Boolean.TRUE;
+        if (praiseTemp == null || praiseTemp.getPraised() == null) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE == praiseTemp.getPraised();
     }
 
     @Override
@@ -260,9 +267,12 @@ public class SubjectServiceImpl extends PraiseAbleService implements ISubjectSer
 
     @Override
     public Boolean isCollected(Long subjectId, Long userId) {
-        ContentPraise praise = new ContentPraise(userId, subjectId, PraiseType.VERIFY_SUBJECT);
+        ContentPraise praise = new ContentPraise(userId, subjectId, PraiseType.COLLECT_SUBJECT);
         ContentPraise praiseTemp = praiseMapper.findPraise(praise);
-        return praiseTemp.getPraised() == Boolean.TRUE;
+        if (praiseTemp == null || praiseTemp.getPraised() == null) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE == praiseTemp.getPraised();
     }
 
     @Override

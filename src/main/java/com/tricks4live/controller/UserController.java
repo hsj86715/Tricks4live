@@ -8,20 +8,18 @@ import com.tricks4live.exception.EmailNotVerifiedException;
 import com.tricks4live.services.IUserService;
 import com.tricks4live.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Controller
+@RestController
 @RequestMapping("/user")
 public class UserController {
     @Autowired
     private IUserService userService;
 
     @RequestMapping("/check_username")
-    @ResponseBody
     public DataResult<Boolean> isUserNameUsable(@RequestParam("user_name") String userName) {
         DataResult<Boolean> result = new DataResult<>();
         if (StringUtils.isEmpty(userName)) {
@@ -40,7 +38,6 @@ public class UserController {
     }
 
     @RequestMapping("/check_email")
-    @ResponseBody
     public DataResult<Boolean> isEmailUsable(@RequestParam("email") String email) {
         DataResult<Boolean> result = new DataResult<>();
         if (StringUtils.isEmpty(email)) {
@@ -59,7 +56,6 @@ public class UserController {
     }
 
     @RequestMapping("/check_phone")
-    @ResponseBody
     public DataResult<Boolean> isPhoneUsable(@RequestParam("phone") String phone) {
         DataResult<Boolean> result = new DataResult<>();
         if (StringUtils.isEmpty(phone)) {
@@ -78,7 +74,6 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    @ResponseBody
     public DataResult<User> register(@RequestBody User user, HttpServletRequest request) {
         DataResult<User> result = new DataResult<>();
 
@@ -149,8 +144,13 @@ public class UserController {
         return result;
     }
 
+    @PostMapping("/loginOut")
+    public BaseResult loginOut(@RequestParam("user_token") String token) {
+        userService.loginOut(token);
+        return new BaseResult();
+    }
+
     @RequestMapping("/focus")
-    @ResponseBody
     public BaseResult focusUser(@RequestParam("which_user") Long whichUser,
                                 @RequestParam("focus_who") Long focusWho,
                                 @RequestParam("focused") Boolean focused) {

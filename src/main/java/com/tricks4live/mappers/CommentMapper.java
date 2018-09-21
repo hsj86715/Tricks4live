@@ -17,6 +17,8 @@ public interface CommentMapper {
 
     List<CommentInfo> findByPageInSubject(CommentVO vo);
 
+    List<CommentInfo> findHottest(CommentVO commentVO);
+
     CommentInfo findSuperComment(Long superId);
 
     CommentInfo findSubComment(Long commId);

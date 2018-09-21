@@ -11,17 +11,15 @@ import com.tricks4live.exception.PermissionException;
 import com.tricks4live.services.ISubjectService;
 import com.tricks4live.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/subject")
 public class SubjectController {
     @Autowired
     private ISubjectService service;
 
     @RequestMapping("/findByPage")
-    @ResponseBody
     public DataResult<Page<SubjectInfo>> findByPage(@RequestParam("category_id") Long categoryId,
                                                     @RequestParam("page_num") Long pageNum,
                                                     @RequestParam(name = "page_size", defaultValue = "20",
@@ -37,8 +35,8 @@ public class SubjectController {
     }
 
     @RequestMapping("/findById")
-    @ResponseBody
-    public DataResult<SubjectInfo> findById(@RequestParam("subject_id") Long subjectId, Long userId) {
+    public DataResult<SubjectInfo> findById(@RequestParam("subject_id") Long subjectId,
+                                            @RequestParam(name = "user_id", required = false) Long userId) {
         DataResult<SubjectInfo> result = new DataResult<>();
         if (subjectId <= 0) {
             result.setCodeMsg(Constants.getErrorMsg(ErrCode.ILLEGAL_ARGUMENT), "subject_id");
@@ -49,7 +47,6 @@ public class SubjectController {
     }
 
     @PostMapping(value = "/addSubject", headers = Constants.HEADER, produces = Constants.APPLICATION_JSON)
-    @ResponseBody
     public BaseResult addSubject(@RequestBody SubjectInfo subject) {
         BaseResult result = new BaseResult();
         Long id = service.addSubject(subject);
@@ -60,7 +57,6 @@ public class SubjectController {
     }
 
     @RequestMapping("/delete")
-    @ResponseBody
     public BaseResult deleteSubject(@RequestParam("subject_id") Long subjectId) {
         BaseResult result = new BaseResult();
         if (subjectId <= 0) {
@@ -71,8 +67,7 @@ public class SubjectController {
         return result;
     }
 
-    @RequestMapping("/validate")
-    @ResponseBody
+    @GetMapping("/validate")
     public BaseResult validUser(@RequestParam("subject_id") Long subjectId,
                                 @RequestParam("user_id") Long userId,
                                 @RequestParam("validated") Boolean validated) {
@@ -93,8 +88,7 @@ public class SubjectController {
         return result;
     }
 
-    @RequestMapping("/invalidate")
-    @ResponseBody
+    @GetMapping("/invalidate")
     public BaseResult invalidUser(@RequestParam("subject_id") Long subjectId,
                                   @RequestParam("user_id") Long userId,
                                   @RequestParam("invalidated") Boolean invalidated) {
@@ -116,7 +110,6 @@ public class SubjectController {
     }
 
     @RequestMapping("/findValidUsers")
-    @ResponseBody
     public DataResult<Page<UserSimple>> findValidUsersByPage(@RequestParam("subject_id") Long subjectId,
                                                              @RequestParam("page_num") Long pageNum,
                                                              @RequestParam(name = "page_size", defaultValue = "20",
@@ -132,7 +125,6 @@ public class SubjectController {
     }
 
     @RequestMapping("/findInvalidUsers")
-    @ResponseBody
     public DataResult<Page<UserSimple>> findInvalidUsersByPage(@RequestParam("subject_id") Long subjectId,
                                                                @RequestParam("page_num") Long pageNum,
                                                                @RequestParam(name = "page_size", defaultValue = "20",
@@ -148,7 +140,6 @@ public class SubjectController {
     }
 
     @RequestMapping("/addVerifier")
-    @ResponseBody
     public BaseResult addVerifier(@RequestParam("subject_id") Long subjectId,
                                   @RequestParam("user_id") Long userId) {
         BaseResult result = new BaseResult();
@@ -169,7 +160,6 @@ public class SubjectController {
     }
 
     @RequestMapping("/updateVerifier")
-    @ResponseBody
     public BaseResult updateVerifier(@RequestParam("subject_id") Long subjectId,
                                      @RequestParam("user_id") Long userId,
                                      @RequestParam("valid") Boolean valid) {
@@ -186,7 +176,6 @@ public class SubjectController {
     }
 
     @RequestMapping("/findVerifier")
-    @ResponseBody
     public DataResult<Page<UserSimple>> findVerifier(@RequestParam("subject_id") Long subjectId,
                                                      @RequestParam("page_num") Long pageNum,
                                                      @RequestParam(name = "page_size", defaultValue = "20",
@@ -201,8 +190,7 @@ public class SubjectController {
         return result;
     }
 
-    @RequestMapping("/collect")
-    @ResponseBody
+    @GetMapping("/collect")
     public BaseResult collectSubject(@RequestParam("subject_id") Long subjectId,
                                      @RequestParam("user_id") Long userId,
                                      @RequestParam("collected") Boolean collected) {
@@ -224,7 +212,6 @@ public class SubjectController {
     }
 
     @RequestMapping("/findCollected")
-    @ResponseBody
     public DataResult<Page<SubjectInfo>> findCollected(@RequestParam("user_id") Long userId,
                                                        @RequestParam("page_num") Long pageNum,
                                                        @RequestParam(name = "page_size", defaultValue = "20",
@@ -240,7 +227,6 @@ public class SubjectController {
     }
 
     @RequestMapping("/findNewest")
-    @ResponseBody
     public DataResult<Page<SubjectInfo>> findNewest(@RequestParam("page_num") Long pageNum,
                                                     @RequestParam(name = "page_size", defaultValue = "20",
                                                             required = false) Integer pageSize) {
@@ -255,7 +241,6 @@ public class SubjectController {
     }
 
     @RequestMapping("/findMyPublish")
-    @ResponseBody
     public DataResult<Page<SubjectInfo>> findMyPublish(@RequestParam("user_id") Long userId,
                                                        @RequestParam("page_num") Long pageNum,
                                                        @RequestParam(name = "page_size", defaultValue = "20",

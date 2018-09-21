@@ -25,6 +25,8 @@ public interface UserMapper {
 
     User login(User user);
 
+    void loginOut(String token);
+
     void deleteById(Long userId);
 
     void updateToken(User user);

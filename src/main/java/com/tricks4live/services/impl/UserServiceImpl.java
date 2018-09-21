@@ -65,6 +65,11 @@ public class UserServiceImpl extends PraiseAbleService implements IUserService {
     }
 
     @Override
+    public void loginOut(String token) {
+        mapper.loginOut(token);
+    }
+
+    @Override
     public User changePassword(User user, String oldpwd, String newpwd) {
         return null;
     }
@@ -90,7 +95,10 @@ public class UserServiceImpl extends PraiseAbleService implements IUserService {
     public Boolean isFocused(Long whichUser, Long focusWho) {
         ContentPraise praise = new ContentPraise(whichUser, focusWho, PraiseType.FOCUS_USER);
         ContentPraise praiseTemp = praiseMapper.findPraise(praise);
-        return praiseTemp.getPraised() == Boolean.TRUE;
+        if (praiseTemp == null || praiseTemp.getPraised() == null) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE == praiseTemp.getPraised();
     }
 
     @Override

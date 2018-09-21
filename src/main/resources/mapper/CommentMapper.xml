@@ -39,15 +39,23 @@
     <select id="getCountInSubject" parameterType="long" resultType="long">
         SELECT COUNT(*)
         FROM comment_info
-        WHERE subject_id = #{subjectId, jdbcType=BIGINT} AND super_id IS NULL AND enabled = 1 AND deleted = 0
+        WHERE subject_id = #{subjectId, jdbcType=BIGINT} AND super_id IS NULL AND enabled = 1
     </select>
 
     <select id="findByPageInSubject" parameterType="com.tricks4live.vo.CommentVO" resultMap="commentInfoResultMap">
         SELECT *
         FROM comment_info
-        WHERE subject_id = #{subjectId, jdbcType=BIGINT} AND super_id IS NULL AND enabled = 1 AND deleted = 0
+        WHERE subject_id = #{subjectId, jdbcType=BIGINT} AND super_id IS NULL AND enabled = 1
         ORDER BY create_date DESC, _id DESC
         LIMIT #{limitOff, jdbcType=BIGINT}, #{limitRows, jdbcType=INTEGER}
+    </select>
+
+    <select id="findHottest" parameterType="com.tricks4live.vo.CommentVO" resultMap="commentInfoResultMap">
+        SELECT *
+        FROM comment_info
+        WHERE subject_id = #{subjectId, jdbcType=BIGINT} AND super_id IS NULL AND enabled = 1
+        ORDER BY agree_count DESC, _id DESC
+        LIMIT #{limitRows, jdbcType=INTEGER}
     </select>
 
     <select id="findSuperComment" parameterType="long" resultMap="commentInfoResultMap">

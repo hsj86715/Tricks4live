@@ -75,6 +75,12 @@
         LIMIT 1
     </select>
 
+    <select id="loginOut" parameterType="string">
+        UPDATE t_user
+        SET token = NULL
+        WHERE token = #{token, jdbcType=VARCHAR}
+    </select>
+
     <delete id="deleteById" parameterType="string">
         DELETE FROM t_user
         WHERE _id = #{id, jdbcType=BIGINT}

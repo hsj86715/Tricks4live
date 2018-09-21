@@ -17,6 +17,8 @@ public interface IUserService {
 
     User login(String userName, String password, String userAgent);
 
+    void loginOut(String token);
+
     User changePassword(User user, String oldpwd, String newpwd);
 
     void forgetPassword(String userName, String email);

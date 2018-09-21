@@ -7,23 +7,21 @@ import com.tricks4live.entries.result.DataResult;
 import com.tricks4live.services.ILabelService;
 import com.tricks4live.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/label")
 public class LabelController {
     @Autowired
     private ILabelService service;
 
     @PostMapping("/add")
-    @ResponseBody
     public BaseResult addLabel(@RequestParam("name_cn") String nameCN,
                                @RequestParam("name_en") String nameEN) {
         BaseResult result = new BaseResult();
@@ -40,7 +38,6 @@ public class LabelController {
     }
 
     @PostMapping("/update")
-    @ResponseBody
     public BaseResult updateLabel(@RequestParam("name_cn") String nameCN,
                                   @RequestParam("name_en") String nameEN,
                                   @RequestParam("label_id") Long labelId) {
@@ -60,7 +57,6 @@ public class LabelController {
     }
 
     @RequestMapping("/findAll")
-    @ResponseBody
     public DataResult<List<Label>> findAll() {
         List<Label> labelList = service.findAll();
         return new DataResult<>(labelList);

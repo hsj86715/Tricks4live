@@ -7,6 +7,8 @@ import com.tricks4live.entries.ContentPraise;
 import com.tricks4live.entries.Page;
 import com.tricks4live.mappers.CommentMapper;
 import com.tricks4live.services.ICommentService;
+import com.tricks4live.utils.Constants;
+import com.tricks4live.utils.RedisUtil;
 import com.tricks4live.vo.CommentVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,12 +20,11 @@ import java.util.List;
 public class CommentServiceImpl extends PraiseAbleService implements ICommentService {
     @Autowired
     private CommentMapper mapper;
+    @Autowired
+    private RedisUtil<CommentInfo> redisUtil;
 
     @Override
     public Page<CommentInfo> findByPageInSubject(Long subjectId, Long pageNum, Integer pageSize) {
-        if (subjectId == null || subjectId == 0) {
-            return null;
-        }
         CommentVO vo = new CommentVO();
         vo.setSubjectId(subjectId);
         Long pageIdx = pageNum - 1;
@@ -49,6 +50,23 @@ public class CommentServiceImpl extends PraiseAbleService implements ICommentSer
         pageComments.setPageSize(pageSize);
         pageComments.setPageNum(pageNum);
         return pageComments;
+    }
+
+    @Override
+    public List<CommentInfo> findHottest(Long subjectId, Integer size) {
+        String key = "CommentServiceImpl-findHottest-" + subjectId + "-" + size;
+        if (redisUtil.hasKey(key)) {
+            return redisUtil.lGet(key, 0, size - 1);
+        } else {
+            CommentVO vo = new CommentVO();
+            vo.setSubjectId(subjectId);
+            vo.setLimitRows(size);
+            List<CommentInfo> commentInfos = mapper.findHottest(vo);
+            if (commentInfos != null && !commentInfos.isEmpty()) {
+                redisUtil.lSet(key, commentInfos, Constants.REDIS_CACHE_DURATION.getSeconds());
+            }
+            return commentInfos;
+        }
     }
 
     @Override
